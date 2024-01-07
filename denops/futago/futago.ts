@@ -22,29 +22,6 @@ export class Futago {
     this.#chatSession = this.#model.startChat(startChatParams);
   }
 
-  // public async *sendMessageStream(message: string) {
-  //   if (!this.#chatSession) {
-  //     this.startChat();
-  //   }
-
-  //   if (this.#chatSession == undefined) {
-  //     throw new Error("Chat session is not started");
-  //   }
-
-  //   if (message === "") {
-  //     return "";
-  //   }
-
-  //   const result = await this.#chatSession.sendMessageStream(message);
-  //   let text = "";
-  //   for await (const chunk of result.stream) {
-  //     const chunkText = chunk.text();
-  //     yield chunkText;
-  //     text += chunkText;
-  //   }
-  //   return text;
-  // }
-
   public async sendMessageStream(message: string): Promise<GenerateContentStreamResult> {
     if (!this.#chatSession) {
       this.startChat();
