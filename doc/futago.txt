@@ -49,7 +49,7 @@ Usage ~
 Commands ~
                                                             *futago-commands*
 
-`:FutagStart`                                        *:FutagStart*
+`:FutagStart`                                                     *:FutagStart*
 
 Start Futago chat.
 
@@ -59,7 +59,7 @@ Config ~
 
 No settings are required. However, the following settings can be made if necessary.
 
-`g:futago_debug`                        *g:futago_debug*
+`g:futago_debug`                                               *g:futago_debug*
 Enable debug messages.
 default is v:false
 

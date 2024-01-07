@@ -37,7 +37,7 @@ dvpm.add({ url: "yukimemi/futago.vim" });
 
 # Commands 
 
-`:FutagStart`                                        
+`:FutagStart`                                                     
 
 Start Futago chat.
 
@@ -45,7 +45,7 @@ Start Futago chat.
 
 No settings are required. However, the following settings can be made if necessary.
 
-`g:futago_debug`                        
+`g:futago_debug`                                               
 Enable debug messages.
 default is v:false
 
