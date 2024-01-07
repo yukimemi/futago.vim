@@ -1,0 +1,83 @@
+*futago.txt*                                      Google gemini chat for vim.
+=============================================================================
+futago.vim~
+
+Google gemini chat for Vim / Neovim.
+
+=============================================================================
+Features ~
+                                                            *futago-features*
+
+This plugin is a Google gemini chat for Vim / Neovim.
+
+=============================================================================
+Installation ~
+                                                        *futago-installation*
+
+If you use folke/lazy.nvim |https://github.com/folke/lazy.nvim|.
+
+>
+	{
+	  "yukimemi/futago.vim",
+	  lazy = false,
+	  dependencies = {
+	    "vim-denops/denops.vim",
+	  },
+	}
+<
+
+If you use yukimemi/dvpm |https://github.com/yukimemi/dvpm|.
+
+>
+	dvpm.add({ url: "yukimemi/futago.vim" });
+<
+
+=============================================================================
+Requirements ~
+                                                        *futago-requirements*
+
+- [Deno - A modern runtime for JavaScript and TypeScript](https://deno.land/)
+- [vim-denops/denops.vim: 🐜 An ecosystem of Vim/Neovim which allows developers to write cross-platform plugins in Deno](https://github.com/vim-denops/denops.vim)
+- Environment: `GEMINI_API_KEY`
+[Get API key](https://ai.google.dev/)
+
+=============================================================================
+Usage ~
+                                                               *futago-usage*
+
+=============================================================================
+Commands ~
+                                                            *futago-commands*
+
+`:FutagStart`                                        *:FutagStart*
+
+Start Futago chat.
+
+=============================================================================
+Config ~
+                                                              *futago-config*
+
+No settings are required. However, the following settings can be made if necessary.
+
+`g:futago_debug`                        *g:futago_debug*
+Enable debug messages.
+default is v:false
+
+=============================================================================
+Example ~
+                                                             *futago-example*
+
+>
+	let g:futago_debug = v:true
+<
+
+=============================================================================
+License ~
+                                                             *futago-license*
+
+Licensed under MIT License.
+
+Copyright (c) 2023 yukimemi
+
+
+vim:tw=78:ts=8:noet:ft=help:norl:

@@ -1,0 +1,80 @@
+---
+name: futago
+description: Google gemini chat for vim.
+---
+
+=pod
+
+=head1 futago.vim
+
+Google gemini chat for Vim / Neovim.
+
+=head1 Features X<futago-features>
+
+This plugin is a Google gemini chat for Vim / Neovim.
+
+=head1 Installation X<futago-installation>
+
+If you use L<folke/lazy.nvim|https://github.com/folke/lazy.nvim>.
+
+=begin lua
+
+{
+  "yukimemi/futago.vim",
+  lazy = false,
+  dependencies = {
+    "vim-denops/denops.vim",
+  },
+}
+
+=end lua
+
+If you use L<yukimemi/dvpm|https://github.com/yukimemi/dvpm>.
+
+=begin typescript
+
+dvpm.add({ url: "yukimemi/futago.vim" });
+
+=end typescript
+
+=head1 Requirements X<futago-requirements>
+
+=item [Deno - A modern runtime for JavaScript and TypeScript](https://deno.land/)
+
+=item [vim-denops/denops.vim: 🐜 An ecosystem of Vim/Neovim which allows developers to write cross-platform plugins in Deno](https://github.com/vim-denops/denops.vim)
+
+=item Environment: `GEMINI_API_KEY`
+
+[Get API key](https://ai.google.dev/)
+
+=head1 Usage X<futago-usage>
+
+=head1 Commands X<futago-commands>
+
+C<:FutagStart>                                        X<:FutagStart>
+
+Start Futago chat.
+
+=head1 Config X<futago-config>
+
+No settings are required. However, the following settings can be made if necessary.
+
+C<g:futago_debug>                        X<g:futago_debug>
+Enable debug messages.
+default is v:false
+
+=head1 Example X<futago-example>
+
+=begin vim
+
+let g:futago_debug = v:true
+
+=end vim
+
+=head1 License X<futago-license>
+
+Licensed under MIT License.
+
+Copyright (c) 2023 yukimemi
+
+=cut
