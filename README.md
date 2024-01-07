@@ -2,6 +2,8 @@
 
 Google gemini chat for Vim / Neovim.
 
+![futago](https://github.com/yukimemi/futago.vim/assets/6442108/2a9f13c1-a66f-4170-aba3-e44a417ef5f7)
+
 # Features 
 
 This plugin is a Google gemini chat for Vim / Neovim.
@@ -40,6 +42,7 @@ dvpm.add({ url: "yukimemi/futago.vim" });
 `:FutagStart`                                                     
 
 Start Futago chat.
+Enter the prompt, save buffer, and the chat will be sent.
 
 # Config 
 
