@@ -53,7 +53,7 @@ dvpm.add({ url: "yukimemi/futago.vim" });
 
 =head1 Commands X<futago-commands>
 
-C<:FutagStart>                                                     X<:FutagStart>
+C<:FutagoStart>                                                   X<:FutagoStart>
 
 Start Futago chat.
 Enter the prompt, save buffer, and the chat will be sent.

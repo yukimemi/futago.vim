@@ -51,7 +51,7 @@ Usage ~
 Commands ~
                                                             *futago-commands*
 
-`:FutagStart`                                                     *:FutagStart*
+`:FutagoStart`                                                   *:FutagoStart*
 
 Start Futago chat.
 Enter the prompt, save buffer, and the chat will be sent.
