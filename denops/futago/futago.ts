@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2024/01/08 02:58:03.
+// Last Change : 2024/01/08 09:51:00.
 // =============================================================================
 
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
@@ -11,7 +11,7 @@ import {
   GenerativeModel,
   GoogleGenerativeAI,
   StartChatParams,
-} from "npm:@google/generative-ai@0.1.3";
+} from "https://esm.sh/@google/generative-ai@0.1.3";
 
 export class Futago {
   #genAI: GoogleGenerativeAI;
