@@ -14,7 +14,7 @@ import * as autocmd from "https://deno.land/x/denops_std@v5.2.0/autocmd/mod.ts";
 import * as vars from "https://deno.land/x/denops_std@v5.2.0/variable/mod.ts";
 import type { Denops } from "https://deno.land/x/denops_std@v5.2.0/mod.ts";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
-import { assert, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
+import { assert, is } from "https://deno.land/x/unknownutil@v3.13.0/mod.ts";
 import { ensureFile } from "https://deno.land/std@0.211.0/fs/mod.ts";
 import { getLogger, handlers, setup } from "https://deno.land/std@0.211.0/log/mod.ts";
 import { join } from "https://deno.land/std@0.211.0/path/mod.ts";

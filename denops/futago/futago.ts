@@ -4,7 +4,7 @@
 // Last Change : 2024/01/08 09:51:00.
 // =============================================================================
 
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
+import { ensure, is } from "https://deno.land/x/unknownutil@v3.13.0/mod.ts";
 import {
   ChatSession,
   GenerateContentStreamResult,
