@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/08 22:30:51.
+// Last Change : 2024/01/08 23:12:25.
 // =============================================================================
 
 import * as batch from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
@@ -316,16 +316,18 @@ export async function main(denops: Denops): Promise<void> {
     `,
   );
 
+  const chatCachePattern = `${chatCacheDir.replace(/\\/g, "/")}/*.md`;
+
   await autocmd.group(denops, "futago_chat_buffer", (helper) => {
     helper.remove("*");
     helper.define(
       "BufWriteCmd",
-      ["futago://chat/*", `${chatCacheDir}/*.md`],
+      ["futago://chat/*", chatCachePattern],
       `call denops#notify("${denops.name}", "sendChatMessage", [bufnr()])`,
     );
     helper.define(
       "BufRead",
-      `${chatCacheDir}/*.md`,
+      chatCachePattern,
       `call denops#notify("${denops.name}", "loadChat", [bufnr()])`,
     );
   });
