@@ -62,7 +62,7 @@ Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
 
 `:FutagoHistory`                                               *:FutagoHistory*
 
-Show list of backed up files with quickfix.
+Show list of chat history with quickfix.
 If you open a past chat file, you can start chatting based on the automatically saved history.
 
 =============================================================================
