@@ -12,6 +12,8 @@ jobs:
   update:
     permissions: write-all
     runs-on: ubuntu-latest
+    env:
+      GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
 
     steps:
       - name: Generate app token

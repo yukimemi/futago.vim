@@ -9,6 +9,9 @@ on:
 jobs:
   automerge:
     runs-on: ubuntu-latest
+    env:
+      GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
+
     steps:
       - name: Setup repo
         uses: actions/checkout@v3
