@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/08 02:00:26.
+// Last Change : 2024/01/08 17:21:39.
 // =============================================================================
 
 import * as batch from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
@@ -22,7 +22,8 @@ import { join } from "https://deno.land/std@0.211.0/path/mod.ts";
 import { Futago } from "./futago.ts";
 
 let debug = false;
-const buffers = new Map<number, {
+const futagos = new Map<number, {
+  futago: Futago;
   buf: buffer.OpenResult;
   lines: string[];
 }>();
@@ -64,16 +65,19 @@ export async function main(denops: Denops): Promise<void> {
   });
 
   const logger = debug ? getLogger("futago-debug") : getLogger("futago");
-  const futago = new Futago();
   logger.debug({ debug });
 
   denops.dispatcher = {
-    async startChat(): Promise<void> {
+    async startChat(opener?: unknown): Promise<void> {
+      if (opener != undefined) {
+        assert(opener, is.String);
+      }
+      const futago = new Futago();
       futago.startChat();
 
       const now = getNow();
       const bufname = `futago://chat/${now}`;
-      const buf = await buffer.open(denops, bufname, { opener: "tabnew" });
+      const buf = await buffer.open(denops, bufname, { opener: opener ?? "tabnew" });
 
       await batch.batch(denops, async () => {
         await option.filetype.setBuffer(denops, buf.bufnr, "markdown");
@@ -88,18 +92,22 @@ export async function main(denops: Denops): Promise<void> {
       await denops.cmd("normal! G");
       await denops.cmd("startinsert");
 
-      buffers.set(buf.bufnr, { buf, lines: await fn.getbufline(denops, buf.bufnr, 1, "$") });
+      futagos.set(buf.bufnr, {
+        futago,
+        buf,
+        lines: await fn.getbufline(denops, buf.bufnr, 1, "$"),
+      });
     },
 
     async sendChatMessage(bufnr: unknown): Promise<void> {
       assert(bufnr, is.Number);
       try {
-        const bufInfo = buffers.get(bufnr);
-        if (bufInfo == undefined) {
+        const futago = futagos.get(bufnr);
+        if (futago == undefined) {
           throw new Error(`Buffer not found: ${bufnr}`);
         }
-        const lines = await fn.getbufline(denops, bufInfo.buf.bufnr, 1, "$");
-        if (lines === bufInfo.lines) {
+        const lines = await fn.getbufline(denops, futago.buf.bufnr, 1, "$");
+        if (lines === futago.lines) {
           return;
         }
         const startLineIndex = lines.findLastIndex((_, index, obj) =>
@@ -119,34 +127,35 @@ export async function main(denops: Denops): Promise<void> {
           return;
         }
 
-        const result = await futago.sendMessageStream(prompt.join("\n"));
+        const result = await futago.futago.sendMessageStream(prompt.join("\n"));
         await fn.appendbufline(
           denops,
-          bufInfo.buf.bufnr,
-          await getLastLineNumber(denops, bufInfo.buf.bufnr),
+          futago.buf.bufnr,
+          await getLastLineNumber(denops, futago.buf.bufnr),
           ["", `Gemini: ${getNow()}`, "-------------", ""],
         );
         for await (const chunk of result.stream) {
           const chunkText = chunk.text();
           logger.debug(chunkText);
-          let insertLineNum = await getLastLineNumber(denops, bufInfo.buf.bufnr);
+          let insertLineNum = await getLastLineNumber(denops, futago.buf.bufnr);
           const lines = chunkText.split(/\r?\n/);
-          const lastLine = await fn.getbufline(denops, bufInfo.buf.bufnr, insertLineNum);
-          await fn.setbufline(denops, bufInfo.buf.bufnr, insertLineNum++, [
+          const lastLine = await fn.getbufline(denops, futago.buf.bufnr, insertLineNum);
+          await fn.setbufline(denops, futago.buf.bufnr, insertLineNum++, [
             lastLine + lines[0],
             ...lines.slice(1),
           ]);
         }
         await fn.appendbufline(
           denops,
-          bufInfo.buf.bufnr,
-          await getLastLineNumber(denops, bufInfo.buf.bufnr),
+          futago.buf.bufnr,
+          await getLastLineNumber(denops, futago.buf.bufnr),
           ["", `You: ${getNow()}`, "-------------", ""],
         );
 
-        buffers.set(bufInfo.buf.bufnr, {
-          buf: bufInfo.buf,
-          lines: await fn.getbufline(denops, bufInfo.buf.bufnr, 1, "$"),
+        futagos.set(futago.buf.bufnr, {
+          futago: futago.futago,
+          buf: futago.buf,
+          lines: await fn.getbufline(denops, futago.buf.bufnr, 1, "$"),
         });
 
         await denops.cmd(`redraw!`);
@@ -165,7 +174,7 @@ export async function main(denops: Denops): Promise<void> {
       function! s:${denops.name}_notify(method, params) abort
         call denops#plugin#wait_async('${denops.name}', function('denops#notify', ['${denops.name}', a:method, a:params]))
       endfunction
-      command! FutagoStart call s:${denops.name}_notify('startChat', [])
+      command! -nargs=? -complete=customlist,futago#complete FutagoStart call s:${denops.name}_notify('startChat', [<f-args>])
     `,
   );
 
