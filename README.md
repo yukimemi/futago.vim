@@ -48,6 +48,11 @@ Enter the prompt, save buffer, and the chat will be sent.
 
 Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
 
+`:FutagoHistory`                                               
+
+Show list of backed up files with quickfix.
+If you open a past chat file, you can start chatting based on the automatically saved history.
+
 # Config 
 
 No settings are required. However, the following settings can be made if necessary.
