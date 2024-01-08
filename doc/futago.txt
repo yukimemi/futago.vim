@@ -51,10 +51,14 @@ Usage ~
 Commands ~
                                                             *futago-commands*
 
-`:FutagoStart`                                                   *:FutagoStart*
+`:FutagoStart [opener]`                                          *:FutagoStart*
 
 Start Futago chat.
 Enter the prompt, save buffer, and the chat will be sent.
+
+[opener]: Optional. Default is "tabnew".
+
+Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
 
 =============================================================================
 Config ~

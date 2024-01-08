@@ -39,10 +39,14 @@ dvpm.add({ url: "yukimemi/futago.vim" });
 
 # Commands 
 
-`:FutagoStart`                                                   
+`:FutagoStart [opener]`                                          
 
 Start Futago chat.
 Enter the prompt, save buffer, and the chat will be sent.
+
+[opener]: Optional. Default is "tabnew".
+
+Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
 
 # Config 
 
