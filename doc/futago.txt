@@ -70,12 +70,28 @@ No settings are required. However, the following settings can be made if necessa
 Enable debug messages.
 default is v:false
 
+`g:futago_chat_path`                                       *g:futago_chat_path*
+Path to save chat files.
+default is `xdg.cache()/futago/chat`
+
+https://deno.land/x/xdg/src/mod.deno.ts
+
+If you open a past chat file saved in g:futago_chat_path, you can start chatting based on the automatically saved chat history.
+
+`g:futago_log_file`                                         *g:futago_log_file*
+Path to save log files.
+default is `xdg.cache()/futago/log`
+
+https://deno.land/x/xdg/src/mod.deno.ts
+
 =============================================================================
 Example ~
                                                              *futago-example*
 
 >
 	let g:futago_debug = v:true
+	let g:futago_chat_path = '~/.cache/vim/futago/chat'
+	let g:futago_log_file = '~/.cache/vim/futago/log/futago.log'
 <
 
 =============================================================================
