@@ -1,3 +1,9 @@
+// =============================================================================
+// File        : futago.ts
+// Author      : yukimemi
+// Last Change : 2024/01/08 02:58:03.
+// =============================================================================
+
 import { ensure, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
 import {
   ChatSession,
