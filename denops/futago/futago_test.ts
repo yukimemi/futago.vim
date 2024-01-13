@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : futago_test.ts
 // Author      : yukimemi
-// Last Change : 2024/01/08 02:58:11.
+// Last Change : 2024/01/13 21:52:36.
 // =============================================================================
 
 import { Futago } from "./futago.ts";
@@ -10,15 +10,16 @@ import { assertStringIncludes } from "https://deno.land/std@0.212.0/assert/asser
 Deno.test({
   name: "Test sendMessageStream()",
   fn: async () => {
-    const futago = new Futago();
+    const db = await Deno.openKv();
+    const futago = new Futago("gemini-pro", db);
     futago.startChat();
-    const result = await futago.sendMessageStream("こんにちは！君の名は？");
+    const result = futago.sendMessageStream("こんにちは！君の名は？");
     let response = "";
-    for await (const chunk of result.stream) {
-      const chunkText = chunk.text();
-      console.log(chunkText);
-      response += chunkText;
+    for await (const chunk of result) {
+      console.log(chunk);
+      response += chunk;
     }
     assertStringIncludes(response, "私は");
+    db.close();
   },
 });

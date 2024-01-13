@@ -75,6 +75,12 @@ Default is `xdg.cache()/futago/log`
 
 https://deno.land/x/xdg/src/mod.deno.ts
 
+`g:futago_history_db`                                     
+Path to save history db (Deno KV).
+Default is `xdg.cache()/futago/db/history.db`
+
+https://deno.land/x/xdg/src/mod.deno.ts
+
 `g:futago_safety_settings`                           
 
 [SafetySetting](https://ai.google.dev/api/rest/v1beta/SafetySetting)
@@ -85,12 +91,27 @@ Default is no setting.
 [GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
 Default is no setting.
 
+# Functions 
+
+`futago#start_chat([opener], [history])`                    
+
+Start Futago chat with args.
+
+[opener]: Default is "tabnew".
+Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
+
+[history]: List of chat history.
+
+example:
+[{"role": "user", "parts": "user prompt"}, {"role": "model", "parts": "model reply"}]]
+
 # Example 
 
 ```vim
 let g:futago_debug = v:true
 let g:futago_chat_path = '~/.cache/vim/futago/chat'
 let g:futago_log_file = '~/.cache/vim/futago/log/futago.log'
+let g:futago_history_db = '~/.cache/vim/futago/db/history.db'
 let g:futago_safety_settings = [
   \ { "category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE" },
   \ { "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"  },
@@ -101,6 +122,8 @@ let g:futago_generation_config = {
   \   "temperature": 0.9,
   \   "maxOutputTokens": 256,
   \ }
+
+nnoremap <Leader>Fc <Cmd>call futago#start_chat("vsplit", [{"role": "user", "parts": "僕の名前は yukimemi"}, {"role": "model", "parts": "了解！覚えておくね"}])<cr>
 ```
 
 # License 

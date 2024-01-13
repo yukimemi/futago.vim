@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/13 12:29:49.
+// Last Change : 2024/01/14 00:53:16.
 // =============================================================================
 
 import * as batch from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
@@ -17,17 +17,21 @@ import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
 import { walk } from "https://deno.land/std@0.212.0/fs/walk.ts";
 import { assert, ensure, is } from "https://deno.land/x/unknownutil@v3.13.0/mod.ts";
 import { ensureDir, ensureFile } from "https://deno.land/std@0.212.0/fs/mod.ts";
-import { getLogger, handlers, setup } from "https://deno.land/std@0.212.0/log/mod.ts";
-import { basename, extname, join } from "https://deno.land/std@0.212.0/path/mod.ts";
-
-import { Futago } from "./futago.ts";
-import { FileHandler } from "https://deno.land/std@0.212.0/log/handlers.ts";
-
+import { basename, dirname, extname, join } from "https://deno.land/std@0.212.0/path/mod.ts";
+import {
+  ConsoleHandler,
+  FileHandler,
+  getLogger,
+  RotatingFileHandler,
+  setup,
+} from "https://deno.land/std@0.212.0/log/mod.ts";
 import {
   GenerationConfig,
   InputContent,
   SafetySetting,
 } from "https://esm.sh/@google/generative-ai@0.1.3";
+
+import { Futago } from "./futago.ts";
 
 let debug = false;
 const futagos = new Map<number, {
@@ -39,9 +43,11 @@ const futagos = new Map<number, {
 
 let chatCacheDir = join(xdg.cache(), "futago", "chat");
 let logFile = join(xdg.cache(), "futago", "log", "futago.log");
+let historyDb = join(xdg.cache(), "futago", "db", "history.db");
 let model = "gemini-pro";
 let safetySettings: SafetySetting[];
 let generationConfig: GenerationConfig;
+let db: Deno.Kv;
 
 function getNow(): string {
   return datetime.format(new Date(), "yyyy-MM-ddTHH-mm-ss.SSS");
@@ -61,6 +67,11 @@ export async function main(denops: Denops): Promise<void> {
     ),
     is.String,
   );
+  historyDb = ensure(
+    await fn.expand(denops, await vars.g.get(denops, "futago_history_db", historyDb)),
+    is.String,
+  );
+  await ensureDir(dirname(historyDb));
   model = await vars.g.get(denops, "futago_model", model);
   safetySettings = await vars.g.get(
     denops,
@@ -82,8 +93,8 @@ export async function main(denops: Denops): Promise<void> {
 
   setup({
     handlers: {
-      console: new handlers.ConsoleHandler("DEBUG"),
-      file: new handlers.RotatingFileHandler("DEBUG", {
+      console: new ConsoleHandler("DEBUG"),
+      file: new RotatingFileHandler("DEBUG", {
         filename: logFile,
         maxBytes: 1024 * 1024,
         maxBackupCount: 10,
@@ -102,19 +113,33 @@ export async function main(denops: Denops): Promise<void> {
   });
 
   const logger = debug ? getLogger("debug") : getLogger();
-  logger.debug({ debug, chatCacheDir, model, safetySettings, generationConfig, logFile });
+  logger.debug({
+    debug,
+    chatCacheDir,
+    model,
+    safetySettings,
+    generationConfig,
+    logFile,
+    historyDb,
+  });
   const fileHandler = logger.handlers[1] as FileHandler;
   if (fileHandler) {
     fileHandler.flush();
   }
+  db = await Deno.openKv(historyDb);
 
   denops.dispatcher = {
-    async startChat(opener?: unknown): Promise<void> {
+    async startChat(opener?: unknown, history?: unknown): Promise<void> {
+      const futago = new Futago(model, db, safetySettings, generationConfig);
       if (opener != undefined) {
         assert(opener, is.String);
       }
-      const futago = new Futago(model, safetySettings, generationConfig);
-      futago.startChat();
+      if (history != undefined) {
+        const h = history as InputContent[];
+        futago.startChat({ history: h });
+      } else {
+        futago.startChat();
+      }
 
       const now = getNow();
       const bufname = `futago://chat/${now}`;
@@ -145,45 +170,12 @@ export async function main(denops: Denops): Promise<void> {
       if (futagos.get(bufnr) != undefined) {
         return;
       }
-      const lines = await fn.getbufline(denops, bufnr, 1, "$");
 
-      const history: InputContent[] = [];
-      lines.forEach((value, index, array) => {
-        logger.debug(value);
-        if (value.startsWith("You:") && array[index + 1] === "-------------") {
-          let i = index + 2;
-          let userParts = "";
-          while (i < array.length && !array[i].startsWith("Gemini:")) {
-            userParts += array[i] + "\n";
-            i++;
-          }
-          history.push({
-            role: "user",
-            parts: userParts,
-          });
-        }
-        if (value.startsWith("Gemini:") && array[index + 1] === "-------------") {
-          let i = index + 2;
-          let modelParts = "";
-          while (i < array.length && !array[i].startsWith("You:")) {
-            modelParts += array[i] + "\n";
-            i++;
-          }
-          history.push({
-            role: "model",
-            parts: modelParts,
-          });
-        }
-      });
-
-      if (history[history.length - 1].role === "user") {
-        history.pop();
-      }
-
-      const futago = new Futago(model, safetySettings, generationConfig);
-      futago.startChat({ history });
+      const futago = new Futago(model, db, safetySettings, generationConfig);
       const bufname = await fn.bufname(denops, bufnr);
       futago.chatTitle = basename(bufname, extname(bufname));
+      const history = await futago.getHistory();
+      futago.startChat({ history });
 
       // Set temporary futago.
       futagos.set(bufnr, {
@@ -239,6 +231,7 @@ export async function main(denops: Denops): Promise<void> {
         logger.debug(prompt.join("\n"));
         logger.debug(`-------------`);
 
+        // prompt empty check.
         if (
           prompt.every((line) =>
             line.trim() === ""
@@ -247,19 +240,17 @@ export async function main(denops: Denops): Promise<void> {
           return;
         }
 
-        const result = await futago.futago.sendMessageStream(prompt.join("\n"));
-        logger.debug({ result });
         await fn.appendbufline(
           denops,
           futago.buf.bufnr,
           await getLastLineNumber(denops, futago.buf.bufnr),
           ["", `Gemini: ${getNow()}`, "-------------", ""],
         );
-        for await (const chunk of result.stream) {
-          const chunkText = chunk.text();
-          logger.debug(chunkText);
+        const result = futago.futago.sendMessageStream(prompt.join("\n"));
+        for await (const chunk of result) {
+          logger.debug(chunk);
           let insertLineNum = await getLastLineNumber(denops, futago.buf.bufnr);
-          const lines = chunkText.split(/\r?\n/);
+          const lines = chunk.split(/\r?\n/);
           const lastLine = await fn.getbufline(denops, futago.buf.bufnr, insertLineNum);
           await fn.setbufline(denops, futago.buf.bufnr, insertLineNum++, [
             lastLine + lines[0],
@@ -273,10 +264,9 @@ export async function main(denops: Denops): Promise<void> {
           ["", `You: ${getNow()}`, "-------------", ""],
         );
 
-        if (futago.futago.chatTitle === "") {
-          await futago.futago.createChatTitle(prompt.join("\n"));
+        if (futago.path === "") {
           futago.path = join(chatCacheDir, `${futago.futago.chatTitle}.md`);
-          logger.debug(`Chat title: ${futago.futago.chatTitle}`);
+          logger.debug(`Chat path: ${futago.path}`);
         }
 
         const bufLines = await fn.getbufline(denops, futago.buf.bufnr, 1, "$");
