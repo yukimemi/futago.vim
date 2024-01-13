@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2024/01/14 00:53:40.
+// Last Change : 2024/01/14 01:48:09.
 // =============================================================================
 
 import * as datetime from "https://deno.land/std@0.212.0/datetime/mod.ts";
@@ -65,7 +65,7 @@ export class Futago {
   public async getHistory(): Promise<InputContent[]> {
     const lastHistory = await this.#db.get([this.chatTitle]);
     if (lastHistory.value) {
-      return lastHistory.value;
+      return (lastHistory.value) as InputContent[];
     } else {
       return [];
     }

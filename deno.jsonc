@@ -11,11 +11,11 @@
     "main": "deno task run main.ts",
     "start": "deno task run --watch server.ts",
     // development
-    "test": "deno test --allow-env --allow-read --allow-net --allow-none",
+    "test": "deno test --allow-env --allow-read --allow-net --allow-none --unstable",
     "cov": "deno task test --coverage=cov_profile; deno coverage cov_profile",
     "lint": "deno lint --ignore=cov_profile",
     "fmt": "deno fmt --ignore=cov_profile",
-    "check": "deno check ./**/*.ts",
+    "check": "deno check --unstable ./**/*.ts",
     "ci": "deno task check && deno task lint && deno task fmt --check && deno task test",
     "deps": "deno run --allow-read --allow-write --allow-net --allow-run https://deno.land/x/udd@0.8.2/main.ts --test='deno task test' deno.jsonc ./**.*.ts",
     // git hooks
