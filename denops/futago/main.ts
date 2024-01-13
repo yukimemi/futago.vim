@@ -15,7 +15,7 @@ import * as vars from "https://deno.land/x/denops_std@v5.2.0/variable/mod.ts";
 import type { Denops } from "https://deno.land/x/denops_std@v5.2.0/mod.ts";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
 import { walk } from "https://deno.land/std@0.212.0/fs/walk.ts";
-import { assert, ensure, is } from "https://deno.land/x/unknownutil@v3.13.0/mod.ts";
+import { assert, ensure, is } from "https://deno.land/x/unknownutil@v3.14.0/mod.ts";
 import { ensureDir, ensureFile } from "https://deno.land/std@0.212.0/fs/mod.ts";
 import { basename, dirname, extname, join } from "https://deno.land/std@0.212.0/path/mod.ts";
 import {
