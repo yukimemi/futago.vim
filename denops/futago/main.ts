@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/08 23:12:25.
+// Last Change : 2024/01/13 12:29:49.
 // =============================================================================
 
 import * as batch from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
@@ -23,7 +23,11 @@ import { basename, extname, join } from "https://deno.land/std@0.211.0/path/mod.
 import { Futago } from "./futago.ts";
 import { FileHandler } from "https://deno.land/std@0.211.0/log/handlers.ts";
 
-import { InputContent } from "https://esm.sh/@google/generative-ai@0.1.3";
+import {
+  GenerationConfig,
+  InputContent,
+  SafetySetting,
+} from "https://esm.sh/@google/generative-ai@0.1.3";
 
 let debug = false;
 const futagos = new Map<number, {
@@ -35,6 +39,9 @@ const futagos = new Map<number, {
 
 let chatCacheDir = join(xdg.cache(), "futago", "chat");
 let logFile = join(xdg.cache(), "futago", "log", "futago.log");
+let model = "gemini-pro";
+let safetySettings: SafetySetting[];
+let generationConfig: GenerationConfig;
 
 function getNow(): string {
   return datetime.format(new Date(), "yyyy-MM-ddTHH-mm-ss.SSS");
@@ -54,6 +61,18 @@ export async function main(denops: Denops): Promise<void> {
     ),
     is.String,
   );
+  model = await vars.g.get(denops, "futago_model", model);
+  safetySettings = await vars.g.get(
+    denops,
+    "futago_safety_settings",
+    safetySettings,
+  ) as SafetySetting[];
+  generationConfig = await vars.g.get(
+    denops,
+    "futago_generation_config",
+    generationConfig,
+  ) as GenerationConfig;
+
   await ensureDir(chatCacheDir);
   logFile = ensure(
     await fn.expand(denops, await vars.g.get(denops, "futago_log_file", logFile)),
@@ -83,7 +102,7 @@ export async function main(denops: Denops): Promise<void> {
   });
 
   const logger = debug ? getLogger("debug") : getLogger();
-  logger.debug({ debug, chatCacheDir, logFile });
+  logger.debug({ debug, chatCacheDir, model, safetySettings, generationConfig, logFile });
   const fileHandler = logger.handlers[1] as FileHandler;
   if (fileHandler) {
     fileHandler.flush();
@@ -94,7 +113,7 @@ export async function main(denops: Denops): Promise<void> {
       if (opener != undefined) {
         assert(opener, is.String);
       }
-      const futago = new Futago();
+      const futago = new Futago(model, safetySettings, generationConfig);
       futago.startChat();
 
       const now = getNow();
@@ -161,7 +180,7 @@ export async function main(denops: Denops): Promise<void> {
         history.pop();
       }
 
-      const futago = new Futago();
+      const futago = new Futago(model, safetySettings, generationConfig);
       futago.startChat({ history });
       const bufname = await fn.bufname(denops, bufnr);
       futago.chatTitle = basename(bufname, extname(bufname));
@@ -181,12 +200,15 @@ export async function main(denops: Denops): Promise<void> {
 
       const buf = await buffer.open(denops, bufname);
 
-      await option.filetype.setBuffer(denops, buf.bufnr, "markdown");
-      await option.buftype.setBuffer(denops, buf.bufnr, "acwrite");
-      await option.buflisted.setBuffer(denops, buf.bufnr, true);
-      await option.swapfile.setBuffer(denops, buf.bufnr, false);
-      await option.wrap.setBuffer(denops, buf.bufnr, true);
-      await option.modified.setBuffer(denops, buf.bufnr, false);
+      await batch.batch(denops, async () => {
+        await option.filetype.setBuffer(denops, buf.bufnr, "markdown");
+        await option.buftype.setBuffer(denops, buf.bufnr, "acwrite");
+        await option.buflisted.setBuffer(denops, buf.bufnr, true);
+        await option.swapfile.setBuffer(denops, buf.bufnr, false);
+        await option.wrap.setBuffer(denops, buf.bufnr, true);
+        await option.modified.setBuffer(denops, buf.bufnr, false);
+      });
+
       await denops.cmd("normal! G");
 
       futagos.set(buf.bufnr, {
@@ -226,6 +248,7 @@ export async function main(denops: Denops): Promise<void> {
         }
 
         const result = await futago.futago.sendMessageStream(prompt.join("\n"));
+        logger.debug({ result });
         await fn.appendbufline(
           denops,
           futago.buf.bufnr,

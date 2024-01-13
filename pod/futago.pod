@@ -73,11 +73,11 @@ No settings are required. However, the following settings can be made if necessa
 
 C<g:futago_debug>                                               X<g:futago_debug>
 Enable debug messages.
-default is v:false
+Default is v:false
 
 C<g:futago_chat_path>                                       X<g:futago_chat_path>
 Path to save chat files.
-default is `xdg.cache()/futago/chat`
+Default is `xdg.cache()/futago/chat`
 
 https://deno.land/x/xdg/src/mod.deno.ts
 
@@ -85,9 +85,19 @@ If you open a past chat file saved in g:futago_chat_path, you can start chatting
 
 C<g:futago_log_file>                                         X<g:futago_log_file>
 Path to save log files.
-default is `xdg.cache()/futago/log`
+Default is `xdg.cache()/futago/log`
 
 https://deno.land/x/xdg/src/mod.deno.ts
+
+C<g:futago_safety_settings>                           X<g:futago_safety_settings>
+
+[SafetySetting](https://ai.google.dev/api/rest/v1beta/SafetySetting)
+Default is no setting.
+
+C<g:futago_generation_config>                       X<g:futago_generation_config>
+
+[GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
+Default is no setting.
 
 =head1 Example X<futago-example>
 
@@ -96,6 +106,16 @@ https://deno.land/x/xdg/src/mod.deno.ts
 let g:futago_debug = v:true
 let g:futago_chat_path = '~/.cache/vim/futago/chat'
 let g:futago_log_file = '~/.cache/vim/futago/log/futago.log'
+let g:futago_safety_settings = [
+  \ { "category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE" },
+  \ { "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"  },
+  \ { "category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_ONLY_HIGH" },
+  \ { "category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE" },
+  \ ]
+let g:futago_generation_config = {
+  \   "temperature": 0.9,
+  \   "maxOutputTokens": 256,
+  \ }
 
 =end vim
 
