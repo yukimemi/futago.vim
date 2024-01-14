@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/14 00:53:16.
+// Last Change : 2024/01/14 19:26:38.
 // =============================================================================
 
 import * as batch from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
@@ -282,9 +282,12 @@ export async function main(denops: Denops): Promise<void> {
         await denops.cmd("normal! G");
 
         // Save buffer to file.
-        await Deno.writeTextFile(futago.path, bufLines.join("\n"));
+        const bufname = await fn.bufname(denops, futago.buf.bufnr);
+        if (bufname.startsWith("futago:")) {
+          await Deno.writeTextFile(futago.path, bufLines.join("\n"));
+        }
       } catch (e) {
-        logger.error(e);
+        console.error(`main.ts`, e);
       } finally {
         await option.modified.setBuffer(denops, bufnr, false);
         if (fileHandler) {
@@ -313,7 +316,7 @@ export async function main(denops: Denops): Promise<void> {
         });
         await denops.cmd("botright copen");
       } catch (e) {
-        await denops.cmd(`echom "Error ${e}"`);
+        console.error(`main.ts`, e);
       }
     },
   };

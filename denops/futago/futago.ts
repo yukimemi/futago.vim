@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2024/01/14 01:48:09.
+// Last Change : 2024/01/14 19:20:39.
 // =============================================================================
 
 import * as datetime from "https://deno.land/std@0.212.0/datetime/mod.ts";
@@ -76,41 +76,45 @@ export class Futago {
   }
 
   public async *sendMessageStream(message: string) {
-    const logger = this.#debug ? getLogger("debug") : getLogger();
-    if (!this.#chatSession) {
-      this.startChat();
-    }
-
-    if (this.#chatSession == undefined) {
-      throw new Error("Chat session is not started");
-    }
-
-    if (this.chatTitle === "") {
-      await this.createChatTitle(message);
-      logger.debug(`Chat title: ${this.chatTitle}`);
-    }
-
-    this.#history.push({ role: "user", parts: message });
-    const result = await this.#chatSession.sendMessageStream(message);
-    logger.debug({ result });
-
-    let text = "";
-    for await (const chunk of result.stream) {
-      const chunkText = chunk.text();
-      yield chunkText;
-      text += chunkText;
-    }
-
-    this.#history.push({ role: "model", parts: text });
-
-    const lastHistory = await this.getHistory();
-    logger.debug(lastHistory);
-    if (lastHistory.length > 0) {
-      if (lastHistory[lastHistory.length - 1].role === "user") {
-        lastHistory.pop();
+    try {
+      const logger = this.#debug ? getLogger("debug") : getLogger();
+      if (!this.#chatSession) {
+        this.startChat();
       }
-      this.#history = lastHistory.concat(this.#history);
+
+      if (this.#chatSession == undefined) {
+        throw new Error("Chat session is not started");
+      }
+
+      if (this.chatTitle === "") {
+        await this.createChatTitle(message);
+        logger.debug(`Chat title: ${this.chatTitle}`);
+      }
+
+      this.#history.push({ role: "user", parts: message });
+      const result = await this.#chatSession.sendMessageStream(message);
+      logger.debug({ result });
+
+      let text = "";
+      for await (const chunk of result.stream) {
+        const chunkText = chunk.text();
+        yield chunkText;
+        text += chunkText;
+      }
+
+      this.#history.push({ role: "model", parts: text });
+
+      const lastHistory = await this.getHistory();
+      logger.debug(lastHistory);
+      if (lastHistory.length > 0) {
+        if (lastHistory[lastHistory.length - 1].role === "user") {
+          lastHistory.pop();
+        }
+        this.#history = lastHistory.concat(this.#history);
+      }
+      await this.setHistory(this.#history);
+    } catch (e) {
+      console.error(`futago.ts`, e);
     }
-    await this.setHistory(this.#history);
   }
 }
