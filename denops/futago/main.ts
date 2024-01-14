@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/14 19:26:38.
+// Last Change : 2024/01/14 19:40:35.
 // =============================================================================
 
 import * as batch from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
@@ -201,7 +201,9 @@ export async function main(denops: Denops): Promise<void> {
         await option.modified.setBuffer(denops, buf.bufnr, false);
       });
 
-      await denops.cmd("normal! G");
+      await denops.cmd(`redraw!`);
+      const lastLine = await getLastLineNumber(denops, buf.bufnr);
+      await fn.setpos(denops, ".", [buf.bufnr, lastLine, 0, 0]);
 
       futagos.set(buf.bufnr, {
         futago,
@@ -279,7 +281,8 @@ export async function main(denops: Denops): Promise<void> {
         });
 
         await denops.cmd(`redraw!`);
-        await denops.cmd("normal! G");
+        const lastLine = await getLastLineNumber(denops, futago.buf.bufnr);
+        await fn.setpos(denops, ".", [futago.buf.bufnr, lastLine, 0, 0]);
 
         // Save buffer to file.
         const bufname = await fn.bufname(denops, futago.buf.bufnr);
