@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/14 19:40:35.
+// Last Change : 2024/01/14 22:50:32.
 // =============================================================================
 
 import * as batch from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
@@ -248,13 +248,15 @@ export async function main(denops: Denops): Promise<void> {
           await getLastLineNumber(denops, futago.buf.bufnr),
           ["", `Gemini: ${getNow()}`, "-------------", ""],
         );
+
         const result = futago.futago.sendMessageStream(prompt.join("\n"));
+
         for await (const chunk of result) {
           logger.debug(chunk);
-          let insertLineNum = await getLastLineNumber(denops, futago.buf.bufnr);
           const lines = chunk.split(/\r?\n/);
-          const lastLine = await fn.getbufline(denops, futago.buf.bufnr, insertLineNum);
-          await fn.setbufline(denops, futago.buf.bufnr, insertLineNum++, [
+          const lastLineNum = await getLastLineNumber(denops, futago.buf.bufnr);
+          const lastLine = await fn.getbufline(denops, futago.buf.bufnr, lastLineNum);
+          await fn.setbufline(denops, futago.buf.bufnr, lastLineNum, [
             lastLine + lines[0],
             ...lines.slice(1),
           ]);
