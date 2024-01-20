@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/20 11:38:00.
+// Last Change : 2024/01/20 11:50:09.
 // =============================================================================
 
 import * as batch from "https://deno.land/x/denops_std@v5.3.0/batch/mod.ts";
@@ -309,6 +309,7 @@ export async function main(denops: Denops): Promise<void> {
         ) {
           chatFiles.push(entry.path);
         }
+        chatFiles.sort().reverse();
         await batch.batch(denops, async (denops) => {
           await fn.setqflist(denops, [], " ", {
             title: `Chat History`,
