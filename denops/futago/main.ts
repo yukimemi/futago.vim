@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/14 22:50:32.
+// Last Change : 2024/01/20 11:38:00.
 // =============================================================================
 
 import * as batch from "https://deno.land/x/denops_std@v5.2.0/batch/mod.ts";
@@ -287,10 +287,7 @@ export async function main(denops: Denops): Promise<void> {
         await fn.setpos(denops, ".", [futago.buf.bufnr, lastLine, 0, 0]);
 
         // Save buffer to file.
-        const bufname = await fn.bufname(denops, futago.buf.bufnr);
-        if (bufname.startsWith("futago:")) {
-          await Deno.writeTextFile(futago.path, bufLines.join("\n"));
-        }
+        await Deno.writeTextFile(futago.path, bufLines.join("\n"));
       } catch (e) {
         console.error(`main.ts`, e);
       } finally {
