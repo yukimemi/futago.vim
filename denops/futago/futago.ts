@@ -4,7 +4,7 @@
 // Last Change : 2024/01/14 19:20:39.
 // =============================================================================
 
-import * as datetime from "https://deno.land/std@0.212.0/datetime/mod.ts";
+import * as datetime from "https://deno.land/std@0.213.0/datetime/mod.ts";
 import sanitize from "https://esm.sh/sanitize-filename@1.6.3";
 import {
   ChatSession,
@@ -15,7 +15,7 @@ import {
   SafetySetting,
   StartChatParams,
 } from "https://esm.sh/@google/generative-ai@0.1.3";
-import { getLogger } from "https://deno.land/std@0.212.0/log/mod.ts";
+import { getLogger } from "https://deno.land/std@0.213.0/log/mod.ts";
 
 export class Futago {
   #debug: boolean;
