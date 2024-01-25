@@ -32,6 +32,13 @@ dvpm.add({ url: "yukimemi/futago.vim" });
 
 - [Deno - A modern runtime for JavaScript and TypeScript](https://deno.land/)
 - [vim-denops/denops.vim: 🐜 An ecosystem of Vim/Neovim which allows developers to write cross-platform plugins in Deno](https://github.com/vim-denops/denops.vim)
+Using Deno.KV, you need the `--unstable-kv` flag.
+Please specify as below.
+
+```vim
+let g:denops#server#deno_args = ['-q', '--no-lock', '--unstable-kv', '-A']
+```
+
 - Environment: `GEMINI_API_KEY`
 [Get API key](https://ai.google.dev/)
 
