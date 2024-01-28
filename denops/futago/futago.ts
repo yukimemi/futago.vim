@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2024/01/14 19:20:39.
+// Last Change : 2024/01/28 13:12:05.
 // =============================================================================
 
 import * as datetime from "https://deno.land/std@0.213.0/datetime/mod.ts";
@@ -16,33 +16,50 @@ import {
   StartChatParams,
 } from "https://esm.sh/@google/generative-ai@0.1.3";
 import { getLogger } from "https://deno.land/std@0.213.0/log/mod.ts";
+import { getDb, setDb } from "./db.ts";
+import { Semaphore } from "https://deno.land/x/async@v2.0.2/semaphore.ts";
+import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
+import { join } from "https://deno.land/std@0.205.0/path/join.ts";
 
 export class Futago {
-  #debug: boolean;
-  #db: Deno.Kv;
   #genAI: GoogleGenerativeAI;
   #model: GenerativeModel;
   #chatSession: ChatSession | undefined;
   #history: InputContent[] = [];
 
+  public semaphore = new Semaphore(1);
   public chatTitle = "";
   public chatPath = "";
 
   public constructor(
-    model: string = "gemini-pro",
-    db: Deno.Kv,
-    safetySettings?: SafetySetting[],
-    generationConfig?: GenerationConfig,
-    debug: boolean = false,
+    public bufnr: number,
+    private model: string = DEFAULT_MODEL,
+    private db: Deno.Kv,
+    private chatDir: string,
+    public opts: {
+      safetySettings?: SafetySetting[];
+      generationConfig?: GenerationConfig;
+      humanPrompt: string;
+      aiPrompt: string;
+      debug: boolean;
+    } = {
+      safetySettings: undefined,
+      generationConfig: undefined,
+      humanPrompt: DEFAULT_HUMAN_PROMPT,
+      aiPrompt: DEFAULT_AI_PROMPT,
+      debug: false,
+    },
   ) {
     const apiKey = Deno.env.get("GEMINI_API_KEY");
     if (apiKey == undefined) {
       throw new Error("Environment variable GEMINI_API_KEY is not defined");
     }
-    this.#debug = debug;
-    this.#db = db;
     this.#genAI = new GoogleGenerativeAI(apiKey);
-    this.#model = this.#genAI.getGenerativeModel({ model, safetySettings, generationConfig });
+    this.#model = this.#genAI.getGenerativeModel({
+      model: this.model,
+      safetySettings: this.opts?.safetySettings,
+      generationConfig: this.opts?.generationConfig,
+    });
   }
 
   public startChat(startChatParams?: StartChatParams): void {
@@ -60,24 +77,12 @@ export class Futago {
     const response = result.response;
     this.chatTitle = datetime.format(new Date(), "yyyyMMdd-HHmmss") + "_" +
       sanitize(response.text());
-  }
-
-  public async getHistory(): Promise<InputContent[]> {
-    const lastHistory = await this.#db.get([this.chatTitle]);
-    if (lastHistory.value) {
-      return (lastHistory.value) as InputContent[];
-    } else {
-      return [];
-    }
-  }
-
-  public async setHistory(history: InputContent[]) {
-    await this.#db.set([this.chatTitle], history);
+    this.chatPath = join(this.chatDir, `${this.chatTitle}.md`);
   }
 
   public async *sendMessageStream(message: string) {
     try {
-      const logger = this.#debug ? getLogger("debug") : getLogger();
+      const logger = this.opts?.debug ? getLogger("debug") : getLogger();
       if (!this.#chatSession) {
         this.startChat();
       }
@@ -104,15 +109,23 @@ export class Futago {
 
       this.#history.push({ role: "model", parts: text });
 
-      const lastHistory = await this.getHistory();
-      logger.debug(lastHistory);
-      if (lastHistory.length > 0) {
-        if (lastHistory[lastHistory.length - 1].role === "user") {
-          lastHistory.pop();
+      const lastData = await getDb(this.db, this.chatTitle);
+      logger.debug(lastData);
+      if (lastData) {
+        const history = lastData.history;
+        if (history[history.length - 1].role === "user") {
+          history.pop();
         }
-        this.#history = lastHistory.concat(this.#history);
+        this.#history = history.concat(this.#history);
       }
-      await this.setHistory(this.#history);
+      await setDb(this.db, this.chatTitle, {
+        model: this.model,
+        generationConfig: this.opts.generationConfig,
+        safetySettings: this.opts.safetySettings,
+        humanPrompt: this.opts.humanPrompt,
+        aiPrompt: this.opts.aiPrompt,
+        history: this.#history,
+      });
     } catch (e) {
       console.error(`futago.ts`, e);
     }

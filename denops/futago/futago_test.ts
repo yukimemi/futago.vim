@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : futago_test.ts
 // Author      : yukimemi
-// Last Change : 2024/01/13 21:52:36.
+// Last Change : 2024/01/28 01:28:20.
 // =============================================================================
 
 import { Futago } from "./futago.ts";
@@ -11,7 +11,12 @@ Deno.test({
   name: "Test sendMessageStream()",
   fn: async () => {
     const db = await Deno.openKv();
-    const futago = new Futago("gemini-pro", db);
+    const futago = new Futago(
+      0,
+      "gemini-pro",
+      db,
+      "",
+    );
     futago.startChat();
     const result = futago.sendMessageStream("こんにちは！君の名は？");
     let response = "";
