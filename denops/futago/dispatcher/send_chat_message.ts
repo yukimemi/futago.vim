@@ -8,9 +8,9 @@ import * as option from "https://deno.land/x/denops_std@v5.3.0/option/mod.ts";
 import * as fn from "https://deno.land/x/denops_std@v5.3.0/function/mod.ts";
 import { Futago } from "../futago.ts";
 import { getNow } from "../util.ts";
-import { type Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
+import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { Semaphore } from "https://deno.land/x/async@v2.0.2/semaphore.ts";
+import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
 import { SEPARATOR } from "../consts.ts";
 import { getLastLineNumber } from "../util.ts";
 

@@ -17,9 +17,9 @@ import {
 } from "https://esm.sh/@google/generative-ai@0.1.3";
 import { getLogger } from "https://deno.land/std@0.213.0/log/mod.ts";
 import { getDb, setDb } from "./db.ts";
-import { Semaphore } from "https://deno.land/x/async@v2.0.2/semaphore.ts";
+import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
-import { join } from "https://deno.land/std@0.205.0/path/join.ts";
+import { join } from "https://deno.land/std@0.213.0/path/join.ts";
 
 export class Futago {
   #genAI: GoogleGenerativeAI;
