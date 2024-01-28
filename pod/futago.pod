@@ -62,15 +62,6 @@ let g:denops#server#deno_args = ['-q', '--no-lock', '--unstable-kv', '-A']
 
 =head1 Commands X<futago-commands>
 
-C<:FutagoStart [opener]>                                          X<:FutagoStart>
-
-Start Futago chat.
-Enter the prompt, save buffer, and the chat will be sent.
-
-[opener]: Optional. Default is "tabnew".
-
-Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
-
 C<:FutagoHistory>                                               X<:FutagoHistory>
 
 Show list of chat history with quickfix.
@@ -114,20 +105,48 @@ C<g:futago_generation_config>                       X<g:futago_generation_config
 [GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
 Default is no setting.
 
+C<g:futago_ai_prompt>                                       X<g:futago_ai_prompt>
+AI prompt.
+Default is `Gemini`.
+
+C<g:futago_human_prompt>                                 X<g:futago_human_prompt>
+Human prompt.
+Default is `You`.
+
+C<g:futago_opener>                                             X<g:futago_opener>
+Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
+Default is "tabnew".
+
+
 =head1 Functions X<futago-functions>
 
-C<futago#start_chat([opener], [history])>                    X<futago#start_chat>
+C<futago#start_chat([params])>                               X<futago#start_chat>
 
-Start Futago chat with args.
+Start Futago chat with params.
+params is dictionaly.
 
-[opener]: Default is "tabnew".
+=item [opener]: Default is "tabnew".
+
 Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
 
-[history]: List of chat history.
+=item [history]: List of chat history.
 
 example:
 [{"role": "user", "parts": "user prompt"}, {"role": "model", "parts": "model reply"}]]
 
+[Content[]](https://ai.google.dev/api/rest/v1beta/Content)
+
+=item [safetySettings]: Default is no setting.
+
+[SafetySetting](https://ai.google.dev/api/rest/v1beta/SafetySetting)
+
+=item [generationConfig]: Default is no setting.
+
+[GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
+
+=item [aiPrompt]: Default is `Gemini`.
+
+=item [humanPrompt]: Default is `You`.
 
 =head1 Example X<futago-example>
 
@@ -147,8 +166,14 @@ let g:futago_generation_config = {
   \   "temperature": 0.9,
   \   "maxOutputTokens": 256,
   \ }
-
-nnoremap <Leader>Fc <Cmd>call futago#start_chat("vsplit", [{"role": "user", "parts": "僕の名前は yukimemi"}, {"role": "model", "parts": "了解！覚えておくね"}])<cr>
+nnoremap <Leader>fc <Cmd>call futago#start_chat({
+  \ "opener": "vsplit",
+  \ "history": [
+  \   {"role": "user", "parts": "僕の名前は yukimemi"},
+  \   {"role": "model", "parts": "了解！覚えておくね"}
+  \ ],
+  \ "humanPrompt": "yukimemi"
+  \ })<cr>
 
 =end vim
 

@@ -46,15 +46,6 @@ let g:denops#server#deno_args = ['-q', '--no-lock', '--unstable-kv', '-A']
 
 # Commands 
 
-`:FutagoStart [opener]`                                          
-
-Start Futago chat.
-Enter the prompt, save buffer, and the chat will be sent.
-
-[opener]: Optional. Default is "tabnew".
-
-Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
-
 `:FutagoHistory`                                               
 
 Show list of chat history with quickfix.
@@ -98,20 +89,42 @@ Default is no setting.
 [GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
 Default is no setting.
 
+`g:futago_ai_prompt`                                       
+AI prompt.
+Default is `Gemini`.
+
+`g:futago_human_prompt`                                 
+Human prompt.
+Default is `You`.
+
+`g:futago_opener`                                             
+Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
+Default is "tabnew".
+
 # Functions 
 
-`futago#start_chat([opener], [history])`                    
+`futago#start_chat([params])`                               
 
-Start Futago chat with args.
+Start Futago chat with params.
+params is dictionaly.
 
-[opener]: Default is "tabnew".
+- [opener]: Default is "tabnew".
 Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
 
-[history]: List of chat history.
-
+- [history]: List of chat history.
 example:
 [{"role": "user", "parts": "user prompt"}, {"role": "model", "parts": "model reply"}]]
 
+[Content[]](https://ai.google.dev/api/rest/v1beta/Content)
+
+- [safetySettings]: Default is no setting.
+[SafetySetting](https://ai.google.dev/api/rest/v1beta/SafetySetting)
+
+- [generationConfig]: Default is no setting.
+[GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
+
+- [aiPrompt]: Default is `Gemini`.
+- [humanPrompt]: Default is `You`.
 # Example 
 
 ```vim
@@ -129,8 +142,14 @@ let g:futago_generation_config = {
   \   "temperature": 0.9,
   \   "maxOutputTokens": 256,
   \ }
-
-nnoremap <Leader>Fc <Cmd>call futago#start_chat("vsplit", [{"role": "user", "parts": "僕の名前は yukimemi"}, {"role": "model", "parts": "了解！覚えておくね"}])<cr>
+nnoremap <Leader>fc <Cmd>call futago#start_chat({
+  \ "opener": "vsplit",
+  \ "history": [
+  \   {"role": "user", "parts": "僕の名前は yukimemi"},
+  \   {"role": "model", "parts": "了解！覚えておくね"}
+  \ ],
+  \ "humanPrompt": "yukimemi"
+  \ })<cr>
 ```
 
 # License 
