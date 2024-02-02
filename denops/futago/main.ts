@@ -8,19 +8,19 @@ import * as fn from "https://deno.land/x/denops_std@v5.3.0/function/mod.ts";
 import * as helper from "https://deno.land/x/denops_std@v5.3.0/helper/mod.ts";
 import * as autocmd from "https://deno.land/x/denops_std@v5.3.0/autocmd/mod.ts";
 import * as vars from "https://deno.land/x/denops_std@v5.3.0/variable/mod.ts";
-import { deepMerge } from "https://deno.land/std@0.213.0/collections/deep_merge.ts";
+import { deepMerge } from "https://deno.land/std@0.214.0/collections/deep_merge.ts";
 import type { Denops } from "https://deno.land/x/denops_std@v5.3.0/mod.ts";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
-import { ensureDir, ensureFile } from "https://deno.land/std@0.213.0/fs/mod.ts";
-import { dirname, join } from "https://deno.land/std@0.213.0/path/mod.ts";
+import { ensureDir, ensureFile } from "https://deno.land/std@0.214.0/fs/mod.ts";
+import { dirname, join } from "https://deno.land/std@0.214.0/path/mod.ts";
 import {
   ConsoleHandler,
   FileHandler,
   getLogger,
   RotatingFileHandler,
   setup,
-} from "https://deno.land/std@0.213.0/log/mod.ts";
-import { GenerationConfig, SafetySetting } from "https://esm.sh/@google/generative-ai@0.1.3";
+} from "https://deno.land/std@0.214.0/log/mod.ts";
+import { GenerationConfig, SafetySetting } from "https://esm.sh/@google/generative-ai@0.2.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 import { startChat, StartChatParamsSchema } from "./dispatcher/start_chat.ts";

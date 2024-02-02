@@ -4,7 +4,7 @@
 // Last Change : 2024/01/28 13:12:05.
 // =============================================================================
 
-import * as datetime from "https://deno.land/std@0.213.0/datetime/mod.ts";
+import * as datetime from "https://deno.land/std@0.214.0/datetime/mod.ts";
 import sanitize from "https://esm.sh/sanitize-filename@1.6.3";
 import {
   ChatSession,
@@ -14,12 +14,12 @@ import {
   InputContent,
   SafetySetting,
   StartChatParams,
-} from "https://esm.sh/@google/generative-ai@0.1.3";
-import { getLogger } from "https://deno.land/std@0.213.0/log/mod.ts";
+} from "https://esm.sh/@google/generative-ai@0.2.0";
+import { getLogger } from "https://deno.land/std@0.214.0/log/mod.ts";
 import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
-import { join } from "https://deno.land/std@0.213.0/path/join.ts";
+import { join } from "https://deno.land/std@0.214.0/path/join.ts";
 
 export class Futago {
   #genAI: GoogleGenerativeAI;
