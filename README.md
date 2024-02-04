@@ -4,11 +4,11 @@ Google gemini chat for Vim / Neovim.
 
 ![futago](https://github.com/yukimemi/futago.vim/assets/6442108/29e371e3-c16e-4b94-8a0c-67a37e26f7b5)
 
-# Features 
+# Features
 
 This plugin is a Google gemini chat for Vim / Neovim.
 
-# Installation 
+# Installation
 
 If you use [folke/lazy.nvim](https://github.com/folke/lazy.nvim).
 
@@ -28,10 +28,11 @@ If you use [yukimemi/dvpm](https://github.com/yukimemi/dvpm).
 dvpm.add({ url: "yukimemi/futago.vim" });
 ```
 
-# Requirements 
+# Requirements
 
 - [Deno - A modern runtime for JavaScript and TypeScript](https://deno.land/)
 - [vim-denops/denops.vim: 🐜 An ecosystem of Vim/Neovim which allows developers to write cross-platform plugins in Deno](https://github.com/vim-denops/denops.vim)
+
 Using Deno.KV, you need the `--unstable-kv` flag.
 Please specify as below.
 
@@ -40,100 +41,124 @@ let g:denops#server#deno_args = ['-q', '--no-lock', '--unstable-kv', '-A']
 ```
 
 - Environment: `GEMINI_API_KEY`
+
 [Get API key](https://ai.google.dev/)
 
-# Usage 
+# Usage
 
-# Commands 
+# Commands
 
-`:FutagoHistory`                                               
+`:FutagoHistory`
 
 Show list of chat history with quickfix.
 If you open a past chat file, you can start chatting based on the automatically saved history.
 
-# Config 
+# Config
 
 No settings are required. However, the following settings can be made if necessary.
 
-`g:futago_debug`                                               
+`g:futago_debug`
+
 Enable debug messages.
+
 Default is v:false
 
-`g:futago_chat_path`                                       
+`g:futago_chat_path`
+
 Path to save chat files.
+
 Default is `xdg.cache()/futago/chat`
 
 https://deno.land/x/xdg/src/mod.deno.ts
 
 If you open a past chat file saved in g:futago_chat_path, you can start chatting based on the automatically saved chat history.
 
-`g:futago_log_file`                                         
+`g:futago_log_file`
+
 Path to save log files.
+
 Default is `xdg.cache()/futago/log`
 
 https://deno.land/x/xdg/src/mod.deno.ts
 
-`g:futago_history_db`                                     
+`g:futago_history_db`
+
 Path to save history db (Deno KV).
+
 Default is `xdg.cache()/futago/db/history.db`
 
 https://deno.land/x/xdg/src/mod.deno.ts
 
-`g:futago_safety_settings`                           
+`g:futago_safety_settings`
 
 [SafetySetting](https://ai.google.dev/api/rest/v1beta/SafetySetting)
+
 Default is no setting.
 
-`g:futago_generation_config`                       
+`g:futago_generation_config`
 
 [GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
+
 Default is no setting.
 
-`g:futago_ai_prompt`                                       
+`g:futago_ai_prompt`
+
 AI prompt.
+
 Default is `Gemini`.
 
-`g:futago_human_prompt`                                 
+`g:futago_human_prompt`
+
 Human prompt.
+
 Default is `You`.
 
-`g:futago_opener`                                             
+`g:futago_opener`
+
 Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
+
 Default is "tabnew".
 
-# Functions 
+# Functions
 
-`futago#start_chat([params])`                               
+`futago#start_chat([params])`
 
 Start Futago chat with params.
 params is dictionaly.
 
 - [opener]: Default is "tabnew".
+
 Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
 
 - [history]: List of chat history.
+
 example:
+
 [{"role": "user", "parts": "user prompt"}, {"role": "model", "parts": "model reply"}]]
 
 [Content[]](https://ai.google.dev/api/rest/v1beta/Content)
 
 - [safetySettings]: Default is no setting.
+
 [SafetySetting](https://ai.google.dev/api/rest/v1beta/SafetySetting)
 
 - [generationConfig]: Default is no setting.
+
 [GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
 
 - [aiPrompt]: Default is `Gemini`.
 - [humanPrompt]: Default is `You`.
-`futago#git_commit([params])`                               
+
+`futago#git_commit([params])`
 
 Generate a message for git commit based on the `git diff --cached` result.
 The generated message will be inserted at the current cursor position.
 
 - [prompt]: Default is [here](https://github.com/yukimemi/futago.vim/blob/main/denops/futago/consts.ts#L17).
+
 `git diff --cached` result will be appended to the prompt.
 
-# Example 
+# Example
 
 ```vim
 let g:futago_debug = v:true
@@ -161,7 +186,7 @@ nnoremap <Leader>fc <Cmd>call futago#start_chat({
 nnoremap <Leader>fg <Cmd>call futago#git_commit()<CR>
 ```
 
-# License 
+# License
 
 Licensed under MIT License.
 

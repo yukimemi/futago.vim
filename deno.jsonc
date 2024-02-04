@@ -21,11 +21,7 @@
     // git hooks
     "setup-hooks": "deno run --allow-read --allow-run https://pax.deno.dev/kawarimidoll/deno-dev-template/scripts/setup-hooks.ts",
     "pre-commit": "deno task doc && deno run --allow-read --allow-env --allow-run --allow-write https://pax.deno.dev/kawarimidoll/deno-dev-template/scripts/lint-staged.ts",
-    "pre-push": "deno task ci",
-    // doc with podium. (Change plugin name.)
-    "doc": "deno task markdown && deno task vimdoc",
-    "markdown": "deno run --allow-net --allow-read --allow-write https://pax.deno.dev/Omochice/podeno/cli.ts markdown --in ./pod/futago.pod --out ./README.md",
-    "vimdoc": "deno run --allow-net --allow-read --allow-write https://pax.deno.dev/Omochice/podeno/cli.ts vimdoc --in ./pod/futago.pod --out ./doc/futago.txt"
+    "pre-push": "deno task ci"
   },
   "fmt": {
     "useTabs": false,
