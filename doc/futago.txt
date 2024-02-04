@@ -141,6 +141,14 @@ example:
 
 - [aiPrompt]: Default is `Gemini`.
 - [humanPrompt]: Default is `You`.
+`futago#git_commit([params])`                               *futago#start_chat*
+
+Generate a message for git commit based on the `git diff --cached` result.
+The generated message will be inserted at the current cursor position.
+
+- [prompt]: Default is here |https://github.com/yukimemi/futago.vim/blob/main/denops/futago/consts.ts#L17|.
+`git diff --cached` result will be appended to the prompt.
+
 =============================================================================
 Example ~
                                                              *futago-example*
@@ -167,7 +175,8 @@ Example ~
 	  \   {"role": "model", "parts": "了解！覚えておくね"}
 	  \ ],
 	  \ "humanPrompt": "yukimemi"
-	  \ })<cr>
+	  \ })<CR>
+	nnoremap <Leader>fg <Cmd>call futago#git_commit()<CR>
 <
 
 =============================================================================

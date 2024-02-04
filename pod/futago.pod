@@ -148,6 +148,15 @@ example:
 
 =item [humanPrompt]: Default is `You`.
 
+C<futago#git_commit([params])>                               X<futago#start_chat>
+
+Generate a message for git commit based on the `git diff --cached` result.
+The generated message will be inserted at the current cursor position.
+
+=item [prompt]: Default is L<here|https://github.com/yukimemi/futago.vim/blob/main/denops/futago/consts.ts#L17>.
+
+`git diff --cached` result will be appended to the prompt.
+
 =head1 Example X<futago-example>
 
 =begin vim
@@ -173,7 +182,8 @@ nnoremap <Leader>fc <Cmd>call futago#start_chat({
   \   {"role": "model", "parts": "了解！覚えておくね"}
   \ ],
   \ "humanPrompt": "yukimemi"
-  \ })<cr>
+  \ })<CR>
+nnoremap <Leader>fg <Cmd>call futago#git_commit()<CR>
 
 =end vim
 
