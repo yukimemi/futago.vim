@@ -11,3 +11,11 @@ function! futago#start_chat(...) abort
   call futago#denops_notify("startChat", a:000)
 endfunction
 
+function! futago#open_history(...) abort
+  call futago#denops_notify("openHistory", a:000)
+endfunction
+
+function! futago#git_commit(...) abort
+  call futago#denops_notify("gitCommit", a:000)
+endfunction
+

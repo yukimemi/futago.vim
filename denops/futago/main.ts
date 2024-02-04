@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/01/28 13:13:15.
+// Last Change : 2024/02/03 23:39:53.
 // =============================================================================
 
 import * as fn from "https://deno.land/x/denops_std@v6.0.0/function/mod.ts";
@@ -25,6 +25,7 @@ import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 import { startChat, StartChatParamsSchema } from "./dispatcher/start_chat.ts";
 import { loadChat } from "./dispatcher/load_chat.ts";
+import { gitCommit, GitCommitParamsSchema } from "./dispatcher/git_commit.ts";
 import {
   DEFAULT_AI_PROMPT,
   DEFAULT_HUMAN_PROMPT,
@@ -167,6 +168,27 @@ export async function main(denops: Denops): Promise<void> {
 
     async openHistory(): Promise<void> {
       await openHistory(denops, { chatDir });
+    },
+
+    async gitCommit(params: unknown): Promise<void> {
+      const parsed = GitCommitParamsSchema.omit({ db: true }).safeParse(params);
+      if (parsed.success) {
+        await gitCommit(
+          denops,
+          deepMerge(
+            { db, model, safetySettings, generationConfig, debug },
+            parsed.data,
+          ),
+        );
+      } else {
+        await gitCommit(denops, {
+          db,
+          model,
+          safetySettings,
+          generationConfig,
+          debug,
+        });
+      }
     },
   };
 

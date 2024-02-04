@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : send_chat_message.ts
 // Author      : yukimemi
-// Last Change : 2024/01/28 01:57:11.
+// Last Change : 2024/02/03 20:00:01.
 // =============================================================================
 
 import * as option from "https://deno.land/x/denops_std@v6.0.0/option/mod.ts";
@@ -29,7 +29,8 @@ export async function sendChatMessage(
     await futago.semaphore.lock(async () => {
       const lines = await fn.getbufline(denops, futago.bufnr, 1, "$");
       const startLineIndex = lines.findLastIndex((_, index, obj) =>
-        obj[index].startsWith(futago.opts.humanPrompt) && obj[index + 1] === SEPARATOR
+        obj[index].startsWith(z.string().parse(futago.opts.humanPrompt)) &&
+        obj[index + 1] === SEPARATOR
       ) + 2;
 
       const prompt = lines.slice(startLineIndex);

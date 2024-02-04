@@ -1,10 +1,11 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2024/01/28 13:12:05.
+// Last Change : 2024/02/04 00:00:34.
 // =============================================================================
 
 import * as datetime from "https://deno.land/std@0.214.0/datetime/mod.ts";
+import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
 import sanitize from "https://esm.sh/sanitize-filename@1.6.3";
 import {
   ChatSession,
@@ -20,6 +21,7 @@ import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
 import { join } from "https://deno.land/std@0.214.0/path/join.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 export class Futago {
   #genAI: GoogleGenerativeAI;
@@ -35,12 +37,12 @@ export class Futago {
     public bufnr: number,
     private model: string = DEFAULT_MODEL,
     private db: Deno.Kv,
-    private chatDir: string,
+    private chatDir: string = join(xdg.cache(), "futago", "chat"),
     public opts: {
       safetySettings?: SafetySetting[];
       generationConfig?: GenerationConfig;
-      humanPrompt: string;
-      aiPrompt: string;
+      humanPrompt?: string;
+      aiPrompt?: string;
       debug: boolean;
     } = {
       safetySettings: undefined,
@@ -67,6 +69,14 @@ export class Futago {
       this.#history = startChatParams.history;
     }
     this.#chatSession = this.#model.startChat(startChatParams);
+  }
+
+  public async generateContent(prompt: string): Promise<string> {
+    const result = await this.#model.generateContent(prompt);
+    if (result.response) {
+      return result.response.text();
+    }
+    throw new Error(`No response: ${prompt}`);
   }
 
   public async createChatTitle(message: string): Promise<void> {
@@ -122,8 +132,8 @@ export class Futago {
         model: this.model,
         generationConfig: this.opts.generationConfig,
         safetySettings: this.opts.safetySettings,
-        humanPrompt: this.opts.humanPrompt,
-        aiPrompt: this.opts.aiPrompt,
+        humanPrompt: z.string().parse(this.opts.humanPrompt),
+        aiPrompt: z.string().parse(this.opts.aiPrompt),
         history: this.#history,
       });
     } catch (e) {
