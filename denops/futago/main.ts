@@ -4,12 +4,12 @@
 // Last Change : 2024/01/28 13:13:15.
 // =============================================================================
 
-import * as fn from "https://deno.land/x/denops_std@v5.3.0/function/mod.ts";
-import * as helper from "https://deno.land/x/denops_std@v5.3.0/helper/mod.ts";
-import * as autocmd from "https://deno.land/x/denops_std@v5.3.0/autocmd/mod.ts";
-import * as vars from "https://deno.land/x/denops_std@v5.3.0/variable/mod.ts";
+import * as fn from "https://deno.land/x/denops_std@v6.0.0/function/mod.ts";
+import * as helper from "https://deno.land/x/denops_std@v6.0.0/helper/mod.ts";
+import * as autocmd from "https://deno.land/x/denops_std@v6.0.0/autocmd/mod.ts";
+import * as vars from "https://deno.land/x/denops_std@v6.0.0/variable/mod.ts";
 import { deepMerge } from "https://deno.land/std@0.214.0/collections/deep_merge.ts";
-import type { Denops } from "https://deno.land/x/denops_std@v5.3.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_std@v6.0.0/mod.ts";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
 import { ensureDir, ensureFile } from "https://deno.land/std@0.214.0/fs/mod.ts";
 import { dirname, join } from "https://deno.land/std@0.214.0/path/mod.ts";
