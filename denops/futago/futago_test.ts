@@ -5,7 +5,7 @@
 // =============================================================================
 
 import { Futago } from "./futago.ts";
-import { assertStringIncludes } from "https://deno.land/std@0.215.0/assert/assert_string_includes.ts";
+import { assertStringIncludes } from "https://deno.land/std@0.216.0/assert/assert_string_includes.ts";
 
 Deno.test({
   name: "Test sendMessageStream()",
