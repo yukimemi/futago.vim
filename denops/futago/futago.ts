@@ -4,7 +4,7 @@
 // Last Change : 2024/02/04 00:00:34.
 // =============================================================================
 
-import * as datetime from "https://deno.land/std@0.215.0/datetime/mod.ts";
+import * as datetime from "https://deno.land/std@0.216.0/datetime/mod.ts";
 import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
 import sanitize from "https://esm.sh/sanitize-filename@1.6.3";
 import {
@@ -16,11 +16,11 @@ import {
   SafetySetting,
   StartChatParams,
 } from "https://esm.sh/@google/generative-ai@0.2.1";
-import { getLogger } from "https://deno.land/std@0.215.0/log/mod.ts";
+import { getLogger } from "https://deno.land/std@0.216.0/log/mod.ts";
 import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
-import { join } from "https://deno.land/std@0.215.0/path/join.ts";
+import { join } from "https://deno.land/std@0.216.0/path/join.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 export class Futago {
