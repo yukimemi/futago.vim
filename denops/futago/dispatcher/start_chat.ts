@@ -4,9 +4,9 @@
 // Last Change : 2024/01/28 11:29:27.
 // =============================================================================
 
-import * as batch from "https://deno.land/x/denops_std@v6.0.1/batch/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v6.0.1/buffer/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v6.0.1/option/mod.ts";
+import * as batch from "https://deno.land/x/denops_std@v6.1.0/batch/mod.ts";
+import * as buffer from "https://deno.land/x/denops_std@v6.1.0/buffer/mod.ts";
+import * as option from "https://deno.land/x/denops_std@v6.1.0/option/mod.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
 import { HistorySchema } from "../schema/history.ts";

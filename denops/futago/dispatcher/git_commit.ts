@@ -4,7 +4,7 @@
 // Last Change : 2024/02/04 20:29:33.
 // =============================================================================
 
-import * as fn from "https://deno.land/x/denops_std@v6.0.1/function/mod.ts";
+import * as fn from "https://deno.land/x/denops_std@v6.1.0/function/mod.ts";
 import { Futago } from "../futago.ts";
 import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
