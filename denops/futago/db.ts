@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : db.ts
 // Author      : yukimemi
-// Last Change : 2024/03/02 14:31:30.
+// Last Change : 2024/03/02 15:55:44.
 // =============================================================================
 
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
@@ -48,7 +48,7 @@ export async function setDb(db: Deno.Kv, key: string, record: Record): Promise<v
     humanPrompt: record.humanPrompt,
     aiPrompt: record.aiPrompt,
   });
-  record.history.forEach(async (inputContent, index) => {
+  for (const [index, inputContent] of record.history.entries()) {
     await db.set([key, "history", index], inputContent);
-  });
+  }
 }
