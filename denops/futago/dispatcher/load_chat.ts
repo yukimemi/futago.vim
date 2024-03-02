@@ -4,14 +4,14 @@
 // Last Change : 2024/01/28 09:59:55.
 // =============================================================================
 
-import * as batch from "https://deno.land/x/denops_std@v6.1.0/batch/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@v6.1.0/function/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v6.1.0/option/mod.ts";
+import * as batch from "https://deno.land/x/denops_std@v6.2.0/batch/mod.ts";
+import * as fn from "https://deno.land/x/denops_std@v6.2.0/function/mod.ts";
+import * as option from "https://deno.land/x/denops_std@v6.2.0/option/mod.ts";
 import { Futago } from "../futago.ts";
 import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { getDb } from "../db.ts";
-import { basename, extname } from "https://deno.land/std@0.217.0/path/mod.ts";
+import { basename, extname } from "https://deno.land/std@0.218.2/path/mod.ts";
 
 export const loadChatParamsSchema = z.object({
   bufnr: z.number(),
