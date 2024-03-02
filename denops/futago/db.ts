@@ -1,18 +1,15 @@
 // =============================================================================
 // File        : db.ts
 // Author      : yukimemi
-// Last Change : 2024/01/28 10:24:09.
+// Last Change : 2024/03/02 14:31:30.
 // =============================================================================
 
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { GenerationConfigSchema } from "./schema/generation_config.ts";
 import { SafetySettingsSchema } from "./schema/safety_settings.ts";
-import { HistorySchema } from "./schema/history.ts";
+import { HistorySchema, InputContentSchema } from "./schema/history.ts";
 
-export const KvKeySchema = z.string();
-export type KvKey = z.infer<typeof KvKeySchema>;
-
-export const KvValueSchema = z.object({
+export const RecordSchema = z.object({
   model: z.string(),
   generationConfig: GenerationConfigSchema.optional(),
   safetySettings: SafetySettingsSchema.optional(),
@@ -20,25 +17,38 @@ export const KvValueSchema = z.object({
   aiPrompt: z.string(),
   history: HistorySchema,
 });
-export type KvValue = z.infer<typeof KvValueSchema>;
+export type Record = z.infer<typeof RecordSchema>;
 
-export async function getDb(db: Deno.Kv, key: KvKey): Promise<KvValue | undefined> {
-  const lastData = await db.get([key]);
+export const RecordMasterSchema = RecordSchema.omit({
+  history: true,
+});
+export type RecordMaster = z.infer<typeof RecordMasterSchema>;
+
+export async function getDb(db: Deno.Kv, key: string): Promise<Record | undefined> {
+  const lastData = await db.get([key, "master"]);
   if (lastData.value) {
-    const parsed = KvValueSchema.safeParse(lastData.value);
+    const parsed = RecordMasterSchema.safeParse(lastData.value);
     if (parsed.success) {
-      return parsed.data;
+      const record: Record = { history: [], ...parsed.data };
+      const history = db.list({ prefix: [key, "history"] });
+      for await (const h of history) {
+        const inputContent = InputContentSchema.parse(h.value);
+        record.history.push(inputContent);
+      }
+      return record;
     }
   }
 }
 
-export async function setDb(db: Deno.Kv, key: KvKey, value: KvValue): Promise<void> {
-  await db.set([key], {
-    model: value.model,
-    generationConfig: value.generationConfig,
-    safetySettings: value.safetySettings,
-    humanPrompt: value.humanPrompt,
-    aiPrompt: value.aiPrompt,
-    history: value.history,
+export async function setDb(db: Deno.Kv, key: string, record: Record): Promise<void> {
+  await db.set([key, "master"], {
+    model: record.model,
+    generationConfig: record.generationConfig,
+    safetySettings: record.safetySettings,
+    humanPrompt: record.humanPrompt,
+    aiPrompt: record.aiPrompt,
+  });
+  record.history.forEach(async (inputContent, index) => {
+    await db.set([key, "history", index], inputContent);
   });
 }
