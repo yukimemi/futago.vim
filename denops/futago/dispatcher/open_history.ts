@@ -4,8 +4,8 @@
 // Last Change : 2024/01/28 01:47:40.
 // =============================================================================
 
-import * as batch from "https://deno.land/x/denops_std@v6.2.0/batch/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@v6.2.0/function/mod.ts";
+import * as batch from "https://deno.land/x/denops_std@v6.3.0/batch/mod.ts";
+import * as fn from "https://deno.land/x/denops_std@v6.3.0/function/mod.ts";
 import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { walk } from "https://deno.land/std@0.218.2/fs/walk.ts";

@@ -5,7 +5,7 @@
 // =============================================================================
 
 import * as datetime from "https://deno.land/std@0.218.2/datetime/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@v6.2.0/function/mod.ts";
+import * as fn from "https://deno.land/x/denops_std@v6.3.0/function/mod.ts";
 import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 
 export function getNow(): string {
