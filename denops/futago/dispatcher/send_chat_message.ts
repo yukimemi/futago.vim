@@ -4,8 +4,8 @@
 // Last Change : 2024/02/03 20:00:01.
 // =============================================================================
 
-import * as option from "https://deno.land/x/denops_std@v6.2.0/option/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@v6.2.0/function/mod.ts";
+import * as option from "https://deno.land/x/denops_std@v6.3.0/option/mod.ts";
+import * as fn from "https://deno.land/x/denops_std@v6.3.0/function/mod.ts";
 import { Futago } from "../futago.ts";
 import { getNow } from "../util.ts";
 import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
