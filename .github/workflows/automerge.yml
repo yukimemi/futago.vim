@@ -1,3 +1,9 @@
+# =============================================================================
+# File        : automerge.yml
+# Author      : yukimemi
+# Last Change : 2024/07/06 21:32:33.
+# =============================================================================
+
 name: automerge
 
 on:
@@ -9,9 +15,6 @@ on:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    env:
-      GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
-
     steps:
       - name: Setup repo
         uses: actions/checkout@v3
