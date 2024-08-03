@@ -21,7 +21,7 @@ import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
 import { join } from "https://deno.land/std@0.224.0/path/join.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 
 export class Futago {
   #genAI: GoogleGenerativeAI;

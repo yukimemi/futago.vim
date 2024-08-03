@@ -7,7 +7,7 @@
 import * as fn from "https://deno.land/x/denops_std@v6.5.1/function/mod.ts";
 import { Futago } from "../futago.ts";
 import { type Denops } from "https://deno.land/x/denops_core@v6.1.0/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 import { DEFAULT_MODEL, GIT_COMMIT_PROMPT } from "../consts.ts";
 import { SafetySettingsSchema } from "../schema/safety_settings.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";

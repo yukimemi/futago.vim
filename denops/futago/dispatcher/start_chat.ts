@@ -14,7 +14,7 @@ import { OpenerSchema } from "../schema/opener.ts";
 import { SafetySettingsSchema } from "../schema/safety_settings.ts";
 import { getNow } from "../util.ts";
 import { type Denops } from "https://deno.land/x/denops_core@v6.1.0/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL, SEPARATOR } from "../consts.ts";
 
 export const StartChatParamsSchema = z.object({

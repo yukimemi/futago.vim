@@ -9,7 +9,7 @@ import * as fn from "https://deno.land/x/denops_std@v6.5.1/function/mod.ts";
 import { Futago } from "../futago.ts";
 import { getNow } from "../util.ts";
 import { type Denops } from "https://deno.land/x/denops_core@v6.1.0/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
 import { SEPARATOR } from "../consts.ts";
 import { getLastLineNumber } from "../util.ts";

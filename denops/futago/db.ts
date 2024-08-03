@@ -4,7 +4,7 @@
 // Last Change : 2024/03/02 15:55:44.
 // =============================================================================
 
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 import { GenerationConfigSchema } from "./schema/generation_config.ts";
 import { SafetySettingsSchema } from "./schema/safety_settings.ts";
 import { HistorySchema, InputContentSchema } from "./schema/history.ts";

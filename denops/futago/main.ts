@@ -21,7 +21,7 @@ import {
   setup,
 } from "https://deno.land/std@0.224.0/log/mod.ts";
 import { GenerationConfig, SafetySetting } from "https://esm.sh/@google/generative-ai@0.2.1";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 
 import { startChat, StartChatParamsSchema } from "./dispatcher/start_chat.ts";
 import { loadChat } from "./dispatcher/load_chat.ts";
