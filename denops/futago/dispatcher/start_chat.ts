@@ -4,17 +4,17 @@
 // Last Change : 2024/01/28 11:29:27.
 // =============================================================================
 
-import * as batch from "https://deno.land/x/denops_std@v6.3.0/batch/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v6.3.0/buffer/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v6.3.0/option/mod.ts";
+import * as batch from "https://deno.land/x/denops_std@v6.5.1/batch/mod.ts";
+import * as buffer from "https://deno.land/x/denops_std@v6.5.1/buffer/mod.ts";
+import * as option from "https://deno.land/x/denops_std@v6.5.1/option/mod.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
 import { HistorySchema } from "../schema/history.ts";
 import { OpenerSchema } from "../schema/opener.ts";
 import { SafetySettingsSchema } from "../schema/safety_settings.ts";
 import { getNow } from "../util.ts";
-import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { type Denops } from "https://deno.land/x/denops_core@v6.1.0/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL, SEPARATOR } from "../consts.ts";
 
 export const StartChatParamsSchema = z.object({
