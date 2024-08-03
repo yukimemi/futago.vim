@@ -1,0 +1,23 @@
+{
+  "tasks": {
+    "test": "deno test --allow-env --allow-read --allow-net --allow-none",
+    "cov": "deno task test --coverage=cov_profile; deno coverage cov_profile",
+    "lint": "deno lint --ignore=cov_profile",
+    "fmt": "deno fmt --ignore=cov_profile",
+    "check": "deno check ./**/*.ts",
+    "ci": "deno task check && deno task lint && deno task fmt --check && deno task test",
+    "update": "deno run --allow-env --allow-read --allow-write --allow-run --allow-net jsr:@molt/cli ./**/*.ts",
+    "update:commit": "deno task -q update --commit --prefix 'chore:' --pre-commit=fmt,lint"
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "singleQuote": false,
+    "include": ["denops"]
+  },
+  "lint": {
+    "include": ["denops"]
+  },
+  "lock": false
+}
