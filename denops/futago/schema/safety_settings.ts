@@ -5,6 +5,6 @@
 // =============================================================================
 
 import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
-import { SafetySetting } from "https://esm.sh/@google/generative-ai@0.2.1";
+import { SafetySetting } from "https://esm.sh/@google/generative-ai@0.16.0";
 
 export const SafetySettingsSchema = z.array(z.record(z.any()).transform((v) => v as SafetySetting));

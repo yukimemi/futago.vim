@@ -15,7 +15,7 @@ import {
   InputContent,
   SafetySetting,
   StartChatParams,
-} from "https://esm.sh/@google/generative-ai@0.2.1";
+} from "https://esm.sh/@google/generative-ai@0.16.0";
 import { getLogger } from "https://deno.land/std@0.224.0/log/mod.ts";
 import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
