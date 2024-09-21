@@ -1,7 +1,7 @@
 # =============================================================================
 # File        : molt.yml
 # Author      : yukimemi
-# Last Change : 2024/09/08 20:11:09.
+# Last Change : 2024/09/21 15:46:08.
 # =============================================================================
 
 name: molt
@@ -38,3 +38,5 @@ jobs:
         with:
           labels: automerge
           token: ${{ steps.app-token.outputs.token }}
+          config: false
+          source: "**/*.ts"
