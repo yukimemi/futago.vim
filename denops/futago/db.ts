@@ -1,13 +1,13 @@
 // =============================================================================
 // File        : db.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 18:51:26.
+// Last Change : 2024/11/03 00:06:34.
 // =============================================================================
 
 import { z } from "npm:zod@3.23.8";
 import { GenerationConfigSchema } from "./schema/generation_config.ts";
 import { SafetySettingsSchema } from "./schema/safety_settings.ts";
-import { HistorySchema, InputContentSchema } from "./schema/history.ts";
+import { ContentSchema, HistorySchema } from "./schema/history.ts";
 
 export const RecordSchema = z.object({
   model: z.string(),
@@ -32,7 +32,7 @@ export async function getDb(db: Deno.Kv, key: string): Promise<Record | undefine
       const record: Record = { history: [], ...parsed.data };
       const history = db.list({ prefix: [key, "history"] });
       for await (const h of history) {
-        const inputContent = InputContentSchema.parse(h.value);
+        const inputContent = ContentSchema.parse(h.value);
         record.history.push(inputContent);
       }
       return record;

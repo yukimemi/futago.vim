@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 19:17:43.
+// Last Change : 2024/11/03 00:07:10.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.3.0/function";
@@ -20,7 +20,7 @@ import {
   RotatingFileHandler,
   setup,
 } from "jsr:@std/log@0.224.9";
-import { GenerationConfig, SafetySetting } from "https://esm.sh/@google/generative-ai@0.2.1";
+import { GenerationConfig, SafetySetting } from "npm:@google/generative-ai@0.21.0";
 import { z } from "npm:zod@3.23.8";
 
 import { startChat, StartChatParamsSchema } from "./dispatcher/start_chat.ts";

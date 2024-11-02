@@ -1,12 +1,12 @@
 // =============================================================================
 // File        : history.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 18:54:27.
+// Last Change : 2024/11/03 00:00:20.
 // =============================================================================
 
 import { z } from "npm:zod@3.23.8";
-import { InputContent } from "https://esm.sh/@google/generative-ai@0.2.1";
+import { Content } from "npm:@google/generative-ai@0.21.0";
 
-export const InputContentSchema = z.record(z.any()).transform((v) => v as InputContent);
-export const HistorySchema = z.array(z.record(z.any()).transform((v) => v as InputContent));
+export const ContentSchema = z.record(z.any()).transform((v) => v as Content);
+export const HistorySchema = z.array(z.record(z.any()).transform((v) => v as Content));
 export type History = z.infer<typeof HistorySchema>;

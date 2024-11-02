@@ -59,30 +59,30 @@ Options are "split", "vsplit", "tabnew", "edit", "new", "vnew".
 
 example:
 
-[{"role": "user", "parts": "user prompt"}, {"role": "model", "parts": "model reply"}]]
+[{"role": "user", "parts": [{ "text": "user prompt" }]}, {"role": "model", "parts": [{ "text": "model reply" }]}]
 
-[Content[]](https://ai.google.dev/api/rest/v1beta/Content)
+[Content[]](https://ai.google.dev/api/caching?#Content)
 
 - [safetySettings]: Default is no setting.
 
-[SafetySetting](https://ai.google.dev/api/rest/v1beta/SafetySetting)
+[SafetySetting](https://ai.google.dev/api/generate-content?#safetysetting)
 
 - [generationConfig]: Default is no setting.
 
-[GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
+[GenerationConfig](https://ai.google.dev/api/generate-content?#generationconfig)
 
 - [aiPrompt]: Default is `Gemini`.
+
 - [humanPrompt]: Default is `You`.
 
 ## `futago#git_commit([params])`
 
-Generate a message for git commit based on the `git diff --cached` result.
+Generate a message for git commit based on the `git diff --no-ext-diff --staged` result.
 The generated message will be inserted at the current cursor position.
 
-- [prompt]: Default is [here](https://github.com/yukimemi/futago.vim/blob/main/denops/futago/consts.ts#L17).
+- [prompt]: Default is [here](https://github.com/yukimemi/futago.vim/blob/main/denops/futago/consts.ts#L21).
 
-`git diff --cached` result will be appended to the prompt.
-
+`git diff --no-ext-diff --staged` result will be appended to the prompt.
 
 # Commands
 
@@ -104,6 +104,8 @@ Default is v:false
 - g:futago_model
 
 Default is "gemini-1.5-flash"
+
+[Model](https://ai.google.dev/gemini-api/docs/models/gemini?#model-variations)
 
 - `g:futago_chat_path`
 
@@ -133,13 +135,13 @@ See [@cross/dir - JSR](https://jsr.io/@cross/dir)
 
 - `g:futago_safety_settings`
 
-[SafetySetting](https://ai.google.dev/api/rest/v1beta/SafetySetting)
+[SafetySetting](https://ai.google.dev/api/generate-content?#safetysetting)
 
 Default is no setting.
 
 - `g:futago_generation_config`
 
-[GenerationConfig](https://ai.google.dev/api/rest/v1beta/GenerationConfig)
+[GenerationConfig](https://ai.google.dev/api/generate-content?#generationconfig)
 
 Default is no setting.
 
@@ -182,8 +184,8 @@ let g:futago_generation_config = {
 nnoremap <Leader>fc <Cmd>call futago#start_chat({
   \ "opener": "vsplit",
   \ "history": [
-  \   {"role": "user", "parts": "僕の名前は yukimemi"},
-  \   {"role": "model", "parts": "了解！覚えておくね"}
+  \   {"role": "user", "parts": [{ "text": "僕の名前は yukimemi" }]},
+  \   {"role": "model", "parts": [{ "text": "了解！覚えておくね" }]},
   \ ],
   \ "humanPrompt": "yukimemi"
   \ })<CR>

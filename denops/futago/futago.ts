@@ -1,20 +1,20 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 19:42:46.
+// Last Change : 2024/11/03 00:05:59.
 // =============================================================================
 
 import * as datetime from "jsr:@std/datetime@0.225.2";
-import sanitize from "https://esm.sh/sanitize-filename@1.6.3";
+import sanitize from "npm:sanitize-filename@1.6.3";
 import {
   ChatSession,
+  Content,
   GenerationConfig,
   GenerativeModel,
   GoogleGenerativeAI,
-  InputContent,
   SafetySetting,
   StartChatParams,
-} from "https://esm.sh/@google/generative-ai@0.2.1";
+} from "npm:@google/generative-ai@0.21.0";
 import { getLogger } from "jsr:@std/log@0.224.9";
 import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
@@ -26,7 +26,7 @@ export class Futago {
   #genAI: GoogleGenerativeAI;
   #model: GenerativeModel;
   #chatSession: ChatSession | undefined;
-  #history: InputContent[] = [];
+  #history: Content[] = [];
 
   public semaphore = new Semaphore(1);
   public chatTitle = "";
@@ -105,7 +105,7 @@ export class Futago {
         logger.debug(`Chat title: ${this.chatTitle}`);
       }
 
-      this.#history.push({ role: "user", parts: message });
+      this.#history.push({ role: "user", parts: [{ text: message }] });
       const result = await this.#chatSession.sendMessageStream(message);
       logger.debug({ result });
 
@@ -116,7 +116,7 @@ export class Futago {
         text += chunkText;
       }
 
-      this.#history.push({ role: "model", parts: text });
+      this.#history.push({ role: "model", parts: [{ text }] });
 
       const lastData = await getDb(this.db, this.chatTitle);
       logger.debug(lastData);
