@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : consts.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 19:41:56.
+// Last Change : 2024/11/02 20:45:30.
 // =============================================================================
 
 import { join } from "jsr:@std/path@1.0.8";
@@ -19,18 +19,6 @@ export const CACHE_DIR = join(await dir("cache"), "futago");
 export const SEPARATOR = "-------------";
 
 export const GIT_COMMIT_PROMPT = `
-Please make git commit messages for the following diff output.
-
-Each commit message must be one line starting with one of the following words.
-
-* feat: (new feature for the user, not a new feature for build script)
-* fix: (bug fix for the user, not a fix to a build script)
-* docs: (changes to the documentation)
-* style: (formatting, missing semi colons, etc; no production code change)
-* refactor: (refactoring production code, eg. renaming a variable)
-* test: (adding missing tests, refactoring tests; no production code change)
-* chore: (updating grunt tasks etc; no production code change)
-
-### diff
-
+You are an expert at following the Conventional Commit specification.
+Given the git diff listed below, please generate a commit message for me:
 `;

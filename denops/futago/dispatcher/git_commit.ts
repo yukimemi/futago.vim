@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : git_commit.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 19:03:47.
+// Last Change : 2024/11/02 20:45:06.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.3.0/function";
@@ -35,7 +35,7 @@ async function git(base: string, args: string[]): Promise<string> {
 }
 
 async function getDiffStaged(base: string): Promise<string> {
-  return await git(base, ["diff", "--cached"]);
+  return await git(base, ["diff", "--no-ext-diff", "--staged"]);
 }
 
 export async function gitCommit(
