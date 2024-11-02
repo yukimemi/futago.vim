@@ -73,6 +73,10 @@ No settings are required. However, the following settings can be made if necessa
 Enable debug messages.
 Default is v:false
 
+`g:futago_model`                                               *g:futago_model*
+Gemini API model.
+Default is "gemini-1.5-flash"
+
 `g:futago_chat_path`                                       *g:futago_chat_path*
 Path to save chat files.
 Default is `xdg.cache()/futago/chat`

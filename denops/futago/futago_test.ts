@@ -1,11 +1,13 @@
 // =============================================================================
 // File        : futago_test.ts
 // Author      : yukimemi
-// Last Change : 2024/03/02 14:53:45.
+// Last Change : 2024/11/02 18:44:13.
 // =============================================================================
 
 import { Futago } from "./futago.ts";
-import { assertStringIncludes } from "https://deno.land/std@0.219.1/assert/assert_string_includes.ts";
+import { assertStringIncludes } from "jsr:@std/assert@1.0.7";
+
+import { DEFAULT_MODEL } from "./consts.ts";
 
 Deno.test({
   name: "Test sendMessageStream()",
@@ -14,7 +16,7 @@ Deno.test({
     try {
       const futago = new Futago(
         0,
-        "gemini-pro",
+        DEFAULT_MODEL,
         db,
         "",
       );

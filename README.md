@@ -101,6 +101,10 @@ Enable debug messages.
 
 Default is v:false
 
+- g:futago_model
+
+Default is "gemini-1.5-flash"
+
 - `g:futago_chat_path`
 
 Path to save chat files.
@@ -161,6 +165,7 @@ Default is "tabnew".
 
 ```vim
 let g:futago_debug = v:true
+let g:futago_model = "gemini-1.5-pro"
 let g:futago_chat_path = '~/.cache/vim/futago/chat'
 let g:futago_log_file = '~/.cache/vim/futago/log/futago.log'
 let g:futago_history_db = '~/.cache/vim/futago/db/history.db'
