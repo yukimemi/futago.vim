@@ -1,7 +1,7 @@
 # =============================================================================
 # File        : molt.yml
 # Author      : yukimemi
-# Last Change : 2024/09/21 15:46:08.
+# Last Change : 2024/11/03 01:51:10.
 # =============================================================================
 
 name: molt
@@ -34,6 +34,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
       - run: deno task ci
+        env:
+          GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
       - uses: hasundue/molt-action@v1.0.2
         with:
           labels: automerge
