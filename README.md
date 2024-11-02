@@ -42,7 +42,7 @@ let g:denops#server#deno_args = ['-q', '--no-lock', '--unstable-kv', '-A']
 
 - Environment: `GEMINI_API_KEY`
 
-[Get API key](https://ai.google.dev/)
+See [Get API key](https://ai.google.dev/)
 
 # Functions
 
@@ -61,15 +61,15 @@ example:
 
 [{"role": "user", "parts": [{ "text": "user prompt" }]}, {"role": "model", "parts": [{ "text": "model reply" }]}]
 
-[Content[]](https://ai.google.dev/api/caching?#Content)
+See [Content[]](https://ai.google.dev/api/caching?#Content)
 
 - [safetySettings]: Default is no setting.
 
-[SafetySetting](https://ai.google.dev/api/generate-content?#safetysetting)
+See [SafetySetting](https://ai.google.dev/api/generate-content?#safetysetting)
 
 - [generationConfig]: Default is no setting.
 
-[GenerationConfig](https://ai.google.dev/api/generate-content?#generationconfig)
+See [GenerationConfig](https://ai.google.dev/api/generate-content?#generationconfig)
 
 - [aiPrompt]: Default is `Gemini`.
 
@@ -105,7 +105,8 @@ Default is v:false
 
 Default is "gemini-1.5-flash"
 
-[Model](https://ai.google.dev/gemini-api/docs/models/gemini?#model-variations)
+
+See [Model](https://ai.google.dev/gemini-api/docs/models/gemini?#model-variations)
 
 - `g:futago_chat_path`
 
@@ -135,13 +136,13 @@ See [@cross/dir - JSR](https://jsr.io/@cross/dir)
 
 - `g:futago_safety_settings`
 
-[SafetySetting](https://ai.google.dev/api/generate-content?#safetysetting)
+See [SafetySetting](https://ai.google.dev/api/generate-content?#safetysetting)
 
 Default is no setting.
 
 - `g:futago_generation_config`
 
-[GenerationConfig](https://ai.google.dev/api/generate-content?#generationconfig)
+See [GenerationConfig](https://ai.google.dev/api/generate-content?#generationconfig)
 
 Default is no setting.
 
