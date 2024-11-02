@@ -1,14 +1,14 @@
 // =============================================================================
 // File        : open_history.ts
 // Author      : yukimemi
-// Last Change : 2024/01/28 01:47:40.
+// Last Change : 2024/11/02 19:07:09.
 // =============================================================================
 
-import * as batch from "https://deno.land/x/denops_std@v6.3.0/batch/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@v6.3.0/function/mod.ts";
-import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { walk } from "https://deno.land/std@0.219.1/fs/walk.ts";
+import * as batch from "jsr:@denops/std@7.3.0/batch";
+import * as fn from "jsr:@denops/std@7.3.0/function";
+import type { Denops } from "jsr:@denops/std@7.3.0";
+import { walk } from "jsr:@std/fs@1.0.5";
+import { z } from "npm:zod@3.23.8";
 
 export const openHistoryParamsSchema = z.object({
   chatDir: z.string(),

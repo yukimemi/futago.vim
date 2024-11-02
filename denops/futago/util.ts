@@ -1,12 +1,12 @@
 // =============================================================================
 // File        : util.ts
 // Author      : yukimemi
-// Last Change : 2024/01/28 00:28:33.
+// Last Change : 2024/11/02 19:18:28.
 // =============================================================================
 
-import * as datetime from "https://deno.land/std@0.219.1/datetime/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@v6.3.0/function/mod.ts";
-import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
+import * as datetime from "jsr:@std/datetime@0.225.2";
+import * as fn from "jsr:@denops/std@7.3.0/function";
+import type { Denops } from "jsr:@denops/std@7.3.0";
 
 export function getNow(): string {
   return datetime.format(new Date(), "yyyy-MM-ddTHH-mm-ss.SSS");

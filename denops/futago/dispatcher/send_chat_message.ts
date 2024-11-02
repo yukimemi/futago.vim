@@ -1,16 +1,16 @@
 // =============================================================================
 // File        : send_chat_message.ts
 // Author      : yukimemi
-// Last Change : 2024/02/03 20:00:01.
+// Last Change : 2024/11/02 19:08:44.
 // =============================================================================
 
-import * as option from "https://deno.land/x/denops_std@v6.3.0/option/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@v6.3.0/function/mod.ts";
+import * as fn from "jsr:@denops/std@7.3.0/function";
+import * as option from "jsr:@denops/std@7.3.0/option";
 import { Futago } from "../futago.ts";
 import { getNow } from "../util.ts";
-import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
+import type { Denops } from "jsr:@denops/std@7.3.0";
+import { z } from "npm:zod@3.23.8";
+import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
 import { SEPARATOR } from "../consts.ts";
 import { getLastLineNumber } from "../util.ts";
 

@@ -1,27 +1,27 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/02/03 23:39:53.
+// Last Change : 2024/11/02 19:17:43.
 // =============================================================================
 
-import * as fn from "https://deno.land/x/denops_std@v6.3.0/function/mod.ts";
-import * as helper from "https://deno.land/x/denops_std@v6.3.0/helper/mod.ts";
-import * as autocmd from "https://deno.land/x/denops_std@v6.3.0/autocmd/mod.ts";
-import * as vars from "https://deno.land/x/denops_std@v6.3.0/variable/mod.ts";
-import { deepMerge } from "https://deno.land/std@0.219.1/collections/deep_merge.ts";
-import type { Denops } from "https://deno.land/x/denops_std@v6.3.0/mod.ts";
-import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
-import { ensureDir, ensureFile } from "https://deno.land/std@0.219.1/fs/mod.ts";
-import { dirname, join } from "https://deno.land/std@0.219.1/path/mod.ts";
+import * as fn from "jsr:@denops/std@7.3.0/function";
+import * as helper from "jsr:@denops/std@7.3.0/helper";
+import * as autocmd from "jsr:@denops/std@7.3.0/autocmd";
+import * as vars from "jsr:@denops/std@7.3.0/variable";
+import { deepMerge } from "jsr:@std/collections@1.0.9";
+import type { Denops } from "jsr:@denops/std@7.3.0";
+import { dir } from "jsr:@cross/dir@1.1.0";
+import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.5";
+import { dirname, join } from "jsr:@std/path@1.0.8";
 import {
   ConsoleHandler,
   FileHandler,
   getLogger,
   RotatingFileHandler,
   setup,
-} from "https://deno.land/std@0.219.1/log/mod.ts";
+} from "jsr:@std/log@0.224.9";
 import { GenerationConfig, SafetySetting } from "https://esm.sh/@google/generative-ai@0.2.1";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from "npm:zod@3.23.8";
 
 import { startChat, StartChatParamsSchema } from "./dispatcher/start_chat.ts";
 import { loadChat } from "./dispatcher/load_chat.ts";
@@ -40,9 +40,9 @@ import { openHistory } from "./dispatcher/open_history.ts";
 let debug = false;
 const futagos = new Map<number, Futago>();
 
-let chatDir = join(xdg.cache(), "futago", "chat");
-let logFile = join(xdg.cache(), "futago", "log", "futago.log");
-let historyDb = join(xdg.cache(), "futago", "db", "history.db");
+let chatDir = join(await dir("cache"), "futago", "chat");
+let logFile = join(await dir("cache"), "futago", "log", "futago.log");
+let historyDb = join(await dir("cache"), "futago", "db", "history.db");
 let model = DEFAULT_MODEL;
 let safetySettings: SafetySetting[];
 let generationConfig: GenerationConfig;

@@ -1,11 +1,10 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2024/03/02 15:55:51.
+// Last Change : 2024/11/02 19:42:46.
 // =============================================================================
 
-import * as datetime from "https://deno.land/std@0.219.1/datetime/mod.ts";
-import xdg from "https://deno.land/x/xdg@v10.6.0/src/mod.deno.ts";
+import * as datetime from "jsr:@std/datetime@0.225.2";
 import sanitize from "https://esm.sh/sanitize-filename@1.6.3";
 import {
   ChatSession,
@@ -16,12 +15,12 @@ import {
   SafetySetting,
   StartChatParams,
 } from "https://esm.sh/@google/generative-ai@0.2.1";
-import { getLogger } from "https://deno.land/std@0.219.1/log/mod.ts";
+import { getLogger } from "jsr:@std/log@0.224.9";
 import { getDb, setDb } from "./db.ts";
-import { Semaphore } from "https://deno.land/x/async@v2.1.0/semaphore.ts";
-import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
-import { join } from "https://deno.land/std@0.219.1/path/join.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
+import { CACHE_DIR, DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
+import { join } from "jsr:@std/path@1.0.8";
+import { z } from "npm:zod@3.23.8";
 
 export class Futago {
   #genAI: GoogleGenerativeAI;
@@ -37,7 +36,7 @@ export class Futago {
     public bufnr: number,
     private model: string = DEFAULT_MODEL,
     private db: Deno.Kv,
-    private chatDir: string = join(xdg.cache(), "futago", "chat"),
+    private chatDir: string = join(CACHE_DIR, "futago", "chat"),
     public opts: {
       safetySettings?: SafetySetting[];
       generationConfig?: GenerationConfig;

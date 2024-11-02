@@ -109,9 +109,9 @@ Default is "gemini-1.5-flash"
 
 Path to save chat files.
 
-Default is `xdg.cache()/futago/chat`
+Default is `(await dir("cache"))/futago/chat`
 
-https://deno.land/x/xdg/src/mod.deno.ts
+See [@cross/dir - JSR](https://jsr.io/@cross/dir)
 
 If you open a past chat file saved in g:futago_chat_path, you can start chatting based on the automatically saved chat history.
 
@@ -119,17 +119,17 @@ If you open a past chat file saved in g:futago_chat_path, you can start chatting
 
 Path to save log files.
 
-Default is `xdg.cache()/futago/log`
+Default is `(await dir("cache"))/futago/log`
 
-https://deno.land/x/xdg/src/mod.deno.ts
+See [@cross/dir - JSR](https://jsr.io/@cross/dir)
 
 - `g:futago_history_db`
 
 Path to save history db (Deno KV).
 
-Default is `xdg.cache()/futago/db/history.db`
+Default is `(await dir("cache"))/futago/db/history.db`
 
-https://deno.land/x/xdg/src/mod.deno.ts
+See [@cross/dir - JSR](https://jsr.io/@cross/dir)
 
 - `g:futago_safety_settings`
 

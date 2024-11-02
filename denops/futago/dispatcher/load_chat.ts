@@ -1,17 +1,16 @@
 // =============================================================================
 // File        : load_chat.ts
 // Author      : yukimemi
-// Last Change : 2024/01/28 09:59:55.
+// Last Change : 2024/11/02 19:34:38.
 // =============================================================================
 
-import * as batch from "https://deno.land/x/denops_std@v6.3.0/batch/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@v6.3.0/function/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v6.3.0/option/mod.ts";
+import * as batch from "jsr:@denops/std@7.3.0/batch";
+import * as fn from "jsr:@denops/std@7.3.0/function";
 import { Futago } from "../futago.ts";
-import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import type { Denops } from "jsr:@denops/std@7.3.0";
+import { z } from "npm:zod@3.23.8";
 import { getDb } from "../db.ts";
-import { basename, extname } from "https://deno.land/std@0.219.1/path/mod.ts";
+import { basename, extname } from "jsr:@std/path@1.0.8";
 
 export const loadChatParamsSchema = z.object({
   bufnr: z.number(),
@@ -56,12 +55,12 @@ export async function loadChat(
   futago.startChat({ history: lastDb.history });
 
   await batch.batch(denops, async () => {
-    await option.filetype.setBuffer(denops, bnr, "markdown");
-    await option.buftype.setBuffer(denops, bnr, "acwrite");
-    await option.buflisted.setBuffer(denops, bnr, true);
-    await option.swapfile.setBuffer(denops, bnr, false);
-    await option.wrap.setBuffer(denops, bnr, true);
-    await option.modified.setBuffer(denops, bnr, false);
+    await fn.setbufvar(denops, bnr, "&filetype", "markdown");
+    await fn.setbufvar(denops, bnr, "&buftype", "acwrite");
+    await fn.setbufvar(denops, bnr, "&buflisted", true);
+    await fn.setbufvar(denops, bnr, "&swapfile", false);
+    await fn.setbufvar(denops, bnr, "&wrap", true);
+    await fn.setbufvar(denops, bnr, "&modified", false);
   });
 
   const currentBufnr = await fn.bufnr(denops);

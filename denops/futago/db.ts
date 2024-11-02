@@ -1,10 +1,10 @@
 // =============================================================================
 // File        : db.ts
 // Author      : yukimemi
-// Last Change : 2024/03/02 15:55:44.
+// Last Change : 2024/11/02 18:51:26.
 // =============================================================================
 
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { z } from "npm:zod@3.23.8";
 import { GenerationConfigSchema } from "./schema/generation_config.ts";
 import { SafetySettingsSchema } from "./schema/safety_settings.ts";
 import { HistorySchema, InputContentSchema } from "./schema/history.ts";

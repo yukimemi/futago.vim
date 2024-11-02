@@ -1,21 +1,21 @@
 // =============================================================================
 // File        : start_chat.ts
 // Author      : yukimemi
-// Last Change : 2024/01/28 11:29:27.
+// Last Change : 2024/11/02 19:37:06.
 // =============================================================================
 
-import * as batch from "https://deno.land/x/denops_std@v6.3.0/batch/mod.ts";
-import * as buffer from "https://deno.land/x/denops_std@v6.3.0/buffer/mod.ts";
-import * as option from "https://deno.land/x/denops_std@v6.3.0/option/mod.ts";
+import * as batch from "jsr:@denops/std@7.3.0/batch";
+import * as buffer from "jsr:@denops/std@7.3.0/buffer";
+import * as fn from "jsr:@denops/std@7.3.0/function";
+import type { Denops } from "jsr:@denops/std@7.3.0";
+import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL, SEPARATOR } from "../consts.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
 import { HistorySchema } from "../schema/history.ts";
 import { OpenerSchema } from "../schema/opener.ts";
 import { SafetySettingsSchema } from "../schema/safety_settings.ts";
 import { getNow } from "../util.ts";
-import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL, SEPARATOR } from "../consts.ts";
+import { z } from "npm:zod@3.23.8";
 
 export const StartChatParamsSchema = z.object({
   model: z.string().default(DEFAULT_MODEL),
@@ -66,12 +66,13 @@ export async function startChat(
   }
 
   await batch.batch(denops, async () => {
-    await option.filetype.setBuffer(denops, buf.bufnr, "markdown");
-    await option.buftype.setBuffer(denops, buf.bufnr, "acwrite");
-    await option.buflisted.setBuffer(denops, buf.bufnr, true);
-    await option.swapfile.setBuffer(denops, buf.bufnr, false);
-    await option.wrap.setBuffer(denops, buf.bufnr, true);
-    await option.modified.setBuffer(denops, buf.bufnr, false);
+    await fn.setbufvar(denops, buf.bufnr, "&filetype", "markdown");
+    await fn.setbufvar(denops, buf.bufnr, "&buftype", "acwrite");
+    await fn.setbufvar(denops, buf.bufnr, "&buflisted", true);
+    await fn.setbufvar(denops, buf.bufnr, "&swapfile", false);
+    await fn.setbufvar(denops, buf.bufnr, "&wrap", true);
+    await fn.setbufvar(denops, buf.bufnr, "&modified", false);
+
     await buffer.replace(denops, buf.bufnr, [`${params.humanPrompt}: ${now}`, SEPARATOR, ""]);
   });
 
