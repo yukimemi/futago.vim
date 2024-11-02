@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : git_commit.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 20:45:06.
+// Last Change : 2024/11/02 23:41:19.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.3.0/function";
@@ -22,8 +22,9 @@ export const GitCommitParamsSchema = z.object({
 });
 export type GitCitCommitParams = z.infer<typeof GitCommitParamsSchema>;
 
-async function getGitRoot(): Promise<string> {
-  const cmd = new Deno.Command("git", { args: ["rev-parse", "--show-toplevel"] });
+async function getGitRoot(denops: Denops): Promise<string> {
+  const cwd = await fn.getcwd(denops);
+  const cmd = new Deno.Command("git", { args: ["rev-parse", "--show-toplevel"], cwd });
   const output = await cmd.output();
   return new TextDecoder().decode(output.stdout).trim();
 }
@@ -63,10 +64,9 @@ export async function gitCommit(
     },
   );
 
-  const diff = await getDiffStaged(await getGitRoot());
+  const diff = await getDiffStaged(await getGitRoot(denops));
   const p = (prompt ?? GIT_COMMIT_PROMPT) + "\n\n" + diff;
   const commitMessage = await futago.generateContent(p);
-  console.log(commitMessage);
 
   const lnum = await fn.line(denops, ".");
   await fn.appendbufline(denops, futago.bufnr, lnum - 1, commitMessage.split("\n"));
