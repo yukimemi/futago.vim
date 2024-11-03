@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : send_chat_message.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 19:08:44.
+// Last Change : 2024/11/04 01:26:48.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.3.0/function";
@@ -85,6 +85,16 @@ export async function sendChatMessage(
           ...lines.slice(1),
         ]);
       }
+
+      while (true) {
+        const lastLine = await fn.getbufline(denops, futago.bufnr, "$");
+        if (lastLine[0] === "") {
+          await fn.deletebufline(denops, futago.bufnr, "$");
+        } else {
+          break;
+        }
+      }
+
       await fn.appendbufline(
         denops,
         futago.bufnr,

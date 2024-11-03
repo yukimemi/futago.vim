@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/11/03 00:07:10.
+// Last Change : 2024/11/04 01:00:16.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.3.0/function";
@@ -154,7 +154,7 @@ export async function main(denops: Denops): Promise<void> {
         return;
       }
       const futago = await loadChat(denops, { bufnr, db, chatDir, debug });
-      futagos.set(bufnr, futago);
+      futagos.set(futago.bufnr, futago);
     },
 
     async sendChatMessage(params: unknown): Promise<void> {
@@ -207,7 +207,7 @@ export async function main(denops: Denops): Promise<void> {
     helper.remove("*");
     helper.define(
       "BufWriteCmd",
-      ["futago://chat/*", chatCachePattern],
+      "futago://chat/*",
       `call denops#notify("${denops.name}", "sendChatMessage", [bufnr()])`,
     );
     helper.define(

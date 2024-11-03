@@ -1,16 +1,18 @@
 // =============================================================================
 // File        : load_chat.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 19:34:38.
+// Last Change : 2024/11/04 01:16:38.
 // =============================================================================
 
 import * as batch from "jsr:@denops/std@7.3.0/batch";
+import * as buffer from "jsr:@denops/std@7.3.0/buffer";
 import * as fn from "jsr:@denops/std@7.3.0/function";
-import { Futago } from "../futago.ts";
 import type { Denops } from "jsr:@denops/std@7.3.0";
-import { z } from "npm:zod@3.23.8";
-import { getDb } from "../db.ts";
+import { Futago } from "../futago.ts";
 import { basename, extname } from "jsr:@std/path@1.0.8";
+import { getDb } from "../db.ts";
+import { getNow } from "../util.ts";
+import { z } from "npm:zod@3.23.8";
 
 export const loadChatParamsSchema = z.object({
   bufnr: z.number(),
@@ -30,15 +32,20 @@ export async function loadChat(
     chatDir,
     debug,
   } = params;
-  const bufname = await fn.bufname(denops, bufnr);
-  const chatTitle = basename(bufname, extname(bufname));
+  const bufPath = await fn.fnamemodify(denops, await fn.bufname(denops, bufnr), ":p");
+  const chatTitle = basename(bufPath, extname(bufPath));
   const lastDb = await getDb(db, chatTitle);
   if (lastDb == undefined) {
     throw new Error(`Chat ${chatTitle} history is not found`);
   }
-  const bnr = z.number().parse(bufnr);
+  const lines = await fn.getbufline(denops, bufnr, 1, "$");
+  const now = getNow();
+  const bufname = `futago://chat/${now}`;
+  const buf = await buffer.open(denops, bufname);
+  await denops.cmd(`bwipeout! ${bufnr}`);
+
   const futago = new Futago(
-    bnr,
+    buf.bufnr,
     lastDb.model,
     db,
     chatDir,
@@ -51,22 +58,21 @@ export async function loadChat(
     },
   );
   futago.chatTitle = chatTitle;
-  futago.chatPath = bufname;
+  futago.chatPath = bufPath;
   futago.startChat({ history: lastDb.history });
 
   await batch.batch(denops, async () => {
-    await fn.setbufvar(denops, bnr, "&filetype", "markdown");
-    await fn.setbufvar(denops, bnr, "&buftype", "acwrite");
-    await fn.setbufvar(denops, bnr, "&buflisted", true);
-    await fn.setbufvar(denops, bnr, "&swapfile", false);
-    await fn.setbufvar(denops, bnr, "&wrap", true);
-    await fn.setbufvar(denops, bnr, "&modified", false);
+    await fn.setbufvar(denops, buf.bufnr, "&filetype", "markdown");
+    await fn.setbufvar(denops, buf.bufnr, "&buftype", "acwrite");
+    await fn.setbufvar(denops, buf.bufnr, "&buflisted", true);
+    await fn.setbufvar(denops, buf.bufnr, "&swapfile", false);
+    await fn.setbufvar(denops, buf.bufnr, "&wrap", true);
+    await fn.setbufvar(denops, buf.bufnr, "&modified", false);
+
+    await buffer.replace(denops, buf.bufnr, lines);
   });
 
-  const currentBufnr = await fn.bufnr(denops);
-  if (currentBufnr === bnr) {
-    await denops.cmd("normal! G");
-  }
+  await denops.cmd("normal! G");
 
   return futago;
 }
