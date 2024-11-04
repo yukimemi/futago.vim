@@ -86,6 +86,10 @@ The generated message will be inserted at the current cursor position.
 
 # Commands
 
+## `:FutagoStartChat`
+
+`call futago$start_chat()` with default argument.
+
 ## `:FutagoHistory`
 
 Show list of chat history with quickfix.
@@ -168,7 +172,7 @@ Default is "tabnew".
 
 ```vim
 let g:futago_debug = v:true
-let g:futago_model = "gemini-1.5-pro"
+let g:futago_model = "gemini-1.5-flash-latest"
 let g:futago_chat_path = '~/.cache/vim/futago/chat'
 let g:futago_log_file = '~/.cache/vim/futago/log/futago.log'
 let g:futago_history_db = '~/.cache/vim/futago/db/history.db'
@@ -197,5 +201,5 @@ nnoremap <Leader>fg <Cmd>call futago#git_commit()<CR>
 
 Licensed under MIT License.
 
-Copyright (c) 2023 yukimemi
+Copyright (c) 2024 yukimemi
 
