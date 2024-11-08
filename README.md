@@ -88,12 +88,16 @@ The generated message will be inserted at the current cursor position.
 
 ## `:FutagoStartChat`
 
-`call futago$start_chat()` with default argument.
+`call futago#start_chat()` with default argument.
 
 ## `:FutagoHistory`
 
 Show list of chat history with quickfix.
 If you open a past chat file, you can start chatting based on the automatically saved history.
+
+## `:FutagoGitCommit`
+
+`call futago#git_commit()` with default argument.
 
 # Config
 
