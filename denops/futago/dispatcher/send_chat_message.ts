@@ -4,11 +4,11 @@
 // Last Change : 2024/11/04 01:26:48.
 // =============================================================================
 
-import * as fn from "jsr:@denops/std@7.3.0/function";
-import * as option from "jsr:@denops/std@7.3.0/option";
+import * as fn from "jsr:@denops/std@7.3.1/function";
+import * as option from "jsr:@denops/std@7.3.1/option";
 import { Futago } from "../futago.ts";
 import { getNow } from "../util.ts";
-import type { Denops } from "jsr:@denops/std@7.3.0";
+import type { Denops } from "jsr:@denops/std@7.3.1";
 import { z } from "npm:zod@3.23.8";
 import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
 import { SEPARATOR } from "../consts.ts";
