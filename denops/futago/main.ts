@@ -19,7 +19,7 @@ import {
   getLogger,
   RotatingFileHandler,
   setup,
-} from "jsr:@std/log@0.224.9";
+} from "jsr:@std/log@0.224.10";
 import { GenerationConfig, SafetySetting } from "npm:@google/generative-ai@0.21.0";
 import { z } from "npm:zod@3.23.8";
 
