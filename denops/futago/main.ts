@@ -4,12 +4,12 @@
 // Last Change : 2024/11/04 01:00:16.
 // =============================================================================
 
-import * as fn from "jsr:@denops/std@7.3.1/function";
-import * as helper from "jsr:@denops/std@7.3.1/helper";
-import * as autocmd from "jsr:@denops/std@7.3.1/autocmd";
-import * as vars from "jsr:@denops/std@7.3.1/variable";
+import * as fn from "jsr:@denops/std@7.3.2/function";
+import * as helper from "jsr:@denops/std@7.3.2/helper";
+import * as autocmd from "jsr:@denops/std@7.3.2/autocmd";
+import * as vars from "jsr:@denops/std@7.3.2/variable";
 import { deepMerge } from "jsr:@std/collections@1.0.9";
-import type { Denops } from "jsr:@denops/std@7.3.1";
+import type { Denops } from "jsr:@denops/std@7.3.2";
 import { dir } from "jsr:@cross/dir@1.1.0";
 import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.5";
 import { dirname, join } from "jsr:@std/path@1.0.8";
