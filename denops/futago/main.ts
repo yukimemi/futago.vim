@@ -11,7 +11,7 @@ import * as vars from "jsr:@denops/std@7.3.2/variable";
 import { deepMerge } from "jsr:@std/collections@1.0.9";
 import type { Denops } from "jsr:@denops/std@7.3.2";
 import { dir } from "jsr:@cross/dir@1.1.0";
-import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.5";
+import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.6";
 import { dirname, join } from "jsr:@std/path@1.0.8";
 import {
   ConsoleHandler,
@@ -19,7 +19,7 @@ import {
   getLogger,
   RotatingFileHandler,
   setup,
-} from "jsr:@std/log@0.224.10";
+} from "jsr:@std/log@0.224.11";
 import { GenerationConfig, SafetySetting } from "npm:@google/generative-ai@0.21.0";
 import { z } from "npm:zod@3.23.8";
 
