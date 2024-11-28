@@ -4,8 +4,8 @@
 // Last Change : 2024/11/02 23:41:19.
 // =============================================================================
 
-import * as fn from "jsr:@denops/std@7.3.2/function";
-import type { Denops } from "jsr:@denops/std@7.3.2";
+import * as fn from "jsr:@denops/std@7.4.0/function";
+import type { Denops } from "jsr:@denops/std@7.4.0";
 import { DEFAULT_MODEL, GIT_COMMIT_PROMPT } from "../consts.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
