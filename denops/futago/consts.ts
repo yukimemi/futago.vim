@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : consts.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 20:45:30.
+// Last Change : 2024/12/04 15:41:48.
 // =============================================================================
 
 import { join } from "jsr:@std/path@1.0.8";
@@ -20,5 +20,6 @@ export const SEPARATOR = "-------------";
 
 export const GIT_COMMIT_PROMPT = `
 You are an expert at following the Conventional Commit specification.
-Given the git diff listed below, please generate a commit message for me:
+Given the git diff listed below, please generate a commit message for me.
+Do not use code fences (\`\`\`) in your response:
 `;
