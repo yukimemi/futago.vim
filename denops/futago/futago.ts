@@ -20,7 +20,7 @@ import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
 import { CACHE_DIR, DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
 import { join } from "jsr:@std/path@1.0.8";
-import { z } from "npm:zod@3.23.8";
+import { z } from "npm:zod@3.24.1";
 
 export class Futago {
   #genAI: GoogleGenerativeAI;
