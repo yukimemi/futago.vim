@@ -21,7 +21,7 @@ import {
   setup,
 } from "jsr:@std/log@0.224.11";
 import { GenerationConfig, SafetySetting } from "npm:@google/generative-ai@0.21.0";
-import { z } from "npm:zod@3.23.8";
+import { z } from "npm:zod@3.24.1";
 
 import { startChat, StartChatParamsSchema } from "./dispatcher/start_chat.ts";
 import { loadChat } from "./dispatcher/load_chat.ts";
