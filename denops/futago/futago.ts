@@ -15,7 +15,7 @@ import {
   SafetySetting,
   StartChatParams,
 } from "npm:@google/generative-ai@0.21.0";
-import { getLogger } from "jsr:@std/log@0.224.11";
+import { getLogger } from "jsr:@std/log@0.224.12";
 import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
 import { CACHE_DIR, DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
