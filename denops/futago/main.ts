@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/11/04 01:00:16.
+// Last Change : 2024/12/30 08:11:28.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.4.0/function";
@@ -130,7 +130,17 @@ export async function main(denops: Denops): Promise<void> {
         ? await startChat(
           denops,
           deepMerge(
-            { db, chatDir, opener, safetySettings, generationConfig, humanPrompt, aiPrompt, debug },
+            {
+              model,
+              db,
+              chatDir,
+              opener,
+              safetySettings,
+              generationConfig,
+              humanPrompt,
+              aiPrompt,
+              debug,
+            },
             parsed.data,
           ),
         )
