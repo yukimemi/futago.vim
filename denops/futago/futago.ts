@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2024/11/03 00:05:59.
+// Last Change : 2024/12/30 14:56:09.
 // =============================================================================
 
 import * as datetime from "jsr:@std/datetime@0.225.2";
@@ -18,7 +18,13 @@ import {
 import { getLogger } from "jsr:@std/log@0.224.12";
 import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
-import { CACHE_DIR, DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL } from "./consts.ts";
+import {
+  CACHE_DIR,
+  DEFAULT_AI_PROMPT,
+  DEFAULT_HUMAN_PROMPT,
+  DEFAULT_MODEL,
+  TITLE_MODEL,
+} from "./consts.ts";
 import { join } from "jsr:@std/path@1.0.8";
 import { z } from "npm:zod@3.24.1";
 
@@ -80,9 +86,15 @@ export class Futago {
 
   public async createChatTitle(message: string): Promise<void> {
     const prompt =
-      `以下はチャットプロンプトです。このチャットプロンプトから始まるチャットのタイトルを作成してください。作成したタイトルはファイル名として保存します。後からわかりやすいようなファイル名になるようにタイトルを作成してください。タイトルに拡張子は不要です。\n\n${message}`;
+      `以下はチャットプロンプトです。このチャットプロンプトから始まるチャットのタイトルを作成してください。作成したタイトルはファイル名として保存します。後からわかりやすいようなファイル名になるようにタイトルを作成してください。タイトルに拡張子は不要です。思考プロセスなどは出力せず、出力はファイル名となるタイトルだけを出力してください。\n\n${message}`;
 
-    const result = await this.#model.generateContent(prompt);
+    const futago = new Futago(
+      this.bufnr,
+      TITLE_MODEL,
+      this.db,
+      this.chatDir,
+    );
+    const result = await futago.#model.generateContent(prompt);
     const response = result.response;
     this.chatTitle = datetime.format(new Date(), "yyyyMMdd-HHmmss") + "_" +
       sanitize(response.text());

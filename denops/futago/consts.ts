@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : consts.ts
 // Author      : yukimemi
-// Last Change : 2024/12/24 09:26:45.
+// Last Change : 2024/12/30 14:54:44.
 // =============================================================================
 
 import { join } from "jsr:@std/path@1.0.8";
@@ -9,6 +9,7 @@ import { dir } from "jsr:@cross/dir@1.1.0";
 import { Opener } from "./schema/opener.ts";
 
 export const DEFAULT_MODEL = "gemini-2.0-flash-exp";
+export const TITLE_MODEL = "gemini-2.0-flash-exp";
 
 export const DEFAULT_OPENER: Opener = "tabnew";
 export const DEFAULT_AI_PROMPT = "Gemini";
