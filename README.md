@@ -176,7 +176,7 @@ Default is "tabnew".
 
 ```vim
 let g:futago_debug = v:true
-let g:futago_model = "gemini-1.5-flash-latest"
+let g:futago_model = "gemini-2.0-flash-thinking-exp"
 let g:futago_chat_path = '~/.cache/vim/futago/chat'
 let g:futago_log_file = '~/.cache/vim/futago/log/futago.log'
 let g:futago_history_db = '~/.cache/vim/futago/db/history.db'
@@ -198,7 +198,7 @@ nnoremap <Leader>fc <Cmd>call futago#start_chat({
   \ ],
   \ "humanPrompt": "yukimemi"
   \ })<CR>
-nnoremap <Leader>fg <Cmd>call futago#git_commit()<CR>
+nnoremap <Leader>fg <Cmd>call futago#git_commit({ "model": "gemini-2.0-flash-exp" })<CR>
 ```
 
 # License
