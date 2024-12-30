@@ -1,14 +1,14 @@
 // =============================================================================
 // File        : start_chat.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 19:37:06.
+// Last Change : 2024/12/30 09:49:46.
 // =============================================================================
 
 import * as batch from "jsr:@denops/std@7.4.0/batch";
 import * as buffer from "jsr:@denops/std@7.4.0/buffer";
 import * as fn from "jsr:@denops/std@7.4.0/function";
 import type { Denops } from "jsr:@denops/std@7.4.0";
-import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL, SEPARATOR } from "../consts.ts";
+import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, SEPARATOR } from "../consts.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
 import { HistorySchema } from "../schema/history.ts";
@@ -18,7 +18,7 @@ import { getNow } from "../util.ts";
 import { z } from "npm:zod@3.24.1";
 
 export const StartChatParamsSchema = z.object({
-  model: z.string().default(DEFAULT_MODEL),
+  model: z.string().optional(),
   db: z.instanceof(Deno.Kv),
   chatDir: z.string(),
   opener: OpenerSchema,
@@ -36,6 +36,7 @@ export async function startChat(
   denops: Denops,
   params: StartChatParams,
 ): Promise<Futago> {
+  console.log({ params });
   const now = getNow();
   const bufname = `futago://chat/${now}`;
   const buf = await buffer.open(denops, bufname, { opener: params.opener });

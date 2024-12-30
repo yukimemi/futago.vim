@@ -1,20 +1,20 @@
 // =============================================================================
 // File        : git_commit.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 23:41:19.
+// Last Change : 2024/12/30 09:50:56.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.4.0/function";
 import type { Denops } from "jsr:@denops/std@7.4.0";
-import { DEFAULT_MODEL, GIT_COMMIT_PROMPT } from "../consts.ts";
+import { GIT_COMMIT_PROMPT } from "../consts.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
 import { SafetySettingsSchema } from "../schema/safety_settings.ts";
 import { z } from "npm:zod@3.24.1";
 
 export const GitCommitParamsSchema = z.object({
+  model: z.string().optional(),
   db: z.instanceof(Deno.Kv),
-  model: z.string().default(DEFAULT_MODEL),
   prompt: z.string().optional(),
   safetySettings: SafetySettingsSchema.optional(),
   generationConfig: GenerationConfigSchema.optional(),
