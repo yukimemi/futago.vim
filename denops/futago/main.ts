@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/12/30 09:31:25.
+// Last Change : 2024/12/30 15:39:42.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.4.0/function";
@@ -192,8 +192,8 @@ export async function main(denops: Denops): Promise<void> {
         );
       } else {
         await gitCommit(denops, {
-          db,
           model,
+          db,
           safetySettings,
           generationConfig,
           debug,

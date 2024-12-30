@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : git_commit.ts
 // Author      : yukimemi
-// Last Change : 2024/12/30 09:50:56.
+// Last Change : 2024/12/30 15:40:29.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.4.0/function";
@@ -13,7 +13,7 @@ import { SafetySettingsSchema } from "../schema/safety_settings.ts";
 import { z } from "npm:zod@3.24.1";
 
 export const GitCommitParamsSchema = z.object({
-  model: z.string().optional(),
+  model: z.string(),
   db: z.instanceof(Deno.Kv),
   prompt: z.string().optional(),
   safetySettings: SafetySettingsSchema.optional(),

@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : start_chat.ts
 // Author      : yukimemi
-// Last Change : 2024/12/30 09:56:35.
+// Last Change : 2024/12/30 15:47:23.
 // =============================================================================
 
 import * as batch from "jsr:@denops/std@7.4.0/batch";
@@ -18,7 +18,7 @@ import { getNow } from "../util.ts";
 import { z } from "npm:zod@3.24.1";
 
 export const StartChatParamsSchema = z.object({
-  model: z.string().optional(),
+  model: z.string(),
   db: z.instanceof(Deno.Kv),
   chatDir: z.string(),
   opener: OpenerSchema,
