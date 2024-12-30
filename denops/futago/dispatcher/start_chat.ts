@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : start_chat.ts
 // Author      : yukimemi
-// Last Change : 2024/12/30 09:49:46.
+// Last Change : 2024/12/30 09:56:35.
 // =============================================================================
 
 import * as batch from "jsr:@denops/std@7.4.0/batch";
@@ -36,7 +36,6 @@ export async function startChat(
   denops: Denops,
   params: StartChatParams,
 ): Promise<Futago> {
-  console.log({ params });
   const now = getNow();
   const bufname = `futago://chat/${now}`;
   const buf = await buffer.open(denops, bufname, { opener: params.opener });
