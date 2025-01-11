@@ -4,7 +4,7 @@
 // Last Change : 2024/12/30 14:56:09.
 // =============================================================================
 
-import * as datetime from "jsr:@std/datetime@0.225.2";
+import * as datetime from "jsr:@std/datetime@0.225.3";
 import sanitize from "npm:sanitize-filename@1.6.3";
 import {
   ChatSession,
@@ -15,7 +15,7 @@ import {
   SafetySetting,
   StartChatParams,
 } from "npm:@google/generative-ai@0.21.0";
-import { getLogger } from "jsr:@std/log@0.224.12";
+import { getLogger } from "jsr:@std/log@0.224.13";
 import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
 import {
