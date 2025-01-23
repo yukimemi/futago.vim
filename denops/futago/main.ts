@@ -8,10 +8,10 @@ import * as fn from "jsr:@denops/std@7.4.0/function";
 import * as helper from "jsr:@denops/std@7.4.0/helper";
 import * as autocmd from "jsr:@denops/std@7.4.0/autocmd";
 import * as vars from "jsr:@denops/std@7.4.0/variable";
-import { deepMerge } from "jsr:@std/collections@1.0.9";
+import { deepMerge } from "jsr:@std/collections@1.0.10";
 import type { Denops } from "jsr:@denops/std@7.4.0";
 import { dir } from "jsr:@cross/dir@1.1.0";
-import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.9";
+import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.10";
 import { dirname, join } from "jsr:@std/path@1.0.8";
 import {
   ConsoleHandler,
