@@ -111,10 +111,19 @@ Default is v:false
 
 - g:futago_model
 
+Gemini API model.
+
 Default is "gemini-2.0-flash-exp"
 
 
 See [Model](https://ai.google.dev/gemini-api/docs/models/gemini?#model-variations)
+
+- g:futago_git_model
+
+Gemini API model used by futago#git_commit().
+
+Default is "gemini-2.0-flash-exp"
+
 
 - `g:futago_chat_path`
 
