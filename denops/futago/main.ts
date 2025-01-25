@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2024/12/30 15:39:42.
+// Last Change : 2025/01/25 14:24:44.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.4.0/function";
@@ -28,6 +28,7 @@ import { loadChat } from "./dispatcher/load_chat.ts";
 import { gitCommit, GitCommitParamsSchema } from "./dispatcher/git_commit.ts";
 import {
   DEFAULT_AI_PROMPT,
+  DEFAULT_GIT_MODEL,
   DEFAULT_HUMAN_PROMPT,
   DEFAULT_MODEL,
   DEFAULT_OPENER,
@@ -44,6 +45,7 @@ let chatDir = join(await dir("cache"), "futago", "chat");
 let logFile = join(await dir("cache"), "futago", "log", "futago.log");
 let historyDb = join(await dir("cache"), "futago", "db", "history.db");
 let model = DEFAULT_MODEL;
+let gitModel = DEFAULT_GIT_MODEL;
 let safetySettings: SafetySetting[];
 let generationConfig: GenerationConfig;
 let humanPrompt = DEFAULT_HUMAN_PROMPT;
@@ -64,6 +66,7 @@ export async function main(denops: Denops): Promise<void> {
   );
   await ensureDir(dirname(historyDb));
   model = await vars.g.get(denops, "futago_model", model);
+  gitModel = await vars.g.get(denops, "futago_git_model", gitModel);
   safetySettings = await vars.g.get(
     denops,
     "futago_safety_settings",
@@ -110,6 +113,7 @@ export async function main(denops: Denops): Promise<void> {
     debug,
     chatDir,
     model,
+    gitModel,
     safetySettings,
     generationConfig,
     logFile,
@@ -186,13 +190,13 @@ export async function main(denops: Denops): Promise<void> {
         await gitCommit(
           denops,
           deepMerge(
-            { db, model, safetySettings, generationConfig, debug },
+            { db, model: gitModel, safetySettings, generationConfig, debug },
             parsed.data,
           ),
         );
       } else {
         await gitCommit(denops, {
-          model,
+          model: gitModel,
           db,
           safetySettings,
           generationConfig,
