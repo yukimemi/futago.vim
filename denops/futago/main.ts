@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2025/02/02 23:06:10.
+// Last Change : 2025/02/05 00:32:26.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.4.0/function";
@@ -127,7 +127,7 @@ export async function main(denops: Denops): Promise<void> {
 
   denops.dispatcher = {
     async startChat(params: unknown): Promise<void> {
-      const parsed = StartChatParamsSchema.omit({ model: true, db: true, chatDir: true }).safeParse(
+      const parsed = StartChatParamsSchema.omit({ db: true, chatDir: true }).safeParse(
         params,
       );
       const futago = parsed.success
@@ -185,7 +185,7 @@ export async function main(denops: Denops): Promise<void> {
     },
 
     async gitCommit(params: unknown): Promise<void> {
-      const parsed = GitCommitParamsSchema.omit({ model: true, db: true }).safeParse(params);
+      const parsed = GitCommitParamsSchema.omit({ db: true }).safeParse(params);
       if (parsed.success) {
         await gitCommit(
           denops,
