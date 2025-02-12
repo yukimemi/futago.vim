@@ -4,7 +4,7 @@
 // Last Change : 2024/11/03 00:06:34.
 // =============================================================================
 
-import { z } from "npm:zod@3.24.1";
+import { z } from "npm:zod@3.24.2";
 import { GenerationConfigSchema } from "./schema/generation_config.ts";
 import { SafetySettingsSchema } from "./schema/safety_settings.ts";
 import { ContentSchema, HistorySchema } from "./schema/history.ts";
