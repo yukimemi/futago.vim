@@ -26,7 +26,7 @@ import {
   TITLE_MODEL,
 } from "./consts.ts";
 import { join } from "jsr:@std/path@1.0.8";
-import { z } from "npm:zod@3.24.1";
+import { z } from "npm:zod@3.24.2";
 
 export class Futago {
   #genAI: GoogleGenerativeAI;
