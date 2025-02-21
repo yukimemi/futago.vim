@@ -5,6 +5,6 @@
 // =============================================================================
 
 import { z } from "npm:zod@3.24.2";
-import { SafetySetting } from "npm:@google/generative-ai@0.21.0";
+import { SafetySetting } from "npm:@google/generative-ai@0.22.0";
 
 export const SafetySettingsSchema = z.array(z.record(z.any()).transform((v) => v as SafetySetting));
