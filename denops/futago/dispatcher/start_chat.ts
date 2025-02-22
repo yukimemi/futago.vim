@@ -4,10 +4,10 @@
 // Last Change : 2025/02/05 00:25:56.
 // =============================================================================
 
-import * as batch from "jsr:@denops/std@7.4.0/batch";
-import * as buffer from "jsr:@denops/std@7.4.0/buffer";
-import * as fn from "jsr:@denops/std@7.4.0/function";
-import type { Denops } from "jsr:@denops/std@7.4.0";
+import * as batch from "jsr:@denops/std@7.5.0/batch";
+import * as buffer from "jsr:@denops/std@7.5.0/buffer";
+import * as fn from "jsr:@denops/std@7.5.0/function";
+import type { Denops } from "jsr:@denops/std@7.5.0";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, SEPARATOR } from "../consts.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
