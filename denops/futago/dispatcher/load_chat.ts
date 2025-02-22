@@ -4,10 +4,10 @@
 // Last Change : 2024/11/04 01:16:38.
 // =============================================================================
 
-import * as batch from "jsr:@denops/std@7.4.0/batch";
-import * as buffer from "jsr:@denops/std@7.4.0/buffer";
-import * as fn from "jsr:@denops/std@7.4.0/function";
-import type { Denops } from "jsr:@denops/std@7.4.0";
+import * as batch from "jsr:@denops/std@7.5.0/batch";
+import * as buffer from "jsr:@denops/std@7.5.0/buffer";
+import * as fn from "jsr:@denops/std@7.5.0/function";
+import type { Denops } from "jsr:@denops/std@7.5.0";
 import { Futago } from "../futago.ts";
 import { basename, extname } from "jsr:@std/path@1.0.8";
 import { getDb } from "../db.ts";

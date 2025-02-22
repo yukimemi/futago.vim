@@ -4,9 +4,9 @@
 // Last Change : 2024/11/02 19:07:09.
 // =============================================================================
 
-import * as batch from "jsr:@denops/std@7.4.0/batch";
-import * as fn from "jsr:@denops/std@7.4.0/function";
-import type { Denops } from "jsr:@denops/std@7.4.0";
+import * as batch from "jsr:@denops/std@7.5.0/batch";
+import * as fn from "jsr:@denops/std@7.5.0/function";
+import type { Denops } from "jsr:@denops/std@7.5.0";
 import { walk } from "jsr:@std/fs@1.0.13";
 import { z } from "npm:zod@3.24.2";
 

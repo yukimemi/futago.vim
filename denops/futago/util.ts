@@ -5,8 +5,8 @@
 // =============================================================================
 
 import * as datetime from "jsr:@std/datetime@0.225.3";
-import * as fn from "jsr:@denops/std@7.4.0/function";
-import type { Denops } from "jsr:@denops/std@7.4.0";
+import * as fn from "jsr:@denops/std@7.5.0/function";
+import type { Denops } from "jsr:@denops/std@7.5.0";
 
 export function getNow(): string {
   return datetime.format(new Date(), "yyyy-MM-ddTHH-mm-ss.SSS");
