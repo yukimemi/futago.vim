@@ -20,7 +20,7 @@ import {
   RotatingFileHandler,
   setup,
 } from "jsr:@std/log@0.224.14";
-import { GenerationConfig, SafetySetting } from "npm:@google/generative-ai@0.22.0";
+import { GenerationConfig, SafetySetting } from "npm:@google/generative-ai@0.23.0";
 import { z } from "npm:zod@3.24.2";
 
 import { startChat, StartChatParamsSchema } from "./dispatcher/start_chat.ts";
