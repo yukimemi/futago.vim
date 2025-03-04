@@ -14,7 +14,7 @@ import {
   GoogleGenerativeAI,
   SafetySetting,
   StartChatParams,
-} from "npm:@google/generative-ai@0.22.0";
+} from "npm:@google/generative-ai@0.23.0";
 import { getLogger } from "jsr:@std/log@0.224.14";
 import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
