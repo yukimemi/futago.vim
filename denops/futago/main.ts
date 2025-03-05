@@ -11,7 +11,7 @@ import * as vars from "jsr:@denops/std@7.5.0/variable";
 import { deepMerge } from "jsr:@std/collections@1.0.10";
 import type { Denops } from "jsr:@denops/std@7.5.0";
 import { dir } from "jsr:@cross/dir@1.1.0";
-import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.13";
+import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.14";
 import { dirname, join } from "jsr:@std/path@1.0.8";
 import {
   ConsoleHandler,
