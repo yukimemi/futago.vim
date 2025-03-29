@@ -1,16 +1,16 @@
 // =============================================================================
 // File        : consts.ts
 // Author      : yukimemi
-// Last Change : 2025/01/25 14:24:09.
+// Last Change : 2025/03/29 20:33:16.
 // =============================================================================
 
 import { join } from "jsr:@std/path@1.0.8";
 import { dir } from "jsr:@cross/dir@1.1.0";
 import { Opener } from "./schema/opener.ts";
 
-export const DEFAULT_MODEL = "gemini-2.0-flash-exp";
-export const DEFAULT_GIT_MODEL = "gemini-2.0-flash-exp";
-export const TITLE_MODEL = "gemini-2.0-flash-exp";
+export const DEFAULT_MODEL = "gemini-2.0-flash";
+export const DEFAULT_GIT_MODEL = "gemini-2.0-flash";
+export const TITLE_MODEL = "gemini-2.0-flash";
 
 export const DEFAULT_OPENER: Opener = "tabnew";
 export const DEFAULT_AI_PROMPT = "Gemini";

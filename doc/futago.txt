@@ -83,13 +83,13 @@ Default is v:false
 
 `g:futago_model`                                               *g:futago_model*
 Gemini API model.
-Default is "gemini-2.0-flash-exp"
+Default is "gemini-2.0-flash"
 
 See [Model](https://ai.google.dev/gemini-api/docs/models/gemini?#model-variations)
 
 `g:futago_git_model`                                               *g:futago_model*
 Gemini API model used by futago#git_commit().
-Default is "gemini-2.0-flash-exp"
+Default is "gemini-2.0-flash"
 
 `g:futago_chat_path`                                       *g:futago_chat_path*
 Path to save chat files.
@@ -197,7 +197,7 @@ Example ~
 	  \ ],
 	  \ "humanPrompt": "yukimemi"
 	  \ })<CR>
-	nnoremap <Leader>fg <Cmd>call futago#git_commit({ "model": "gemini-2.0-flash-exp" })<CR>
+	nnoremap <Leader>fg <Cmd>call futago#git_commit({ "model": "gemini-2.0-flash" })<CR>
 <
 
 =============================================================================
