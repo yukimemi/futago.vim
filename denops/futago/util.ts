@@ -4,7 +4,7 @@
 // Last Change : 2024/11/02 19:18:28.
 // =============================================================================
 
-import * as datetime from "jsr:@std/datetime@0.225.3";
+import * as datetime from "jsr:@std/datetime@0.225.4";
 import * as fn from "jsr:@denops/std@7.5.0/function";
 import type { Denops } from "jsr:@denops/std@7.5.0";
 
