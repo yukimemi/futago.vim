@@ -12,7 +12,7 @@ import { Futago } from "../futago.ts";
 import { basename, extname } from "jsr:@std/path@1.0.8";
 import { getDb } from "../db.ts";
 import { getNow } from "../util.ts";
-import { z } from "npm:zod@3.24.2";
+import { z } from "npm:zod@3.24.3";
 
 export const loadChatParamsSchema = z.object({
   bufnr: z.number(),
