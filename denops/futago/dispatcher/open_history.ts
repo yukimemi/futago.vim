@@ -8,7 +8,7 @@ import * as batch from "jsr:@denops/std@7.5.0/batch";
 import * as fn from "jsr:@denops/std@7.5.0/function";
 import type { Denops } from "jsr:@denops/std@7.5.0";
 import { walk } from "jsr:@std/fs@1.0.16";
-import { z } from "npm:zod@3.24.2";
+import { z } from "npm:zod@3.24.3";
 
 export const openHistoryParamsSchema = z.object({
   chatDir: z.string(),

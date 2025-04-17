@@ -15,7 +15,7 @@ import { HistorySchema } from "../schema/history.ts";
 import { OpenerSchema } from "../schema/opener.ts";
 import { SafetySettingsSchema } from "../schema/safety_settings.ts";
 import { getNow } from "../util.ts";
-import { z } from "npm:zod@3.24.2";
+import { z } from "npm:zod@3.24.3";
 
 export const StartChatParamsSchema = z.object({
   model: z.string().optional(),
