@@ -5,7 +5,7 @@
 // =============================================================================
 
 import { Futago } from "./futago.ts";
-import { assertStringIncludes } from "jsr:@std/assert@1.0.12";
+import { assertStringIncludes } from "jsr:@std/assert@1.0.13";
 
 import { DEFAULT_MODEL } from "./consts.ts";
 
