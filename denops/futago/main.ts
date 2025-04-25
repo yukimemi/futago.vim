@@ -8,11 +8,11 @@ import * as fn from "jsr:@denops/std@7.5.0/function";
 import * as helper from "jsr:@denops/std@7.5.0/helper";
 import * as autocmd from "jsr:@denops/std@7.5.0/autocmd";
 import * as vars from "jsr:@denops/std@7.5.0/variable";
-import { deepMerge } from "jsr:@std/collections@1.0.10";
+import { deepMerge } from "jsr:@std/collections@1.0.11";
 import type { Denops } from "jsr:@denops/std@7.5.0";
 import { dir } from "jsr:@cross/dir@1.1.0";
-import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.16";
-import { dirname, join } from "jsr:@std/path@1.0.8";
+import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.17";
+import { dirname, join } from "jsr:@std/path@1.0.9";
 import {
   ConsoleHandler,
   FileHandler,
