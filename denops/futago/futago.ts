@@ -25,7 +25,7 @@ import {
   DEFAULT_MODEL,
   TITLE_MODEL,
 } from "./consts.ts";
-import { join } from "jsr:@std/path@1.0.8";
+import { join } from "jsr:@std/path@1.0.9";
 import { z } from "npm:zod@3.24.3";
 
 export class Futago {

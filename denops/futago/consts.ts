@@ -4,7 +4,7 @@
 // Last Change : 2025/03/29 20:33:16.
 // =============================================================================
 
-import { join } from "jsr:@std/path@1.0.8";
+import { join } from "jsr:@std/path@1.0.9";
 import { dir } from "jsr:@cross/dir@1.1.0";
 import { Opener } from "./schema/opener.ts";
 

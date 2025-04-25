@@ -12,7 +12,7 @@ import { deepMerge } from "jsr:@std/collections@1.0.11";
 import type { Denops } from "jsr:@denops/std@7.5.0";
 import { dir } from "jsr:@cross/dir@1.1.0";
 import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.17";
-import { dirname, join } from "jsr:@std/path@1.0.8";
+import { dirname, join } from "jsr:@std/path@1.0.9";
 import {
   ConsoleHandler,
   FileHandler,
