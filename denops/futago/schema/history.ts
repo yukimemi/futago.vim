@@ -5,7 +5,7 @@
 // =============================================================================
 
 import { z } from "npm:zod@3.24.3";
-import { Content } from "npm:@google/generative-ai@0.24.0";
+import { Content } from "npm:@google/generative-ai@0.24.1";
 
 export const ContentSchema = z.record(z.any()).transform((v) => v as Content);
 export const HistorySchema = z.array(z.record(z.any()).transform((v) => v as Content));
