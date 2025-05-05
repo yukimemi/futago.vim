@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2025/02/05 00:32:26.
+// Last Change : 2025/05/06 01:55:46.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.5.0/function";
@@ -41,9 +41,10 @@ import { openHistory } from "./dispatcher/open_history.ts";
 let debug = false;
 const futagos = new Map<number, Futago>();
 
-let chatDir = join(await dir("cache"), "futago", "chat");
-let logFile = join(await dir("cache"), "futago", "log", "futago.log");
-let historyDb = join(await dir("cache"), "futago", "db", "history.db");
+let chatDir: string;
+let logFile: string;
+let historyDb: string;
+
 let model = DEFAULT_MODEL;
 let gitModel = DEFAULT_GIT_MODEL;
 let safetySettings: SafetySetting[];
@@ -55,18 +56,44 @@ let db: Deno.Kv;
 
 export async function main(denops: Denops): Promise<void> {
   debug = await vars.g.get(denops, "futago_debug", false);
-  chatDir = z.string().parse(
-    await fn.expand(
-      denops,
-      await vars.g.get(denops, "futago_chat_path", chatDir),
-    ),
+
+  const userChatPathResult = z.string().nullable().safeParse(
+    await vars.g.get(denops, "futago_chat_path", null),
   );
-  historyDb = z.string().parse(
-    await fn.expand(denops, await vars.g.get(denops, "futago_history_db", historyDb)),
+  if (userChatPathResult.success && userChatPathResult.data !== null) {
+    chatDir = z.string().parse(await fn.expand(denops, userChatPathResult.data));
+  } else {
+    chatDir = z.string().parse(await fn.expand(denops, join(await dir("cache"), "futago", "chat")));
+  }
+  await ensureDir(chatDir);
+
+  const userHistoryDbResult = z.string().nullable().safeParse(
+    await vars.g.get(denops, "futago_history_db", null),
   );
+  if (userHistoryDbResult.success && userHistoryDbResult.data !== null) {
+    historyDb = z.string().parse(await fn.expand(denops, userHistoryDbResult.data));
+  } else {
+    historyDb = z.string().parse(
+      await fn.expand(denops, join(await dir("cache"), "futago", "db", "history.db")),
+    );
+  }
   await ensureDir(dirname(historyDb));
+
+  const userLogFileResult = z.string().nullable().safeParse(
+    await vars.g.get(denops, "futago_log_file", null),
+  );
+  if (userLogFileResult.success && userLogFileResult.data !== null) {
+    logFile = z.string().parse(await fn.expand(denops, userLogFileResult.data));
+  } else {
+    logFile = z.string().parse(
+      await fn.expand(denops, join(await dir("cache"), "futago", "log", "futago.log")),
+    );
+  }
+  await ensureFile(logFile);
+
   model = await vars.g.get(denops, "futago_model", model);
   gitModel = await vars.g.get(denops, "futago_git_model", gitModel);
+
   safetySettings = await vars.g.get(
     denops,
     "futago_safety_settings",
@@ -77,15 +104,10 @@ export async function main(denops: Denops): Promise<void> {
     "futago_generation_config",
     generationConfig,
   ) as GenerationConfig;
+
   aiPrompt = await vars.g.get(denops, "futago_ai_prompt", aiPrompt);
   humanPrompt = await vars.g.get(denops, "futago_human_prompt", humanPrompt);
   opener = await vars.g.get(denops, "futago_opener", opener);
-
-  await ensureDir(chatDir);
-  logFile = z.string().parse(
-    await fn.expand(denops, await vars.g.get(denops, "futago_log_file", logFile)),
-  );
-  await ensureFile(logFile);
 
   setup({
     handlers: {

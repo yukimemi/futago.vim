@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : git_commit.ts
 // Author      : yukimemi
-// Last Change : 2025/02/05 00:26:42.
+// Last Change : 2025/05/06 01:57:21.
 // =============================================================================
 
 import * as fn from "jsr:@denops/std@7.5.0/function";
@@ -56,7 +56,7 @@ export async function gitCommit(
     bufnr,
     model,
     db,
-    undefined,
+    "",
     {
       safetySettings,
       generationConfig,

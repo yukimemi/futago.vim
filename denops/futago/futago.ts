@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2024/12/30 14:56:09.
+// Last Change : 2025/05/06 01:50:11.
 // =============================================================================
 
 import * as datetime from "jsr:@std/datetime@0.225.4";
@@ -18,13 +18,7 @@ import {
 import { getLogger } from "jsr:@std/log@0.224.14";
 import { getDb, setDb } from "./db.ts";
 import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
-import {
-  CACHE_DIR,
-  DEFAULT_AI_PROMPT,
-  DEFAULT_HUMAN_PROMPT,
-  DEFAULT_MODEL,
-  TITLE_MODEL,
-} from "./consts.ts";
+import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL, TITLE_MODEL } from "./consts.ts";
 import { join } from "jsr:@std/path@1.0.9";
 import { z } from "npm:zod@3.24.4";
 
@@ -42,7 +36,7 @@ export class Futago {
     public bufnr: number,
     private model: string = DEFAULT_MODEL,
     private db: Deno.Kv,
-    private chatDir: string = join(CACHE_DIR, "futago", "chat"),
+    private chatDir: string,
     public opts: {
       safetySettings?: SafetySetting[];
       generationConfig?: GenerationConfig;
