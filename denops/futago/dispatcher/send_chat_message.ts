@@ -9,7 +9,7 @@ import * as option from "jsr:@denops/std@7.5.0/option";
 import { Futago } from "../futago.ts";
 import { getNow } from "../util.ts";
 import type { Denops } from "jsr:@denops/std@7.5.0";
-import { z } from "npm:zod@3.24.3";
+import { z } from "npm:zod@3.24.4";
 import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
 import { SEPARATOR } from "../consts.ts";
 import { getLastLineNumber } from "../util.ts";

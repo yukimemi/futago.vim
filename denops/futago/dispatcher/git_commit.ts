@@ -10,7 +10,7 @@ import { GIT_COMMIT_PROMPT } from "../consts.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
 import { SafetySettingsSchema } from "../schema/safety_settings.ts";
-import { z } from "npm:zod@3.24.3";
+import { z } from "npm:zod@3.24.4";
 
 export const GitCommitParamsSchema = z.object({
   model: z.string().optional(),
