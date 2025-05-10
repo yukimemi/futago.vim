@@ -1,7 +1,7 @@
 // =============================================================================
 // File        : db.ts
 // Author      : yukimemi
-// Last Change : 2024/11/03 00:06:34.
+// Last Change : 2025/05/10 10:23:03.
 // =============================================================================
 
 import { z } from "npm:zod@3.24.4";
@@ -11,8 +11,8 @@ import { ContentSchema, HistorySchema } from "./schema/history.ts";
 
 export const RecordSchema = z.object({
   model: z.string(),
-  generationConfig: GenerationConfigSchema.optional(),
-  safetySettings: SafetySettingsSchema.optional(),
+  generationConfig: GenerationConfigSchema.nullable().optional(),
+  safetySettings: SafetySettingsSchema.nullable().optional(),
   humanPrompt: z.string(),
   aiPrompt: z.string(),
   history: HistorySchema,
