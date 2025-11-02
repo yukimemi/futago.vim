@@ -1,11 +1,11 @@
 // =============================================================================
 // File        : futago.ts
 // Author      : yukimemi
-// Last Change : 2025/05/06 01:50:11.
+// Last Change : 2025/11/02 11:30:36.
 // =============================================================================
 
-import * as datetime from "jsr:@std/datetime@0.225.4";
-import sanitize from "npm:sanitize-filename@1.6.3";
+import * as datetime from "@std/datetime";
+import sanitize from "sanitize-filename";
 import {
   ChatSession,
   Content,
@@ -14,13 +14,13 @@ import {
   GoogleGenerativeAI,
   SafetySetting,
   StartChatParams,
-} from "npm:@google/generative-ai@0.24.1";
-import { getLogger } from "jsr:@std/log@0.224.14";
+} from "@google/generative-ai";
+import { getLogger } from "@std/log";
 import { getDb, setDb } from "./db.ts";
-import { Semaphore } from "jsr:@lambdalisue/async@2.1.1";
+import { Semaphore } from "@lambdalisue/async";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, DEFAULT_MODEL, TITLE_MODEL } from "./consts.ts";
-import { join } from "jsr:@std/path@1.0.9";
-import { z } from "npm:zod@3.24.4";
+import { join } from "@std/path";
+import { z } from "zod";
 
 export class Futago {
   #genAI: GoogleGenerativeAI;

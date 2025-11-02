@@ -1,10 +1,12 @@
 // =============================================================================
 // File        : generation_config.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 23:49:19.
+// Last Change : 2025/11/02 11:32:00.
 // =============================================================================
 
-import { z } from "npm:zod@3.24.4";
-import { GenerationConfig } from "npm:@google/generative-ai@0.24.1";
+import { z } from "zod";
+import { GenerationConfig } from "@google/generative-ai";
 
-export const GenerationConfigSchema = z.record(z.any()).transform((v) => v as GenerationConfig);
+export const GenerationConfigSchema = z.record(z.string(), z.any()).transform((v) =>
+  v as GenerationConfig
+);

@@ -1,18 +1,18 @@
 // =============================================================================
 // File        : load_chat.ts
 // Author      : yukimemi
-// Last Change : 2024/11/04 01:16:38.
+// Last Change : 2025/11/02 11:33:25.
 // =============================================================================
 
-import * as batch from "jsr:@denops/std@7.5.0/batch";
-import * as buffer from "jsr:@denops/std@7.5.0/buffer";
-import * as fn from "jsr:@denops/std@7.5.0/function";
-import type { Denops } from "jsr:@denops/std@7.5.0";
+import * as batch from "@denops/std/batch";
+import * as buffer from "@denops/std/buffer";
+import * as fn from "@denops/std/function";
+import type { Denops } from "@denops/std";
 import { Futago } from "../futago.ts";
-import { basename, extname } from "jsr:@std/path@1.0.9";
+import { basename, extname } from "@std/path";
 import { getDb } from "../db.ts";
 import { getNow } from "../util.ts";
-import { z } from "npm:zod@3.24.4";
+import { z } from "zod";
 
 export const loadChatParamsSchema = z.object({
   bufnr: z.number(),
@@ -50,8 +50,8 @@ export async function loadChat(
     db,
     chatDir,
     {
-      safetySettings: lastDb.safetySettings,
-      generationConfig: lastDb.generationConfig,
+      safetySettings: lastDb.safetySettings ?? undefined,
+      generationConfig: lastDb.generationConfig ?? undefined,
       debug: z.boolean().parse(debug),
       humanPrompt: lastDb.humanPrompt,
       aiPrompt: lastDb.aiPrompt,

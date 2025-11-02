@@ -20,7 +20,7 @@
     "include": ["denops"]
   },
   "lock": false,
-  "imports": {
-    "@std/assert": "jsr:@std/assert@^1.0.2"
-  }
+  "workspace": [
+    "./denops/futago"
+  ]
 }

@@ -1,16 +1,16 @@
 // =============================================================================
 // File        : git_commit.ts
 // Author      : yukimemi
-// Last Change : 2025/05/06 01:57:21.
+// Last Change : 2025/11/02 11:32:59.
 // =============================================================================
 
-import * as fn from "jsr:@denops/std@7.5.0/function";
-import type { Denops } from "jsr:@denops/std@7.5.0";
+import * as fn from "@denops/std/function";
+import type { Denops } from "@denops/std";
 import { GIT_COMMIT_PROMPT } from "../consts.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
 import { SafetySettingsSchema } from "../schema/safety_settings.ts";
-import { z } from "npm:zod@3.24.4";
+import { z } from "zod";
 
 export const GitCommitParamsSchema = z.object({
   model: z.string().optional(),

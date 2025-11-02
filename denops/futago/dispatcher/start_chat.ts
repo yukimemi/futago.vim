@@ -1,13 +1,13 @@
 // =============================================================================
 // File        : start_chat.ts
 // Author      : yukimemi
-// Last Change : 2025/02/05 00:25:56.
+// Last Change : 2025/11/02 11:34:41.
 // =============================================================================
 
-import * as batch from "jsr:@denops/std@7.5.0/batch";
-import * as buffer from "jsr:@denops/std@7.5.0/buffer";
-import * as fn from "jsr:@denops/std@7.5.0/function";
-import type { Denops } from "jsr:@denops/std@7.5.0";
+import * as batch from "@denops/std/batch";
+import * as buffer from "@denops/std/buffer";
+import * as fn from "@denops/std/function";
+import type { Denops } from "@denops/std";
 import { DEFAULT_AI_PROMPT, DEFAULT_HUMAN_PROMPT, SEPARATOR } from "../consts.ts";
 import { Futago } from "../futago.ts";
 import { GenerationConfigSchema } from "../schema/generation_config.ts";
@@ -15,7 +15,7 @@ import { HistorySchema } from "../schema/history.ts";
 import { OpenerSchema } from "../schema/opener.ts";
 import { SafetySettingsSchema } from "../schema/safety_settings.ts";
 import { getNow } from "../util.ts";
-import { z } from "npm:zod@3.24.4";
+import { z } from "zod";
 
 export const StartChatParamsSchema = z.object({
   model: z.string().optional(),

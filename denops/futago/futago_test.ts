@@ -1,11 +1,11 @@
 // =============================================================================
 // File        : futago_test.ts
 // Author      : yukimemi
-// Last Change : 2024/11/02 18:44:13.
+// Last Change : 2025/11/02 11:29:38.
 // =============================================================================
 
 import { Futago } from "./futago.ts";
-import { assertStringIncludes } from "jsr:@std/assert@1.0.13";
+import { assertStringIncludes } from "@std/assert";
 
 import { DEFAULT_MODEL } from "./consts.ts";
 

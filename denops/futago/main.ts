@@ -1,27 +1,21 @@
 // =============================================================================
 // File        : main.ts
 // Author      : yukimemi
-// Last Change : 2025/05/06 01:55:46.
+// Last Change : 2025/11/02 11:28:53.
 // =============================================================================
 
-import * as fn from "jsr:@denops/std@7.5.0/function";
-import * as helper from "jsr:@denops/std@7.5.0/helper";
-import * as autocmd from "jsr:@denops/std@7.5.0/autocmd";
-import * as vars from "jsr:@denops/std@7.5.0/variable";
-import { deepMerge } from "jsr:@std/collections@1.0.11";
-import type { Denops } from "jsr:@denops/std@7.5.0";
-import { dir } from "jsr:@cross/dir@1.1.0";
-import { ensureDir, ensureFile } from "jsr:@std/fs@1.0.17";
-import { dirname, join } from "jsr:@std/path@1.0.9";
-import {
-  ConsoleHandler,
-  FileHandler,
-  getLogger,
-  RotatingFileHandler,
-  setup,
-} from "jsr:@std/log@0.224.14";
-import { GenerationConfig, SafetySetting } from "npm:@google/generative-ai@0.24.1";
-import { z } from "npm:zod@3.24.4";
+import * as fn from "@denops/std/function";
+import * as helper from "@denops/std/helper";
+import * as autocmd from "@denops/std/autocmd";
+import * as vars from "@denops/std/variable";
+import { deepMerge } from "@std/collections";
+import type { Denops } from "@denops/std";
+import { dir } from "@cross/dir";
+import { ensureDir, ensureFile } from "@std/fs";
+import { dirname, join } from "@std/path";
+import { ConsoleHandler, FileHandler, getLogger, RotatingFileHandler, setup } from "@std/log";
+import { GenerationConfig, SafetySetting } from "@google/generative-ai";
+import { z } from "zod";
 
 import { startChat, StartChatParamsSchema } from "./dispatcher/start_chat.ts";
 import { loadChat } from "./dispatcher/load_chat.ts";

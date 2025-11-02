@@ -1,10 +1,10 @@
 // =============================================================================
 // File        : db.ts
 // Author      : yukimemi
-// Last Change : 2025/05/10 10:23:03.
+// Last Change : 2025/11/02 11:30:48.
 // =============================================================================
 
-import { z } from "npm:zod@3.24.4";
+import { z } from "zod";
 import { GenerationConfigSchema } from "./schema/generation_config.ts";
 import { SafetySettingsSchema } from "./schema/safety_settings.ts";
 import { ContentSchema, HistorySchema } from "./schema/history.ts";
