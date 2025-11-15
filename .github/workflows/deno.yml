@@ -1,7 +1,7 @@
 # =============================================================================
 # File        : deno.yml
 # Author      : yukimemi
-# Last Change : 2025/10/04 20:37:40.
+# Last Change : 2025/11/16 06:13:56.
 # =============================================================================
 
 name: deno
@@ -34,8 +34,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v2
       - run: deno task ci
+        env:
+          GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
       - run: deno outdated --update --latest --recursive
       - run: deno task ci
+        env:
+          GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
       - uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.app-token.outputs.token }}
