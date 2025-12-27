@@ -115,7 +115,7 @@ Default is v:false
 
 Gemini API model.
 
-Default is "gemini-2.0-flash"
+Default is "gemini-flash-latest"
 
 
 See [Model](https://ai.google.dev/gemini-api/docs/models/gemini?#model-variations)
@@ -124,7 +124,7 @@ See [Model](https://ai.google.dev/gemini-api/docs/models/gemini?#model-variation
 
 Gemini API model used by futago#git_commit().
 
-Default is "gemini-2.0-flash"
+Default is "gemini-flash-latest"
 
 
 - `g:futago_chat_path`
@@ -187,7 +187,7 @@ Default is "tabnew".
 
 ```vim
 let g:futago_debug = v:true
-let g:futago_model = "gemini-2.0-flash-thinking-exp"
+let g:futago_model = "gemini-3-pro-preview"
 let g:futago_chat_path = '~/.cache/vim/futago/chat'
 let g:futago_log_file = '~/.cache/vim/futago/log/futago.log'
 let g:futago_history_db = '~/.cache/vim/futago/db/history.db'
@@ -209,7 +209,7 @@ nnoremap <Leader>fc <Cmd>call futago#start_chat({
   \ ],
   \ "humanPrompt": "yukimemi"
   \ })<CR>
-nnoremap <Leader>fg <Cmd>call futago#git_commit({ "model": "gemini-2.0-flash" })<CR>
+nnoremap <Leader>fg <Cmd>call futago#git_commit({ "model": "gemini-3-flash-preview" })<CR>
 ```
 
 # License
