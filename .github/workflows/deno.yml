@@ -40,7 +40,7 @@ jobs:
       - run: deno task ci
         env:
           GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
-      - uses: peter-evans/create-pull-request@v7
+      - uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.app-token.outputs.token }}
           labels: automerge
