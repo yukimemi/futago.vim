@@ -11,6 +11,6 @@
     "@std/log": "jsr:@std/log@^0.224.14",
     "@std/path": "jsr:@std/path@^1.1.4",
     "sanitize-filename": "npm:sanitize-filename@^1.6.3",
-    "zod": "npm:zod@^4.3.4"
+    "zod": "npm:zod@^4.3.5"
   }
 }
