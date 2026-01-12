@@ -86,6 +86,15 @@ The generated message will be inserted at the current cursor position.
 
 `git diff --no-ext-diff --staged` result will be appended to the prompt.
 
+## `futago#jj_commit([params])`
+
+Generate a message for jj commit based on the `jj diff --git` result.
+The generated message will be inserted at the current cursor position.
+
+- [prompt]: Default is [here](https://github.com/yukimemi/futago.vim/blob/main/denops/futago/consts.ts#L21).
+
+`jj diff --git` result will be appended to the prompt.
+
 # Commands
 
 ## `:FutagoStartChat`
@@ -100,6 +109,10 @@ If you open a past chat file, you can start chatting based on the automatically 
 ## `:FutagoGitCommit`
 
 `call futago#git_commit()` with default argument.
+
+## `:FutagoJjCommit`
+
+`call futago#jj_commit()` with default argument.
 
 # Config
 
