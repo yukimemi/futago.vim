@@ -71,6 +71,10 @@ If you open a past chat file, you can start chatting based on the automatically 
 
 `call futago#git_commit()` with default argument.
 
+`:FutagoJjCommit`                                             *:FutagoJjCommit*
+
+`call futago#jj_commit()` with default argument.
+
 =============================================================================
 Config ~
                                                               *futago-config*
@@ -160,7 +164,7 @@ See [GenerationConfig](https://ai.google.dev/api/generate-content?#generationcon
 - [aiPrompt]: Default is `Gemini`.
 - [humanPrompt]: Default is `You`.
 
-`futago#git_commit([params])`                               *futago#start_chat*
+`futago#git_commit([params])`                               *futago#git_commit*
 
 Generate a message for git commit based on the `git diff --no-ext-diff --staged` result.
 The generated message will be inserted at the current cursor position.
@@ -168,6 +172,15 @@ The generated message will be inserted at the current cursor position.
 - [prompt]: Default is here |https://github.com/yukimemi/futago.vim/blob/main/denops/futago/consts.ts#L21|.
 
 `git diff --no-ext-diff --staged` result will be appended to the prompt.
+
+`futago#jj_commit([params])`                                 *futago#jj_commit*
+
+Generate a message for jj commit based on the `jj diff --git` result.
+The generated message will be inserted at the current cursor position.
+
+- [prompt]: Default is here |https://github.com/yukimemi/futago.vim/blob/main/denops/futago/consts.ts#L21|.
+
+`jj diff --git` result will be appended to the prompt.
 
 =============================================================================
 Example ~

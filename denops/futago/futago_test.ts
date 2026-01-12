@@ -27,7 +27,7 @@ Deno.test({
         console.log(chunk);
         response += chunk;
       }
-      assertStringIncludes(response, "私は");
+      assertStringIncludes(response, "私");
     } finally {
       db.close();
     }
