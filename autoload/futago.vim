@@ -19,3 +19,7 @@ function! futago#git_commit(...) abort
   call futago#denops_notify("gitCommit", a:000)
 endfunction
 
+function! futago#jj_commit(...) abort
+  call futago#denops_notify("jjCommit", a:000)
+endfunction
+

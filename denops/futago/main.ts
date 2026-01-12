@@ -20,6 +20,7 @@ import { z } from "zod";
 import { startChat, StartChatParamsSchema } from "./dispatcher/start_chat.ts";
 import { loadChat } from "./dispatcher/load_chat.ts";
 import { gitCommit, GitCommitParamsSchema } from "./dispatcher/git_commit.ts";
+import { jjCommit, JjCommitParamsSchema } from "./dispatcher/jj_commit.ts";
 import {
   DEFAULT_AI_PROMPT,
   DEFAULT_GIT_MODEL,
@@ -212,6 +213,27 @@ export async function main(denops: Denops): Promise<void> {
         );
       } else {
         await gitCommit(denops, {
+          model: gitModel,
+          db,
+          safetySettings,
+          generationConfig,
+          debug,
+        });
+      }
+    },
+
+    async jjCommit(params: unknown): Promise<void> {
+      const parsed = JjCommitParamsSchema.omit({ db: true }).safeParse(params);
+      if (parsed.success) {
+        await jjCommit(
+          denops,
+          deepMerge(
+            { db, model: gitModel, safetySettings, generationConfig, debug },
+            parsed.data,
+          ),
+        );
+      } else {
+        await jjCommit(denops, {
           model: gitModel,
           db,
           safetySettings,
