@@ -1,6 +1,6 @@
 {
   "imports": {
-    "@cross/dir": "jsr:@cross/dir@^1.1.0",
+    "@cross/dir": "jsr:@cross/dir@^1.1.1",
     "@denops/std": "jsr:@denops/std@^8.2.0",
     "@google/generative-ai": "npm:@google/generative-ai@^0.24.1",
     "@lambdalisue/async": "jsr:@lambdalisue/async@^2.1.1",
