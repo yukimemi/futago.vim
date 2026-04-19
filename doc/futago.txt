@@ -91,7 +91,7 @@ Default is "gemini-flash-latest"
 
 See [Model](https://ai.google.dev/gemini-api/docs/models/gemini?#model-variations)
 
-`g:futago_git_model`                                               *g:futago_model*
+`g:futago_git_model`                                       *g:futago_git_model*
 Gemini API model used by futago#git_commit().
 Default is "gemini-flash-latest"
 
