@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: denoland/setup-deno@v1
+      - uses: denoland/setup-deno@v2.0.4
       - run: deno task ci
         env:
           GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
