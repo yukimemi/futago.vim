@@ -140,7 +140,12 @@ export async function main(denops: Denops): Promise<void> {
   if (fileHandler) {
     fileHandler.flush();
   }
-  db = await Deno.openKv(historyDb);
+  try {
+    db = await Deno.openKv(historyDb);
+  } catch {
+    console.warn("KV file backend not supported on this platform, falling back to memory.");
+    db = await Deno.openKv({ backend: "memory" });
+  }
 
   denops.dispatcher = {
     async startChat(params: unknown): Promise<void> {
