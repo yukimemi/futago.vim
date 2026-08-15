@@ -39,7 +39,7 @@ rhysd_action_setup_vim = "v1.6.1"
 # renovate: datasource=github-tags depName=thinca/action-setup-vim
 thinca_action_setup_vim = "v3.0.2+src"
 # renovate: datasource=github-tags depName=actions/create-github-app-token
-create_github_app_token = "v3"
+create_github_app_token = "v3.2.0"
 
 [denops]
 # renovate: datasource=github-releases depName=vim/vim-win32-installer
