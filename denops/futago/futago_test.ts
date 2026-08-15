@@ -11,6 +11,11 @@ import { DEFAULT_MODEL } from "./consts.ts";
 
 Deno.test({
   name: "Test sendMessageStream()",
+  // Live Gemini API call. Skip when no credential is available so
+  // credential-less runs (PR CI, fresh checkouts) stay green instead of
+  // failing on a missing environment variable. Runs for real wherever
+  // GEMINI_API_KEY is set (deno.yml passes the repo secret).
+  ignore: Deno.env.get("GEMINI_API_KEY") == undefined,
   fn: async () => {
     const db = await Deno.openKv();
     try {
