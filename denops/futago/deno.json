@@ -9,7 +9,7 @@
     "@std/datetime": "jsr:@std/datetime@^0.225.7",
     "@std/fs": "jsr:@std/fs@^1.0.24",
     "@std/log": "jsr:@std/log@^0.224.14",
-    "@std/path": "jsr:@std/path@^1.1.4",
+    "@std/path": "jsr:@std/path@^1.1.6",
     "sanitize-filename": "npm:sanitize-filename@^1.6.4",
     "zod": "npm:zod@^4.3.6"
   }
