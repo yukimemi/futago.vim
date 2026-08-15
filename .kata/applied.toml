@@ -1,13 +1,13 @@
-preset = "C:/Users/yukimemi/src/github.com/yukimemi/pj-presets/denops-local.toml"
-applied_at = "2026-08-15T06:21:54.6815231Z"
+preset = "github.com/yukimemi/pj-presets:denops"
+applied_at = "2026-08-15T06:43:54.5086258Z"
 
 [[templates]]
-source = "C:/Users/yukimemi/src/github.com/yukimemi/pj-base"
+source = "github.com/yukimemi/pj-base"
 rev = "local"
 version = "0.13.0"
 
 [[templates]]
-source = "C:/Users/yukimemi/src/github.com/yukimemi/pj-denops"
+source = "github.com/yukimemi/pj-denops"
 rev = "local"
 version = "0.1.0"
 
@@ -30,7 +30,7 @@ content_hash = "c49d3296f13bce5c88498e429c6b413d902fa433f9c42233bc0a1434fcb9cb21
 once_applied = true
 
 [files.".github/workflows/ci.yml"]
-content_hash = "a3969a639b08cd585457df7087c5fc6db22b64d919fa807cae3d775d3f17de1d"
+content_hash = "1b5b6e531f6797b64744883b4469286fe5663417c3fd79a322b4306c00a28e6c"
 
 [files.".github/workflows/claude-review.yml"]
 content_hash = "364cbcb5325bdd5e8e478a7f0441707c5e20d25e183cdb45d2693cb93740af01"

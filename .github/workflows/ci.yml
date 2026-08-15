@@ -45,8 +45,12 @@ jobs:
 
       # `@denops/test` spawns these binaries directly; without the two
       # env vars every `test({ mode: "vim" | "nvim" })` case fails.
+      #
+      # No `shell:` override on purpose — each runner's default shell is
+      # used. Forcing `shell: bash` routes Windows through Git Bash, which
+      # mangles the Windows-style editor paths in the env vars below and
+      # hangs the nvim cases instead of failing them.
       - name: Run CI
-        shell: bash
         run: deno task ci
         env:
           DENOPS_TEST_VIM_EXECUTABLE: ${{ steps.vim-rhysd.outputs.executable || steps.vim-thinca.outputs.executable }}
