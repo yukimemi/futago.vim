@@ -32,14 +32,10 @@ create_pull_request = "v8.1.1"
 claude_code_action = "v1"
 # renovate: datasource=github-tags depName=denoland/setup-deno
 deno_setup = "v2"
-# renovate: datasource=github-tags depName=pascalgn/automerge-action
-automerge_action = "v0.16.4"
 # renovate: datasource=github-tags depName=rhysd/action-setup-vim
 rhysd_action_setup_vim = "v1.6.1"
 # renovate: datasource=github-tags depName=thinca/action-setup-vim
 thinca_action_setup_vim = "v3.0.2"
-# renovate: datasource=github-tags depName=actions/create-github-app-token
-create_github_app_token = "v3.2.0"
 
 [denops]
 # renovate: datasource=github-releases depName=vim/vim-win32-installer

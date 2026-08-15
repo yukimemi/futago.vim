@@ -252,32 +252,31 @@ are pinned in `.kata/vars.toml` under `[denops]`. Do not add a
 through Git Bash, which mangles those executable paths and hangs the
 nvim cases.
 
-### automerge
+### Dependency updates and merging
 
-`.github/workflows/automerge.yml` is seeded by kata on first apply
-and consumer-owned afterward. Renovate bumps action versions
-directly in this file. PRs carrying the `automerge` label are merged
-once their checks pass; the label comes from pj-base's Renovate
-config.
+Renovate owns every dependency bump, including the Deno / JSR imports in
+`deno.json` (its `deno` manager reads `deno.json` and the workspace
+members). There is no `deno outdated` cron and no
+`pascalgn/automerge-action` workflow — an earlier setup had both, and they
+duplicated what Renovate already does.
 
-It deliberately contains no test step. `pascalgn/automerge-action`
-already waits for the PR's own checks, and a `deno task ci` here would
-run without vim/nvim, fail, and that failure alone would hold the PR
-at `mergeable_state=unstable` — blocking the merge this workflow
-exists to perform.
+Merging is GitHub's native auto-merge, armed by Renovate
+(`platformAutomerge`) and by pj-base's `kata-apply` / `apm-bump`
+workflows via `gh pr merge --auto`. Two repo-side preconditions, both
+required — this is the same setup the pj-rust line uses:
 
-### Deno import updates
+* `allow_auto_merge` enabled on the repository.
+* Branch protection on `main` with `ci (ubuntu-latest)` as a required
+  status check. GitHub only arms auto-merge on a pull request that is
+  currently blocked; with no required check the PR is immediately
+  mergeable and the request is rejected.
 
-`.github/workflows/deno-update.yml` is kata-managed. It runs
-`deno outdated --update --latest --recursive` daily and opens a
-rolling `update/deno-imports` PR labelled `automerge`, so ci.yml
-validates the bump and automerge.yml merges it when green. It does
-not run the test suite itself — a broken bump should surface as a red
-PR, not a failed cron with nothing to inspect.
+Only the ubuntu leg is required on purpose. The macOS and Windows legs
+still run and still have to be read, but a flaky runner on those two
+(editor downloads time out often enough) must not wedge every dependency
+PR.
 
-Needs an `APP_ID` variable and `PRIVATE_KEY` secret (GitHub App with
-contents + pull-requests write); the job self-skips when they are
-missing. The App identity is required because PRs opened with
-`GITHUB_TOKEN` do not trigger downstream workflows, so ci.yml would
-never run and automerge could never gate.
+Minor and patch bumps merge themselves. Majors wait for a human — that
+includes Deno / JSR majors, which the old `deno outdated --latest` cron
+used to pull in unreviewed.
 <!-- kata:agents:denops:end -->
