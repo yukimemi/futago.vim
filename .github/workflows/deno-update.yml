@@ -46,13 +46,13 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
 
       - uses: denoland/setup-deno@v2
 
       - run: deno outdated --update --latest --recursive
 
-      - uses: peter-evans/create-pull-request@v7
+      - uses: peter-evans/create-pull-request@v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
           labels: automerge

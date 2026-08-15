@@ -16,26 +16,26 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
 
       # Vim. rhysd/action-setup-vim builds from source, which only works
       # on Linux runners here; thinca/action-setup-vim installs a prebuilt
       # Vim on macOS / Windows. Both expose the same `executable` output,
       # coalesced into DENOPS_TEST_VIM_EXECUTABLE below.
-      - uses: rhysd/action-setup-vim@v1
+      - uses: rhysd/action-setup-vim@v1.6.1
         if: matrix.os == 'ubuntu-latest'
         id: vim-rhysd
         with:
           version: "v9.2.0148"
 
-      - uses: thinca/action-setup-vim@v3
+      - uses: thinca/action-setup-vim@v3.0.2
         if: matrix.os != 'ubuntu-latest'
         id: vim-thinca
         with:
           vim_type: "Vim"
           vim_version: "v9.2.0148"
 
-      - uses: rhysd/action-setup-vim@v1
+      - uses: rhysd/action-setup-vim@v1.6.1
         id: nvim
         with:
           neovim: true

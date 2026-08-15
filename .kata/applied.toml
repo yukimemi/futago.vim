@@ -1,5 +1,5 @@
 preset = "github.com/yukimemi/pj-presets:denops"
-applied_at = "2026-08-15T08:31:50.3256034Z"
+applied_at = "2026-08-15T08:43:53.5323657Z"
 
 [[templates]]
 source = "github.com/yukimemi/pj-base"
@@ -24,25 +24,25 @@ content_hash = "486c974de88903113ed99b4e643432b7050e88f1031276f5263e8da7b43fe11e
 content_hash = "6d380d1ecc2f882c2011429d548a6f3c774b74f0c757d884453e4667172acc2a"
 
 [files.".github/workflows/apm-bump.yml"]
-content_hash = "d7331ae3c991ee893b97dd182ffeabfc5314798a6c9a8595a4c874b1f9b52ad9"
+content_hash = "f1cf3615e0f5ff443860722da8d7f74530eaa37e755e65f4392a0c25cd83917e"
 
 [files.".github/workflows/automerge.yml"]
 once_applied = true
 
 [files.".github/workflows/ci.yml"]
-content_hash = "1b5b6e531f6797b64744883b4469286fe5663417c3fd79a322b4306c00a28e6c"
+content_hash = "8ec238516165f4c03c8cb08216b19afe379339dd4792406660d9e96ed9c23cf2"
 
 [files.".github/workflows/claude-review.yml"]
-content_hash = "8d0de0b2e577bd089d18475915f4cd41f2e7af4054b4888a8ddaac58946ee4e8"
+content_hash = "4589425f4f2dd857f64116c2a8e0ae8746df423dd4cdf1de6c7e582b13fe245f"
 
 [files.".github/workflows/claude.yml"]
-content_hash = "86ff51d6d07835c68827801f362d3b2a08b970ec721dde3bbe58df57fcc38c4f"
+content_hash = "e018b9c422cac8cb57d832c4100697a56bbd4b5f5a9a2abd6c803149665525a7"
 
 [files.".github/workflows/deno-update.yml"]
-content_hash = "a4e49b9b5141212cff2828bea086762db0bd7a6fd2c4a4a132fe12f5c18dcaf2"
+content_hash = "4c27ab63f971635cb578f4ccc44387ec09821e126cb93f1b4b5e96925e109629"
 
 [files.".github/workflows/kata-apply.yml"]
-content_hash = "2256d160721583ff5b6afe5c9a1778761f7ce6fc5ba46dbe27c9cd7d803a0632"
+content_hash = "62bd9b21a8b7257762d06feefbd3d4595cadfdf01dbde2e67a03521fc4b09efc"
 
 [files.".gitignore"]
 content_hash = "4bebd1c3417c33f9d1c51f011694f6d82b098bbb1a5a102ba56e97ab01a866ef"

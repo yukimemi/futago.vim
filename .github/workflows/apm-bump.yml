@@ -68,7 +68,7 @@ jobs:
       # uses it: PRs pushed via GITHUB_TOKEN don't trigger CI,
       # which would block the auto-merge gate. PAT-owned identity
       # restores the trigger chain.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           token: ${{ secrets.KATA_APPLY_TOKEN }}
           persist-credentials: false
@@ -112,7 +112,7 @@ jobs:
 
       - name: Open / update PR if there are changes
         id: cpr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8.1.1
         with:
           token: ${{ secrets.KATA_APPLY_TOKEN }}
           branch: apm-bump/auto

@@ -55,7 +55,7 @@ jobs:
       # CI from running on the auto-PR — making auto-merge wait for
       # checks that never fire. A PAT acts as a user-identity push
       # and triggers CI normally.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           token: ${{ secrets.KATA_APPLY_TOKEN }}
 
@@ -80,7 +80,7 @@ jobs:
 
       - name: Open / update PR if there are changes
         id: cpr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8.1.1
         with:
           token: ${{ secrets.KATA_APPLY_TOKEN }}
           branch: kata-apply/auto
