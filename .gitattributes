@@ -1,0 +1,12 @@
+# kata:gitattributes:base:begin
+# Universal LF — projects using these templates are cross-platform (web,
+# Rust, Go) and never intentionally rely on CRLF, so normalize
+# every text file to LF on commit. Binary files are auto-detected
+# (`text=auto`), so this is safe for images, PDFs, etc.
+#
+# Why: apm install (renri's post_create hook) writes CRLF on
+# Windows, and any future tool that touches a kata-managed file
+# from a Windows checkout would do the same. This rule keeps the
+# committed bytes identical regardless of where the writer ran.
+* text=auto eol=lf
+# kata:gitattributes:base:end

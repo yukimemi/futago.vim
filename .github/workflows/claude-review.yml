@@ -1,0 +1,108 @@
+name: claude-review
+
+# Automatic Claude Code review on every human-authored PR.
+#
+# Replaces the Gemini Code Assist free-tier PR review (free tier
+# discontinued upstream). Runs anthropics/claude-code-action in
+# agent mode: the workflow supplies a review prompt, Claude reads
+# the diff (and the repo's AGENTS.md conventions) and posts inline
+# comments plus a top-level summary.
+#
+# Review-skip policy — mirrors the AGENTS.md "PR review cycle"
+# rules so the workflow and the docs agree on which PRs skip the
+# bot-review gate:
+# - `chore/release-*` version-bump PRs: nothing for a reviewer to
+#   find in a version bump, and the release pipeline downstream of
+#   merge (auto-tag → release.yml, shipped by language layers like
+#   pj-rust-cli) is time-sensitive.
+# - `kata-apply/auto` / `apm-bump/auto` rolling branches: rendered
+#   template / lock refreshes, auto-merged when CI passes.
+# - Renovate / Dependabot PRs: bot-authored dependency bumps skip
+#   the bot-review gate per AGENTS.md.
+# - Draft PRs: review fires once marked ready (`ready_for_review`).
+#
+# `.tera` suffix: same dual purpose as the other workflow templates
+# here — keeps GHA from auto-running the source inside pj-base, and
+# opts the file into kata's Tera rendering for the
+# `{{ vars.actions.* }}` action-version pins.
+#
+# Setup requirement on every consumer (one-time):
+# 1. Install the Claude GitHub App (github.com/apps/claude) on the
+#    repo (or org) — the action exchanges an OIDC token against it.
+# 2. `CLAUDE_CODE_OAUTH_TOKEN` repo secret — generate locally with
+#    `claude setup-token` (requires a Claude Pro/Max subscription).
+#    Pay-as-you-go alternative: store `ANTHROPIC_API_KEY` instead
+#    and swap the input below to `anthropic_api_key`.
+#
+# `when = "always"` (in template.toml): every consumer wants
+# identical review behaviour; fixes to the workflow itself flow
+# automatically on next apply.
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  # One review per PR at a time; a new push supersedes the
+  # in-flight review (reviewing a stale diff is wasted tokens).
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Skip release bumps, rolling bot branches, bot authors and
+    # drafts — see the header comment for the per-line rationale.
+    if: |
+      !github.event.pull_request.draft &&
+      !startsWith(github.head_ref, 'chore/release-') &&
+      github.head_ref != 'kata-apply/auto' &&
+      github.head_ref != 'apm-bump/auto' &&
+      github.event.pull_request.user.login != 'renovate[bot]' &&
+      github.event.pull_request.user.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    # The action's SDK caps runs at 10 agent turns, but has no
+    # wall-clock timeout of its own; bound a hung run well below
+    # GHA's 360-minute default.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          # The action exchanges its own App token for git/API
+          # access; the checkout-persisted credential is unused.
+          # Same hardening as apm-bump.yml.tera.
+          persist-credentials: false
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Tracking comment with progress checkboxes; also pulls
+          # full PR context (comments, attachments) into the run.
+          track_progress: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Review this pull request for correctness bugs first,
+            then code quality. Follow the repository's AGENTS.md
+            conventions where they apply.
+
+            Focus areas, in priority order:
+            - Correctness: logic errors, edge cases, error handling
+            - Security: input validation, secrets handling
+            - Maintainability: readability, duplication, dead code
+            - Tests: coverage for the changed behaviour
+
+            Post specific issues as inline comments on the relevant
+            lines. Use one top-level comment for the overall
+            summary. Be concise — no praise padding; if the PR is
+            clean, say so briefly.
+          # Scope Claude to read-the-PR + comment tools only; the
+          # review job must not push code.
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"

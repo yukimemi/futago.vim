@@ -1,0 +1,34 @@
+# Action version pins for kata-managed GHA workflow templates.
+#
+# Each `# renovate:` annotation tells Renovate which datasource
+# and upstream repo the value tracks; Renovate bumps these via
+# the customManager declared in `default.json`. Edits here flow
+# into the next `kata apply` (which re-renders the consumer's
+# `.tera` workflow files using these values) without being
+# reverted by kata.
+#
+# Layering: this file is shipped via kata as a `when = "once"`
+# seed into each consumer's `.kata/vars.toml`. After the initial
+# seed, the consumer owns their copy — Renovate bumps in-place
+# there. The seed in this template repo is what new `kata init`
+# consumers start with.
+#
+# Universal scope: this layer ships pins for actions used by
+# workflows pj-base itself owns (`kata-apply.yml.tera` uses
+# `actions/checkout` and `peter-evans/create-pull-request`).
+# Language-layer-specific pins (e.g. `Swatinem/rust-cache`,
+# used by pj-rust's `ci.yml.tera`) live in their language layer
+# and are merged into `.kata/vars.toml` via `how = "merge-toml"`
+# on first apply — yukimemi/kata#85 made `when = "once"` compose
+# across multiple `[[file]]` entries to the same dst, so the
+# layered seed works as the preset system was designed.
+
+[actions]
+# renovate: datasource=github-tags depName=actions/checkout
+checkout = "v6"
+# renovate: datasource=github-tags depName=peter-evans/create-pull-request
+create_pull_request = "v7"
+# renovate: datasource=github-tags depName=anthropics/claude-code-action
+claude_code_action = "v1"
+deno_setup = "v2"
+automerge_action = "v0.16.4"

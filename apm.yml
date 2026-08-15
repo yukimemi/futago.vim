@@ -1,0 +1,17 @@
+# Required-by-APM but intentionally static. Projects using these
+# templates are not APM publishers; this apm.yml exists only to install
+# agent skills that contributors want available while working on
+# this repo — currently the `renri` worktree skill.
+name: futago.vim
+version: 0.0.0
+description: |
+  Dev-consumer APM config for the futago.vim repo. Pinned
+  to `#main` so `apm install --update` always pulls the latest
+  renri skill.
+author: yukimemi
+dependencies:
+  apm:
+    - yukimemi/renri#main
+  mcp: []
+includes: auto
+scripts: {}

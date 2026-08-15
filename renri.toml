@@ -1,0 +1,26 @@
+# renri.toml — language-agnostic worktree config for projects using these templates.
+# pj-base ships the minimum hook chain that any PJ benefits from
+# (refresh installed agent skills); language-specific layers
+# (pj-rust, pj-go, pj-bun) overwrite this file with a richer hook
+# that delegates to the project's build-system on-add task.
+
+[ui]
+# Surface the GitHub PR # next to each worktree in `renri list`.
+# renri batches `gh pr list` lookups (one call per `list` run
+# regardless of worktree count) and caches the result; pass
+# `renri list --refresh` to bypass the cache when a new PR has
+# just been opened or merged.
+show_pr = true
+
+[[hooks.post_create]]
+# `apm install` (no `--update`) is idempotent against the existing
+# `apm.lock.yaml`: fresh worktrees get the recorded skills
+# installed without rewriting the lock. Upstream-refresh is
+# delegated to `.github/workflows/apm-bump.yml` (weekly cron +
+# manual dispatch) — same Renovate-equivalent pattern as
+# `kata-apply.yml`. Avoids the per-`renri add` lock churn that
+# the older `apm install --update` hook produced whenever
+# upstream renri (or any other apm dep) had moved.
+type = "command"
+run = "apm install"
+shell = "auto"

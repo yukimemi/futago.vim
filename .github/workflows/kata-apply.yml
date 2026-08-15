@@ -1,0 +1,104 @@
+name: kata-apply
+
+# Auto-sync rendered kata-managed files on a daily cadence.
+#
+# Renovate's customManager bumps action-version pins in
+# `.kata/vars.toml`, and pj-* templates upstream also evolve
+# (action versions, workflow structure, etc.). Either change
+# can leave the rendered output (e.g. `.github/workflows/ci.yml`,
+# produced by Tera-rendering `ci.yml.tera`) stale until someone
+# runs `kata apply` manually.
+#
+# Daily schedule sweep covers both:
+# - bumps that landed on this repo since the last sweep
+#   (`.kata/vars.toml` changes Renovate has merged),
+# - upstream template changes pulled via `kata update` (refreshes
+#   `applied.toml`'s recorded revs against the latest upstream).
+#
+# Output: a PR (single rolling branch `kata-apply/auto`) with the
+# rendered-file diff. Auto-merged when CI passes — if CI fails,
+# the PR stays open for human review.
+#
+# Source: yukimemi/pj-base. Filename carries `.tera` so kata
+# Tera-renders the file at apply time (substituting
+# `{{ vars.actions.* }}`) and strips the
+# suffix — consumer receives `.github/workflows/kata-apply.yml`.
+# pj-base itself has no `.kata` state, so the .tera source never
+# executes in GHA in this repo (GHA only invokes `.yml`/`.yaml`).
+
+on:
+  schedule:
+    # 03:17 UTC daily — off-peak, slightly off-the-hour to dodge
+    # the cron-storm at :00.
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  # `peter-evans/create-pull-request` needs both: contents to
+  # write the branch, pull-requests to open/update the PR.
+  contents: write
+  pull-requests: write
+
+concurrency:
+  # Serialise: if a scheduled run and a manual dispatch overlap,
+  # let them run sequentially so the second sees the first's commit.
+  group: kata-apply
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout with the PAT (KATA_APPLY_TOKEN), NOT GITHUB_TOKEN.
+      # Reason: PRs pushed via GITHUB_TOKEN don't trigger downstream
+      # workflows (GitHub's loop-prevention rule), which would block
+      # CI from running on the auto-PR — making auto-merge wait for
+      # checks that never fire. A PAT acts as a user-identity push
+      # and triggers CI normally.
+      - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.KATA_APPLY_TOKEN }}
+
+      - name: Install kata
+        run: |
+          set -euo pipefail
+          KATA_VERSION="$(curl -fsSL https://api.github.com/repos/yukimemi/kata/releases/latest | jq -r .tag_name)"
+          echo "Installing kata ${KATA_VERSION}"
+          curl -fsSL "https://github.com/yukimemi/kata/releases/download/${KATA_VERSION}/kata-x86_64-unknown-linux-musl.tar.gz" \
+            | tar xz -C /tmp
+          sudo mv /tmp/kata /usr/local/bin/kata
+          kata --version
+
+      # `kata update` refreshes cached template revs against
+      # upstream HEAD (so a new pj-rust release flows in on the
+      # next apply). `kata apply` re-renders / re-merges every
+      # manifest-listed file against the now-fresh templates.
+      - name: kata update + apply
+        run: |
+          kata update
+          kata apply --non-interactive --no-ai
+
+      - name: Open / update PR if there are changes
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.KATA_APPLY_TOKEN }}
+          branch: kata-apply/auto
+          delete-branch: true
+          title: "chore(kata): auto-apply"
+          commit-message: "chore(kata): refresh rendered files"
+          body: |
+            Automated `kata update + apply` (daily schedule + manual dispatch).
+
+            Auto-merged when CI passes; left open if CI fails.
+
+            <!-- pj-base ships this workflow; see yukimemi/pj-base#6 -->
+          author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          committer: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+
+      - name: Enable auto-merge
+        if: steps.cpr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ secrets.KATA_APPLY_TOKEN }}
+        run: |
+          gh pr merge --auto --squash ${{ steps.cpr.outputs.pull-request-number }}
