@@ -9,6 +9,17 @@
 # that failure alone drops the PR to `mergeable_state=unstable`, which
 # blocks the very merge this workflow exists to perform. CI lives in
 # ci.yml; this file only performs the merge.
+#
+# Trigger notes (pascalgn/automerge-action v0.16.4 lib/api.js):
+#   * pull_request / check_suite / status — the fast path. The action reads
+#     the PR from the event payload and merges as soon as it goes green.
+#   * schedule — the ONLY trigger that lists every open PR and sweeps them.
+#     This is the safety net: a PR whose check_suite completed before this
+#     workflow existed (or during an outage) never receives another event
+#     and would otherwise sit green-but-unmerged forever.
+#   * workflow_dispatch — resolves PRs whose HEAD is the dispatched ref, so
+#     dispatching from the default branch matches nothing. Useful only when
+#     dispatched against a specific PR branch.
 
 name: automerge
 
@@ -18,6 +29,8 @@ on:
   check_suite:
     types: [completed]
   status: {}
+  schedule:
+    - cron: "0 */6 * * *"
 
 jobs:
   automerge:
