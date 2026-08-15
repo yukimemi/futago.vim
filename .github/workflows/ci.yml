@@ -1,4 +1,3 @@
-
 # kata-managed — source: yukimemi/pj-denops/.github/workflows/ci.yml.tera
 # Local edits are reverted on the next `kata apply`. Push fixes upstream.
 name: CI
@@ -10,6 +9,7 @@ on:
 
 jobs:
   ci:
+    name: ci (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
@@ -18,8 +18,36 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # Vim. rhysd/action-setup-vim builds from source, which only works
+      # on Linux runners here; thinca/action-setup-vim installs a prebuilt
+      # Vim on macOS / Windows. Both expose the same `executable` output,
+      # coalesced into DENOPS_TEST_VIM_EXECUTABLE below.
+      - uses: rhysd/action-setup-vim@v1
+        if: matrix.os == 'ubuntu-latest'
+        id: vim-rhysd
+        with:
+          version: "v9.2.0148"
+
+      - uses: thinca/action-setup-vim@v3
+        if: matrix.os != 'ubuntu-latest'
+        id: vim-thinca
+        with:
+          vim_type: "Vim"
+          vim_version: "v9.2.0148"
+
+      - uses: rhysd/action-setup-vim@v1
+        id: nvim
+        with:
+          neovim: true
+          version: "v0.12.4"
+
       - uses: denoland/setup-deno@v2
 
+      # `@denops/test` spawns these binaries directly; without the two
+      # env vars every `test({ mode: "vim" | "nvim" })` case fails.
       - name: Run CI
         shell: bash
         run: deno task ci
+        env:
+          DENOPS_TEST_VIM_EXECUTABLE: ${{ steps.vim-rhysd.outputs.executable || steps.vim-thinca.outputs.executable }}
+          DENOPS_TEST_NVIM_EXECUTABLE: ${{ steps.nvim.outputs.executable }}

@@ -1,5 +1,5 @@
 preset = "C:/Users/yukimemi/src/github.com/yukimemi/pj-presets/denops-local.toml"
-applied_at = "2026-08-15T05:52:34.6403763Z"
+applied_at = "2026-08-15T06:21:54.6815231Z"
 
 [[templates]]
 source = "C:/Users/yukimemi/src/github.com/yukimemi/pj-base"
@@ -30,7 +30,7 @@ content_hash = "c49d3296f13bce5c88498e429c6b413d902fa433f9c42233bc0a1434fcb9cb21
 once_applied = true
 
 [files.".github/workflows/ci.yml"]
-content_hash = "235d22c4ca0d757df073d13ac7757d48be2d81a8614574e8d515130f12fd11a1"
+content_hash = "a3969a639b08cd585457df7087c5fc6db22b64d919fa807cae3d775d3f17de1d"
 
 [files.".github/workflows/claude-review.yml"]
 content_hash = "364cbcb5325bdd5e8e478a7f0441707c5e20d25e183cdb45d2693cb93740af01"
@@ -45,6 +45,7 @@ content_hash = "2256d160721583ff5b6afe5c9a1778761f7ce6fc5ba46dbe27c9cd7d803a0632
 content_hash = "4bebd1c3417c33f9d1c51f011694f6d82b098bbb1a5a102ba56e97ab01a866ef"
 
 [files.".kata/vars.toml"]
+content_hash = "393b2b94540e792790ef9357e46e5bc259eb3064605794ca2373ae458999cb23"
 once_applied = true
 
 [files."AGENTS.md"]
