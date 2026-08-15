@@ -1,0 +1,62 @@
+# kata-managed — source: yukimemi/pj-denops/.github/workflows/deno-update.yml.tera
+# Local edits are reverted on the next `kata apply`. Push fixes upstream.
+#
+# Daily `deno outdated --update --latest --recursive`, opened as a rolling
+# PR on `update/deno-imports`. Renovate covers registry deps it recognises;
+# this covers the Deno import map wholesale, including majors.
+#
+# Deliberately does NOT run `deno task ci`:
+#   * on unchanged main it is pure duplication of ci.yml, and
+#   * after the bump it would need this job to carry the full editor
+#     toolchain (`@denops/test` spawns real vim/nvim) plus any repo-specific
+#     test secrets — neither belongs in a shared template.
+# The PR it opens is labelled `automerge`, so ci.yml validates the bump on
+# the PR and automerge.yml merges only once green. A bump that breaks the
+# build therefore leaves a red PR to look at instead of a silently failed
+# cron run.
+#
+# Consumer setup (one-time): an `APP_ID` repository variable plus a
+# `PRIVATE_KEY` secret for a GitHub App with contents + pull-requests
+# write. A GitHub App identity is required rather than GITHUB_TOKEN
+# because PRs opened with GITHUB_TOKEN do not trigger downstream
+# workflows, so ci.yml would never run and the automerge gate could never
+# fire.
+name: deno-update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    name: Update Deno imports
+    runs-on: ubuntu-latest
+    # Skip instead of failing the cron every day on a repo that has not had
+    # the GitHub App installed yet.
+    if: ${{ vars.APP_ID != '' }}
+    steps:
+      - uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - uses: actions/checkout@v6
+
+      - uses: denoland/setup-deno@v2
+
+      - run: deno outdated --update --latest --recursive
+
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          labels: automerge
+          branch: update/deno-imports
+          delete-branch: true
+          title: Update Deno imports
+          commit-message: "chore(deps): Update deno imports"

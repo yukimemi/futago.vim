@@ -32,6 +32,42 @@ here so each tool's auto-load behaviour still finds something.
   `chore/release-*`, `kata-apply/auto`, `apm-bump/auto`, and
   Renovate / Dependabot authors) — a missing Claude review on
   those PRs is expected, not a failure.
+- **Any PR that touches the Claude workflow files goes
+  unreviewed.** `claude-code-action` requires the workflow file to
+  already exist on the default branch **with identical content** —
+  otherwise a PR could rewrite the workflow to exfiltrate the
+  token. When the content differs it logs "Skipping action due to
+  workflow validation" and exits 0 without reviewing: a green
+  check with no review attached. This covers two cases, and the
+  second is the one that keeps surprising people:
+  - the PR that first adopts these templates (the workflow does
+    not exist on the default branch yet), and
+  - any later PR that **edits** `claude-review.yml` / `claude.yml`,
+    e.g. hand-pulling an upstream template fix.
+
+  Not fixable from this side — it is the mechanism that makes the
+  token safe to hand to the action at all. Expected: merge on CI +
+  owner approval; reviews resume on the next PR that leaves the
+  workflows alone. The `kata-apply/auto` branch is already excluded
+  by the job-level `if:`, so the daily template-refresh PRs do not
+  add noise here.
+- **A missing credential fails loudly instead.** If the repo has
+  neither `CLAUDE_CODE_OAUTH_TOKEN` nor `ANTHROPIC_API_KEY` set,
+  the guard step fails the job — set one and re-run (subscription
+  path: `claude setup-token` → `gh secret set`; pay-as-you-go:
+  store `ANTHROPIC_API_KEY` and swap the action input to
+  `anthropic_api_key`). Distinguishing the two: **red** means no
+  credential, **green with no review** means workflow validation.
+- **The Claude full review fires once, at PR open** (plus
+  `ready_for_review` / `reopened`) — fix pushes do **not** re-trigger
+  it (`synchronize` is deliberately off the trigger list; a full
+  re-review per push doubled up with the mention-driven re-check
+  below and burned tokens for no extra signal). Verification of
+  fixes rides the `@claude` thread replies. After a large rework
+  that changes the PR's shape, request a fresh full pass
+  explicitly: `@claude please re-review the full PR`. CodeRabbit
+  still reviews pushes on its own cadence (its app config, not
+  this workflow).
 - **After opening a PR, immediately enter the review-monitoring
   loop — do not ask the user whether to start it.** Drive the
   cadence with `/loop` — fixed-interval mode (e.g.
@@ -71,15 +107,27 @@ here so each tool's auto-load behaviour still finds something.
   to 1200–1800s instead and let it ride. Stopping is only correct
   when the owner has explicitly chosen to skip the bot pass per
   the rate-limit exception below.)
-- **Reply to reviewers after pushing a fix.** Reply on the
-  corresponding review thread with an **@-mention**
-  (`@claude` / `@coderabbitai`). Silent fixes are invisible to
-  reviewers and cost the audit trail. Note `@claude` also
+- **Reply to reviewers after pushing a fix — in each thread, not
+  at the top level.** Every finding lives in its own inline review
+  thread; answer *each* one as an in-thread reply, carrying an
+  **@-mention** (`@claude` / `@coderabbitai`). Use the review-
+  comment *replies* endpoint — `gh api repos/<owner>/<repo>/pulls/<N>/comments/<comment_id>/replies -f body=…`
+  (or `-F in_reply_to=<comment_id> -f body=…` on the comments
+  endpoint — `body` is required there too) — and
+  get each comment's `<comment_id>` from
+  `gh api repos/<owner>/<repo>/pulls/<N>/comments`. A single
+  top-level `gh pr comment` does **not** count: it leaves every
+  inline thread unresolved, the bot can't tie your response to the
+  finding it raised, and the per-finding audit trail is lost.
+  Reply in-thread even when you're **declining** a suggestion —
+  say why; a silent skip reads as overlooked. Note `@claude` also
   triggers the interactive responder
   (`.github/workflows/claude.yml`, kata-managed) — it will
-  re-check the fix and reply on the thread; that re-check is the
-  point, but don't @-mention it for pure FYI notes that need no
-  verification.
+  re-check the fix and reply on the thread. Since fix pushes no
+  longer re-trigger the full review, this mention-driven re-check
+  is the **only** Claude-side verification of a fix — don't skip
+  it for substantive fixes; do skip it for pure FYI notes that
+  need no verification.
 - A review thread is **settled** the moment the latest bot reply
   is ack-only ("Thank you" / "Understood" / a re-review summary
   with no new findings) or 30 minutes elapse with no actionable
@@ -103,6 +151,21 @@ here so each tool's auto-load behaviour still finds something.
   time-sensitive PRs, merge on owner approval without waiting.
 
 ### Worktree workflow
+
+> **Before your FIRST edit to any file, run `renri add` — NEVER edit the
+> main checkout.** Read-only inspection (Read / Grep / Glob) stays on the
+> main checkout; the instant you intend to *change* a file, you must
+> already be in a worktree. The trap that keeps catching agents: diving
+> into a fix the moment the diagnosis lands and editing in place. A
+> concurrent agent shares the main checkout — your in-place edits will
+> clobber theirs or be clobbered, and in a jj-colocated repo a stray
+> working-copy commit entangles unrelated WIP into your branch. If you
+> slip and edit in the main checkout, capture the diff first (jj already
+> snapshotted it into the working-copy commit, so `jj diff > patch`; for
+> git, `git stash` or save a patch — if you got as far as committing on a
+> branch, just push it). Then reset the main checkout to pristine main
+> (`jj new main@origin`, or `git switch -`), `renri add` a worktree, and
+> re-apply the captured diff there.
 
 Use [`renri`](https://github.com/yukimemi/renri) for any
 commit-bound change. From the main checkout:
@@ -181,10 +244,40 @@ are pinned in `.kata/vars.toml` and bumped by Renovate — do not edit
 them inline in the workflow; the bump would be clobbered on the next
 `kata apply`.
 
-### autogmerge
+CI installs real Vim and Neovim and exports
+`DENOPS_TEST_VIM_EXECUTABLE` / `DENOPS_TEST_NVIM_EXECUTABLE`, because
+`@denops/test` spawns the editors as child processes. Editor versions
+are pinned in `.kata/vars.toml` under `[denops]`. Do not add a
+`shell:` override to the run step — forcing `bash` routes Windows
+through Git Bash, which mangles those executable paths and hangs the
+nvim cases.
+
+### automerge
 
 `.github/workflows/automerge.yml` is seeded by kata on first apply
 and consumer-owned afterward. Renovate bumps action versions
-directly in this file. PRs with the `automerge` label are merged
-automatically when CI passes.
+directly in this file. PRs carrying the `automerge` label are merged
+once their checks pass; the label comes from pj-base's Renovate
+config.
+
+It deliberately contains no test step. `pascalgn/automerge-action`
+already waits for the PR's own checks, and a `deno task ci` here would
+run without vim/nvim, fail, and that failure alone would hold the PR
+at `mergeable_state=unstable` — blocking the merge this workflow
+exists to perform.
+
+### Deno import updates
+
+`.github/workflows/deno-update.yml` is kata-managed. It runs
+`deno outdated --update --latest --recursive` daily and opens a
+rolling `update/deno-imports` PR labelled `automerge`, so ci.yml
+validates the bump and automerge.yml merges it when green. It does
+not run the test suite itself — a broken bump should surface as a red
+PR, not a failed cron with nothing to inspect.
+
+Needs an `APP_ID` variable and `PRIVATE_KEY` secret (GitHub App with
+contents + pull-requests write); the job self-skips when they are
+missing. The App identity is required because PRs opened with
+`GITHUB_TOKEN` do not trigger downstream workflows, so ci.yml would
+never run and automerge could never gate.
 <!-- kata:agents:denops:end -->

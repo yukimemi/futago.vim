@@ -78,6 +78,17 @@ jobs:
         # by Microsoft/apm. Same source the local-dev docs use
         # ("install via aka.ms/apm-unix or your platform's package
         # manager").
+        #
+        # GITHUB_TOKEN: the installer resolves apm's latest release
+        # via api.github.com, and an unauthenticated call shares the
+        # hosted runner IP's 60-req/hr quota with every other tenant
+        # — shoka's weekly run died on "API rate limit exceeded"
+        # (2026-06-01). The script honours GITHUB_APM_PAT >
+        # GITHUB_TOKEN > GH_TOKEN, so hand it the workflow's default
+        # token; no extra scopes needed for a public-repo release
+        # lookup.
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           curl -fsSL https://aka.ms/apm-unix | sh
