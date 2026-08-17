@@ -66,6 +66,13 @@ renri remove fix/review-feedback   # or: renri prune (after main pulls)
   matches an existing branch / bookmark, attaches to it instead.
   **If `<name>` is omitted**, prompts interactively unless
   `--non-interactive` is set.
+  - `--from <ref>` forks the new branch off `<ref>` instead of the cwd
+    HEAD (commit / branch / bookmark / tag / revset). Pass the flag with
+    no value to pick from a fuzzy list of local refs. When `<ref>` names
+    a **remote-tracking** ref (`main@origin` for jj, `origin/main` for
+    git), `add` runs a `fetch` first so the worktree forks off the
+    current upstream tip rather than a stale locally-cached one. Pass
+    `--no-fetch` to skip that fetch (offline, or to pin the cached ref).
 - `renri list` (alias `ls`) — show all worktrees with name, path,
   branch, and flags.
 - `renri cd <name>` — print the absolute path of a worktree on stdout.
