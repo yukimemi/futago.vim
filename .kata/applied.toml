@@ -3,7 +3,7 @@ applied_at = "2026-08-15T09:50:54.9829856Z"
 
 [[templates]]
 source = "github.com/yukimemi/pj-base"
-rev = "00be9d5dc530de2a6bbde59c1867d58f58b1bdfc"
+rev = "1a7c2be1758fd01c875b3d503201145f64df42ea"
 version = "0.14.0"
 
 [[templates]]
