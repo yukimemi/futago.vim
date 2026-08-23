@@ -29,7 +29,7 @@ checkout = "v7.0.1"
 # renovate: datasource=github-tags depName=peter-evans/create-pull-request
 create_pull_request = "v8.1.1"
 # renovate: datasource=github-tags depName=anthropics/claude-code-action
-claude_code_action = "v1"
+claude_code_action = "v1.0.195"
 # renovate: datasource=github-tags depName=denoland/setup-deno
 deno_setup = "v2"
 # renovate: datasource=github-tags depName=rhysd/action-setup-vim

@@ -17,7 +17,10 @@ name: kata-apply
 #
 # Output: a PR (single rolling branch `kata-apply/auto`) with the
 # rendered-file diff. Auto-merged when CI passes — if CI fails,
-# the PR stays open for human review.
+# the PR stays open for human review. Auto-merge can also fail to
+# arm at all (see the last step), whether because the repo has no
+# required checks or because none had registered yet; the PR then
+# stays open, which is the safe default.
 #
 # Source: yukimemi/pj-base. Filename carries `.tera` so kata
 # Tera-renders the file at apply time (substituting
@@ -90,15 +93,56 @@ jobs:
           body: |
             Automated `kata update + apply` (daily schedule + manual dispatch).
 
-            Auto-merged when CI passes; left open if CI fails.
+            Auto-merged when CI passes; left open if CI fails — or if
+            auto-merge couldn't be armed (no required checks, or none
+            had registered yet when this PR was opened).
 
             <!-- pj-base ships this workflow; see yukimemi/pj-base#6 -->
           author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
           committer: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
 
+      # Arm auto-merge so the PR lands by itself once the consumer's
+      # required checks go green.
+      #
+      # Deliberately tolerant of failure. GitHub rejects the
+      # `enablePullRequestAutoMerge` mutation when the PR is ALREADY
+      # mergeable — nothing left to wait on — and `gh pr merge
+      # --auto` exits 1 with
+      #   GraphQL: Pull request Pull request is in clean status
+      #   (enablePullRequestAutoMerge)
+      # Two situations produce that state: a default branch with no
+      # required status checks, permanently; or, transiently, this
+      # step firing a second or two after `create-pull-request`
+      # opens the PR, before the first check has registered. The
+      # second is a race, so the same repo can fail one run and
+      # succeed the next — yukimemi/hakari did exactly that within
+      # the hour (run 32610568604 failed, run 32612382813 armed
+      # fine) with its branch protection unchanged (absent)
+      # throughout. Either way, a red scheduled job that means
+      # nothing trains people to ignore the one that does.
+      #
+      # No fallback to an unconditional `gh pr merge --squash`: a repo
+      # with no required checks has no automated confidence to merge
+      # on. The very hakari PR that surfaced this carried three silent
+      # reverts of consumer-owned config; a human caught them. Leaving
+      # the PR open IS the correct outcome here, not a degraded one.
+      #
+      # Nor is the cause worth discriminating: gh reports every
+      # failure as a bare exit 1 with no machine-readable cause, so
+      # telling the two apart would mean matching on the error text
+      # — brittle against gh/API wording drift — and against a race
+      # the verdict would be about timing, not configuration. The
+      # step tolerates any arming failure and annotates it instead;
+      # gh's own stderr stays in the log, and the PR is visible on
+      # the repo either way.
       - name: Enable auto-merge
         if: steps.cpr.outputs.pull-request-number != ''
         env:
           GH_TOKEN: ${{ secrets.KATA_APPLY_TOKEN }}
+          PR: ${{ steps.cpr.outputs.pull-request-number }}
         run: |
-          gh pr merge --auto --squash ${{ steps.cpr.outputs.pull-request-number }}
+          if gh pr merge --auto --squash "$PR"; then
+            echo "Auto-merge armed for PR #${PR}; it will land once required checks pass."
+            exit 0
+          fi
+          echo "::notice::Auto-merge could not be armed for PR #${PR} (see the gh error above; GitHub refuses to arm auto-merge on an already-mergeable PR — either the repo has no required status checks, or none had registered yet in the seconds since the PR was opened). Leaving the PR open for human review."
