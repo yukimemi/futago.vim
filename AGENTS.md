@@ -13,13 +13,19 @@ here so each tool's auto-load behaviour still finds something.
   - Exception: trivial typo / whitespace / docs wording fixes.
 - Branch names: `feat/...`, `fix/...`, `chore/...`.
 - **PR titles + bodies in English. Commit messages in English.**
-- **Releases are PR-driven, tagging is automatic.** Bump
-  `[workspace.package].version` (workspace) or `[package].version`
-  (single crate) in a `chore/release-vX.Y.Z` PR. On merge to `main`,
-  `.github/workflows/auto-tag.yml` (kata-managed) detects the bump,
-  pushes the `vX.Y.Z` tag, and that tag fires `release.yml` for
-  binary builds + crates.io publish. **Do not run `git tag` by
-  hand** — the bot tag will collide and the manual push fails.
+- **Releases are PR-driven and tagging is automatic** — in repos that
+  ship a release pipeline. Bump the version in the project's own
+  manifest in a `chore/release-vX.Y.Z` PR; on merge to `main` the
+  language layer's `auto-tag.yml` detects the bump, pushes the
+  `vX.Y.Z` tag, and that tag is what fires `release.yml`. **Do not run
+  `git tag` by hand** — the bot tag will collide and the manual push
+  fails. The specifics belong to the layers shipping those two
+  workflows, which are not the same layer: `kata:agents:rust:*` for
+  which file holds the version and for `auto-tag.yml`,
+  `kata:agents:rust-{cli,lib}:*` for what `release.yml` builds and
+  publishes. A repo with no `auto-tag.yml` has no release pipeline at
+  all: nothing tags, and the version field in its manifest may well
+  be decoration.
 
 ### PR review cycle
 
@@ -207,11 +213,52 @@ templates — the bytes between `<!-- kata:*:begin -->` and
 listed in `.kata/applied.toml`. **Editing those bytes locally
 won't survive the next `kata apply`** — push the change to the
 upstream template repo (`yukimemi/pj-base` / `yukimemi/pj-rust` /
-…) instead. The marker scopes are layered:
+…) instead.
 
-- `kata:agents:base:*` — language-agnostic conventions (this section).
-- `kata:agents:rust:*` — added when `pj-rust` applies.
-- `kata:agents:rust-cli:*` — added when `pj-rust-cli` applies.
+The marker scopes are layered, one per applied layer:
+`kata:agents:base:*` is this section, and each layer adds its own
+(`kata:agents:rust:*`, `kata:agents:rust-cli:*`,
+`kata:agents:pnpm:*`, `kata:agents:firebase:*`, …). Which ones apply
+*here* is a grep away: `<!-- kata:` in this file.
+
+### This project's own conventions
+
+Everything a layer ships is generic by construction: it describes the
+stack the template assumed, not what this repo grew into. **Bytes
+outside every marker pair are yours and survive `kata apply`** — so
+project-specific conventions belong in a section of their own, outside
+the markers (conventionally at the end of the file; if a later layer
+appends its block below yours, no matter — kata only ever rewrites
+between its own markers). Same mechanism as the `.gitignore` /
+`.gitattributes` blocks.
+
+Write those conventions down there rather than leaving them in one
+agent's head, in commit archaeology, or in a README the agent will not
+read. What earns a line:
+
+- **Any layer default that does not hold here.** A layer states its
+  assumption flatly ("Hosting is the primary target", "these rules are
+  a placeholder to replace"). When the project has diverged, say so and
+  say why — the layer's text keeps asserting the opposite on every
+  apply, and an agent that only reads the blocks will act on it.
+- **Facts duplicated across files with no compiler in between** — an
+  address or a path that appears in code *and* in a rules/config file
+  that cannot import it, a timeout that has to stay inside another
+  timeout. List every copy, so the next edit finds them all.
+- **kata-shipped files this project deleted on purpose**, together with
+  the `once_applied = true` line in `.kata/applied.toml` that keeps
+  them deleted. Otherwise someone helpfully restores one.
+- **Shapes the runtime forces but no tool checks** — an export form a
+  platform requires, import specifiers that must (or must not) carry a
+  file extension, a directory whose contents are reachable by URL.
+- **Invariants that money or access rest on**, naming the file and line
+  that actually enforces them.
+- **Which language the code speaks versus what a user reads**, when the
+  two differ.
+
+A repo whose `AGENTS.md` is nothing but kata blocks is a repo where
+every agent re-derives all of that from scratch — and gets the layer
+defaults wrong the same way each time.
 <!-- kata:agents:base:end -->
 <!-- kata:agents:denops:begin -->
 ### Denops plugin workflow

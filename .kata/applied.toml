@@ -1,10 +1,10 @@
 preset = "github.com/yukimemi/pj-presets:denops"
-applied_at = "2026-08-19T03:30:54.719537317Z"
+applied_at = "2026-08-23T03:33:45.467633413Z"
 
 [[templates]]
 source = "github.com/yukimemi/pj-base"
-rev = "8217f1a99c55240c7337f40b8afb35d9e9232499"
-version = "0.14.0"
+rev = "0424dfa03771babdeca3c22f08fe003f2811f820"
+version = "0.16.0"
 
 [[templates]]
 source = "github.com/yukimemi/pj-denops"
@@ -42,13 +42,13 @@ content_hash = "e018b9c422cac8cb57d832c4100697a56bbd4b5f5a9a2abd6c803149665525a7
 content_hash = "4c27ab63f971635cb578f4ccc44387ec09821e126cb93f1b4b5e96925e109629"
 
 [files.".github/workflows/kata-apply.yml"]
-content_hash = "62bd9b21a8b7257762d06feefbd3d4595cadfdf01dbde2e67a03521fc4b09efc"
+content_hash = "c70c39b08f0e914a44c1dc6c558b3ce2439933fbd64c51674fe64dbc640f02bc"
 
 [files.".gitignore"]
 content_hash = "4bebd1c3417c33f9d1c51f011694f6d82b098bbb1a5a102ba56e97ab01a866ef"
 
 [files.".kata/vars.toml"]
-content_hash = "393b2b94540e792790ef9357e46e5bc259eb3064605794ca2373ae458999cb23"
+content_hash = "8e573305bc9b45b40e4c4c24c0da7728771a12d81c4c1631d6e35f25a189cf84"
 once_applied = true
 
 [files."AGENTS.md"]
