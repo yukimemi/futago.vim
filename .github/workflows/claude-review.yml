@@ -143,7 +143,21 @@ jobs:
           # (anthropics/claude-code-action#1236). The App token the
           # action exchanges covers API calls, not that first fetch.
 
-      - uses: anthropics/claude-code-action@v1
+      # No-op on non-pnpm consumers (Rust, Bun, or anything else) —
+      # gated on pnpm-lock.yaml so this only fires when a pj-pnpm
+      # layer is actually composed in. Corepack ships with the
+      # runner's preinstalled Node.js and reads package.json's
+      # `packageManager` field to materialize the exact pinned pnpm
+      # version, so no extra action or version pin is needed here.
+      # Deliberately not `pnpm/action-setup`: this layer (pj-base) is
+      # language-agnostic and has no `vars.actions.pnpm_action_setup`
+      # pin available — that's seeded only by the optional pj-pnpm
+      # layer's vars.pnpm.toml, and referencing it unconditionally
+      # here would break Rust-only consumers that never seed it.
+      - if: hashFiles('pnpm-lock.yaml') != ''
+        run: corepack enable
+
+      - uses: anthropics/claude-code-action@v1.0.195
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # Tracking comment with progress checkboxes; also pulls
@@ -164,13 +178,14 @@ jobs:
             - Tests: coverage for the changed behaviour
 
             You can run this project's own verification commands
-            (`cargo make check` / `cargo test` / `bun test` and the
-            like). Use them when a finding is worth confirming — a
-            reviewer who ran the test is worth more than one who
-            inferred from the diff — and say which you ran. Keep it
-            targeted: a cold full build costs minutes, so reach for
-            the narrowest command that settles the question, and
-            don't build at all for findings the diff already proves.
+            (`cargo make check` / `cargo test` / `bun test` /
+            `pnpm test` and the like). Use them when a finding is
+            worth confirming — a reviewer who ran the test is worth
+            more than one who inferred from the diff — and say
+            which you ran. Keep it targeted: a cold full build
+            costs minutes, so reach for the narrowest command that
+            settles the question, and don't build at all for
+            findings the diff already proves.
 
             Post specific issues as inline comments on the relevant
             lines. Use one top-level comment for the overall
@@ -210,4 +225,4 @@ jobs:
           # rest of this list bounds intent rather than capability.
           # That is the accepted trade; the stdin path is not.
           claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(cargo make:*),Bash(cargo test:*),Bash(cargo clippy:*),Bash(cargo check:*),Bash(cargo fmt:*),Bash(bun install:*),Bash(bun test:*),Bash(bun run build:*),Bash(bun run test:*),Bash(bun run lint:*),Bash(bun run check:*),Bash(bun run typecheck:*)"
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(cargo make:*),Bash(cargo test:*),Bash(cargo clippy:*),Bash(cargo check:*),Bash(cargo fmt:*),Bash(bun install:*),Bash(bun test:*),Bash(bun run build:*),Bash(bun run test:*),Bash(bun run lint:*),Bash(bun run check:*),Bash(bun run typecheck:*),Bash(pnpm install:*),Bash(pnpm build:*),Bash(pnpm lint:*),Bash(pnpm test:*)"
