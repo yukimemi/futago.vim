@@ -21,6 +21,21 @@ name: claude
 #
 # `when = "always"` (in template.toml): every consumer wants the
 # same responder; fixes to the workflow flow automatically.
+#
+# No `pull_request_review` trigger, and the reason is a merge
+# blocker masquerading as a responder that did not fire. Replying
+# to an inline review comment — `/pulls/{n}/comments/{id}/replies`,
+# which is exactly the AGENTS.md "reply to reviewers in each
+# thread" convention — makes GitHub create a NEW review whose
+# summary body is EMPTY and fires `pull_request_review` with
+# `review.body == ""`. The `@claude` sits in the comment, not the
+# summary, so the job's condition cannot see it; the job skips,
+# and a SKIPPED check run named "claude" then blocks the merge
+# under branch protection until an admin bypasses it. Observed on
+# yukimemi/hakari#18. In-thread replies are already caught by
+# `pull_request_review_comment` above, so dropping the review event
+# loses nothing for that flow. The only loss is an `@claude` placed
+# in a review *summary*, which is not a documented pattern.
 
 on:
   issue_comment:
@@ -29,8 +44,6 @@ on:
     types: [created]
   issues:
     types: [opened, assigned]
-  pull_request_review:
-    types: [submitted]
 
 permissions:
   # contents/pull-requests/issues write: Claude may push fix
@@ -73,12 +86,10 @@ jobs:
     if: |
       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
                github.event.comment.author_association ||
-               github.event.review.author_association ||
                github.event.issue.author_association) &&
       (
         (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
         (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
-        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
         (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
       )
     runs-on: ubuntu-latest
@@ -121,7 +132,21 @@ jobs:
           # (anthropics/claude-code-action#1236). The App token the
           # action exchanges covers API calls, not that first fetch.
 
-      - uses: anthropics/claude-code-action@v1
+      # No-op on non-pnpm consumers (Rust, Bun, or anything else) —
+      # gated on pnpm-lock.yaml so this only fires when a pj-pnpm
+      # layer is actually composed in. Corepack ships with the
+      # runner's preinstalled Node.js and reads package.json's
+      # `packageManager` field to materialize the exact pinned pnpm
+      # version, so no extra action or version pin is needed here.
+      # Deliberately not `pnpm/action-setup`: this layer (pj-base) is
+      # language-agnostic and has no `vars.actions.pnpm_action_setup`
+      # pin available — that's seeded only by the optional pj-pnpm
+      # layer's vars.pnpm.toml, and referencing it unconditionally
+      # here would break Rust-only consumers that never seed it.
+      - if: hashFiles('pnpm-lock.yaml') != ''
+        run: corepack enable
+
+      - uses: anthropics/claude-code-action@v1.0.195
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # The same list `claude-review.yml.tera` carries, and for the
@@ -138,4 +163,4 @@ jobs:
           # test code, so this list bounds intent rather than
           # capability — which is why the job now checks who is asking.
           claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(cargo make:*),Bash(cargo test:*),Bash(cargo clippy:*),Bash(cargo check:*),Bash(cargo fmt:*),Bash(bun install:*),Bash(bun test:*),Bash(bun run build:*),Bash(bun run test:*),Bash(bun run lint:*),Bash(bun run check:*),Bash(bun run typecheck:*)"
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(cargo make:*),Bash(cargo test:*),Bash(cargo clippy:*),Bash(cargo check:*),Bash(cargo fmt:*),Bash(bun install:*),Bash(bun test:*),Bash(bun run build:*),Bash(bun run test:*),Bash(bun run lint:*),Bash(bun run check:*),Bash(bun run typecheck:*),Bash(pnpm install:*),Bash(pnpm build:*),Bash(pnpm lint:*),Bash(pnpm test:*)"
