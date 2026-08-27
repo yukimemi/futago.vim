@@ -41,4 +41,4 @@ thinca_action_setup_vim = "v3.0.2"
 # renovate: datasource=github-releases depName=vim/vim-win32-installer
 vim_version = "v9.2.0148"
 # renovate: datasource=github-releases depName=neovim/neovim
-nvim_version = "v0.12.4"
+nvim_version = "v0.12.5"
