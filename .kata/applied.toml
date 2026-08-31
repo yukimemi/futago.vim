@@ -1,9 +1,9 @@
 preset = "github.com/yukimemi/pj-presets:denops"
-applied_at = "2026-08-27T05:02:19.92843923Z"
+applied_at = "2026-08-31T03:31:13.616978882Z"
 
 [[templates]]
 source = "github.com/yukimemi/pj-base"
-rev = "10cd49c09b95af8add4daf71c5151835821cb670"
+rev = "b205d49d8676a2d3b78efa020749b7f012921159"
 version = "0.18.0"
 
 [[templates]]
@@ -16,6 +16,9 @@ once_applied = true
 
 [files.".claude/skills/renri/SKILL.md"]
 once_applied = true
+
+[files.".editorconfig"]
+content_hash = "31dd1c43fbb48cd8380a0fae0780f05d42eef658ea695772c51b4bde291f7438"
 
 [files.".gemini/settings.json"]
 content_hash = "486c974de88903113ed99b4e643432b7050e88f1031276f5263e8da7b43fe11e"
@@ -36,7 +39,7 @@ content_hash = "5f6cdf606255f5576c14262803d653858fab963e93c81fcb90357ed8d3bd2dad
 content_hash = "4a8e47aabb3cdf2a59030d5194467022f0efb53bb1819d4495752020d10be773"
 
 [files.".github/workflows/claude.yml"]
-content_hash = "c83b52d5f483fdec494028b932facf98018500ce757718cc2e3703328688f5ad"
+content_hash = "7bb6c538ec5c2688e01b54e983232fa99f65e24ee16172c4270341345cbdac34"
 
 [files.".github/workflows/deno-update.yml"]
 content_hash = "4c27ab63f971635cb578f4ccc44387ec09821e126cb93f1b4b5e96925e109629"

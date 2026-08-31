@@ -1,0 +1,23 @@
+# kata:editorconfig:base:begin
+# kata-managed universal EditorConfig rules (yukimemi/pj-base). Normalizes
+# indentation and line endings at edit time so contributors on different
+# editors/OSes converge instead of round-tripping CRLF/LF or mixed indent
+# widths. Companion to `.gitattributes` (`* text=auto eol=lf`, which
+# normalizes at commit time) — this file targets the editor instead.
+# Language layers (pj-rust, ...) append file-type sections via
+# merge-section; see `# kata:editorconfig:*:begin/end` markers in the
+# rendered `.editorconfig`.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Markdown: two trailing spaces is a hard line break, not noise.
+[*.md]
+trim_trailing_whitespace = false
+# kata:editorconfig:base:end
