@@ -1,9 +1,9 @@
 preset = "github.com/yukimemi/pj-presets:denops"
-applied_at = "2026-08-31T03:31:13.616978882Z"
+applied_at = "2026-09-03T04:42:44.049758458Z"
 
 [[templates]]
 source = "github.com/yukimemi/pj-base"
-rev = "b205d49d8676a2d3b78efa020749b7f012921159"
+rev = "6dddfa1a3b889a9ec28382d8ae18f6985c5c9b9e"
 version = "0.18.0"
 
 [[templates]]
@@ -18,7 +18,7 @@ once_applied = true
 once_applied = true
 
 [files.".editorconfig"]
-content_hash = "31dd1c43fbb48cd8380a0fae0780f05d42eef658ea695772c51b4bde291f7438"
+content_hash = "df3d6e27040e82c12677ac073ca9676cc92bffa2cb1b875bfe63d12b4dd1135b"
 
 [files.".gemini/settings.json"]
 content_hash = "486c974de88903113ed99b4e643432b7050e88f1031276f5263e8da7b43fe11e"

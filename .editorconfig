@@ -1,23 +1,45 @@
 # kata:editorconfig:base:begin
-# kata-managed universal EditorConfig rules (yukimemi/pj-base). Normalizes
-# indentation and line endings at edit time so contributors on different
-# editors/OSes converge instead of round-tripping CRLF/LF or mixed indent
-# widths. Companion to `.gitattributes` (`* text=auto eol=lf`, which
-# normalizes at commit time) — this file targets the editor instead.
+# kata-managed universal EditorConfig rules (yukimemi/pj-base). Scope is
+# deliberately narrow: **encoding and line endings only**. Companion to
+# `.gitattributes` (`* text=auto eol=lf`, which normalizes at commit time) —
+# this file targets the editor instead.
+#
+# Why no `indent_style` / `indent_size` here: every language in these
+# templates already ships a formatter that owns indentation — rustfmt for
+# Rust, prettier/biome for web, deno fmt for Deno — and those run in CI as
+# their own jobs. Stating indent width a second time in `.editorconfig` does
+# not add enforcement, it adds a SECOND OPINION about the same bytes, and
+# when the two disagree the formatter wins while the `editorconfig` CI job
+# goes red on code that is correctly formatted.
+#
+# That was not hypothetical. Measured on `yukimemi/nagi` (2026-09-02) with
+# the indent rules in force: `editorconfig-checker` reported **323 errors**
+# while `cargo fmt --check` and `cargo clippy` were clean on the very same
+# tree. Removing `indent_style`/`indent_size` took it to **18** — and 16 of
+# those are a vendored dependency with its own `.editorconfig`, leaving 2
+# real findings (two files stored CRLF against `end_of_line = lf`, i.e.
+# exactly what this file is for). The `editorconfig` job had failed on every
+# single run since it landed, so it never provided signal, only noise that
+# each PR had to be triaged against.
+#
+# The cause is structural rather than a formatting slip: the dominant comment
+# style aligns continuation lines under `/* ` or `- `, which is 3 columns and
+# therefore never a multiple of 2 or 4. No amount of tidying makes an
+# aligned comment satisfy an indent-width rule.
+#
+# `insert_final_newline` / `trim_trailing_whitespace` are gone for the same
+# reason — formatters handle both — and dropping them costs 2 findings on
+# that same measurement, both in files a formatter already covers. Removing
+# `trim_trailing_whitespace` also makes the old `[*.md]` exemption (two
+# trailing spaces is a hard line break) unnecessary.
+#
 # Language layers (pj-rust, ...) append file-type sections via
 # merge-section; see `# kata:editorconfig:*:begin/end` markers in the
-# rendered `.editorconfig`.
+# rendered `.editorconfig`. A layer that only wants to restate its
+# formatter's indent width should ship nothing.
 root = true
 
 [*]
 charset = utf-8
 end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
-indent_style = space
-indent_size = 2
-
-# Markdown: two trailing spaces is a hard line break, not noise.
-[*.md]
-trim_trailing_whitespace = false
 # kata:editorconfig:base:end
