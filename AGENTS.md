@@ -27,134 +27,108 @@ here so each tool's auto-load behaviour still finds something.
   all: nothing tags, and the version field in its manifest may well
   be decoration.
 
-### PR review cycle
+### Pre-merge review
 
-- Every PR runs reviews from **Claude Code**
-  (`.github/workflows/claude-review.yml`, kata-managed) and
-  **CodeRabbit**. Wait for both bots to post, address their
-  comments (push fixes to the PR branch), and merge only after
-  feedback is resolved. The claude-review workflow skips
-  review-exempt PRs by itself (its job-level `if:` excludes
-  `chore/release-*`, `kata-apply/auto`, `apm-bump/auto`, and
-  Renovate / Dependabot authors) — a missing Claude review on
-  those PRs is expected, not a failure.
-- **Any PR that touches the Claude workflow files goes
-  unreviewed.** `claude-code-action` requires the workflow file to
-  already exist on the default branch **with identical content** —
-  otherwise a PR could rewrite the workflow to exfiltrate the
-  token. When the content differs it logs "Skipping action due to
-  workflow validation" and exits 0 without reviewing: a green
-  check with no review attached. This covers two cases, and the
-  second is the one that keeps surprising people:
-  - the PR that first adopts these templates (the workflow does
-    not exist on the default branch yet), and
-  - any later PR that **edits** `claude-review.yml` / `claude.yml`,
-    e.g. hand-pulling an upstream template fix.
+Review happens **before the pull request, on the operator's machine**,
+via [magi](https://github.com/yukimemi/magi). This layer no longer
+ships PR-side review bots: `claude-review.yml` and `claude.yml` were
+removed from it. Their scope was
+human-authored PRs — their own job-level `if:` already excluded
+`chore/release-*`, `kata-apply/auto`, `apm-bump/auto` and
+Renovate / Dependabot — which is exactly the set magi reviews, so
+keeping them meant reviewing the same diff twice, a
+`CLAUDE_CODE_OAUTH_TOKEN` secret per repository, Actions minutes on
+private repos, and one trap that silently cost reviews: a PR editing
+either workflow was skipped by `claude-code-action`'s
+workflow-validation check and merged with a green check and no
+review attached.
 
-  Not fixable from this side — it is the mechanism that makes the
-  token safe to hand to the action at all. Expected: merge on CI +
-  owner approval; reviews resume on the next PR that leaves the
-  workflows alone. The `kata-apply/auto` branch is already excluded
-  by the job-level `if:`, so the daily template-refresh PRs do not
-  add noise here.
-- **A missing credential fails loudly instead.** If the repo has
-  neither `CLAUDE_CODE_OAUTH_TOKEN` nor `ANTHROPIC_API_KEY` set,
-  the guard step fails the job — set one and re-run (subscription
-  path: `claude setup-token` → `gh secret set`; pay-as-you-go:
-  store `ANTHROPIC_API_KEY` and swap the action input to
-  `anthropic_api_key`). Distinguishing the two: **red** means no
-  credential, **green with no review** means workflow validation.
-- **The Claude full review fires once, at PR open** (plus
-  `ready_for_review` / `reopened`) — fix pushes do **not** re-trigger
-  it (`synchronize` is deliberately off the trigger list; a full
-  re-review per push doubled up with the mention-driven re-check
-  below and burned tokens for no extra signal). Verification of
-  fixes rides the `@claude` thread replies. After a large rework
-  that changes the PR's shape, request a fresh full pass
-  explicitly: `@claude please re-review the full PR`. CodeRabbit
-  still reviews pushes on its own cadence (its app config, not
-  this workflow).
-- **After opening a PR, immediately enter the review-monitoring
-  loop — do not ask the user whether to start it.** Drive the
-  cadence with `/loop` — fixed-interval mode (e.g.
-  `/loop 60s …`) schedules ticks via `CronCreate`; dynamic mode
-  (no interval, `/loop …`) self-paces via `ScheduleWakeup`. The
-  agent actively pulls fresh state each tick with
-  `gh pr view <N> --json state,reviews,comments,statusCheckRollup`
-  and `gh api repos/<owner>/<repo>/pulls/<N>/comments` (the
-  latter covers inline review comments, which `gh pr view`
-  does not surface) and reacts to new bot feedback. Passive
-  watchers (background `gh` polls, file watchers, hooks) cannot
-  trigger active follow-up, so they are not a substitute —
-  without an active wake-up the agent never re-reads the PR.
-- **Default polling interval: 60s.** Claude Code review /
-  CodeRabbit typically reply within ~1–5 minutes of a push or
-  thread reply, so a 60s tick catches them on the next wake-up
-  without burning cache: 60s sits well inside the 5-minute
-  prompt-cache TTL, so the conversation context stays cached
-  across ticks. Do **not** stretch the interval to 300s — that
-  is the worst-of-both window (you pay the cache miss without
-  amortizing it). If the PR is idle but a bot re-review is still
-  expected (e.g. a CodeRabbit rate-limit refill window), step
-  **up** to 1200–1800s instead.
-- **Stop the loop entirely when only owner approval is missing.**
-  Once review bots are quiet (or quiet-by-exception — version-bump
-  skip, Renovate/Dependabot skip), CI is green, and there is no
-  other expected follow-up, the *only* remaining action is human
-  approval. GitHub already notifies the owner; the agent
-  re-entering on every cron tick to find the same "still waiting
-  on owner" state burns cache and adds no value. Stop scheduling
-  further wake-ups (`CronDelete` in fixed-interval mode; simply
-  omit the next `ScheduleWakeup` in dynamic mode) and report the
-  wait state to the user. The owner restarts the loop after their
-  next push if a fresh bot pass is wanted, or merges directly.
-  (A CodeRabbit rate-limit window doesn't qualify on its own — a
-  re-review is still expected once the quota refills, so step up
-  to 1200–1800s instead and let it ride. Stopping is only correct
-  when the owner has explicitly chosen to skip the bot pass per
-  the rate-limit exception below.)
-- **Reply to reviewers after pushing a fix — in each thread, not
-  at the top level.** Every finding lives in its own inline review
-  thread; answer *each* one as an in-thread reply, carrying an
-  **@-mention** (`@claude` / `@coderabbitai`). Use the review-
-  comment *replies* endpoint — `gh api repos/<owner>/<repo>/pulls/<N>/comments/<comment_id>/replies -f body=…`
-  (or `-F in_reply_to=<comment_id> -f body=…` on the comments
-  endpoint — `body` is required there too) — and
-  get each comment's `<comment_id>` from
-  `gh api repos/<owner>/<repo>/pulls/<N>/comments`. A single
-  top-level `gh pr comment` does **not** count: it leaves every
-  inline thread unresolved, the bot can't tie your response to the
-  finding it raised, and the per-finding audit trail is lost.
-  Reply in-thread even when you're **declining** a suggestion —
-  say why; a silent skip reads as overlooked. Note `@claude` also
-  triggers the interactive responder
-  (`.github/workflows/claude.yml`, kata-managed) — it will
-  re-check the fix and reply on the thread. Since fix pushes no
-  longer re-trigger the full review, this mention-driven re-check
-  is the **only** Claude-side verification of a fix — don't skip
-  it for substantive fixes; do skip it for pure FYI notes that
-  need no verification.
-- A review thread is **settled** the moment the latest bot reply
-  is ack-only ("Thank you" / "Understood" / a re-review summary
-  with no new findings) or 30 minutes elapse with no actionable
-  comment.
-- **Merge gate**: review bots quiet AND owner explicit approval.
-- Bot-authored PRs (Renovate / Dependabot) skip the bot-review
-  gate; CI green + owner approval is enough.
-- **Version-bump-only PRs** (a single `chore/release-vX.Y.Z`
-  branch whose entire diff is `[workspace.package].version` /
-  `[package].version` + the matching inter-crate refs +
-  `Cargo.lock`) **also skip the bot-review gate.** There is
-  nothing for the bots to find in a version bump, and the
-  release pipeline downstream of merge (auto-tag → release.yml)
-  is time-sensitive. CI green + owner approval is enough.
-- **Treat CodeRabbit rate-limit notices as "quiet" for the
-  merge gate.** If CodeRabbit only posts a "Review limit
-  reached" quota-exhaustion message (no findings, no inline
-  comments), it has produced no review content — there is
-  nothing to address. Re-trigger with `@coderabbitai review`
-  once the quota refills if you want a real pass; for small or
-  time-sensitive PRs, merge on owner approval without waiting.
+**"Removed" is a statement about this template layer, not about
+every repo's current state.** Dropping a `[[file]]` entry stops kata
+from managing the rendered file — it does not delete it. A repo that
+had these workflows before this change keeps `claude-review.yml` /
+`claude.yml` (and the `CLAUDE_CODE_OAUTH_TOKEN` secret) under
+`.github/workflows/` until someone deletes them by hand, and until
+then they still fire on every human-authored PR. Check
+`.github/workflows/` before treating a PR as unreviewed-except-magi:
+if either file is still there, its comments are a real review, not
+noise to ignore.
+
+- **`magi review <branch>`** runs only the review + verification +
+  gate half of magi's graph: nothing competes, no implementation, no
+  judging, no vote. That is the mode for hand-written work.
+  `magi run "<task>"` is the full competition, for work handed over
+  whole. Both end at the same gate.
+- What the loop actually does: each reviewer gets its **own detached
+  worktree pinned at the commit under review** (no reviewer can
+  perturb the tree, and the fixer never races one); `verify.e2e` runs
+  in the branch's worktree and its output is fed to the fixer;
+  finding ids (`R2-1-3`) are assigned by magi, not by the agent, so
+  the fixer's adoption report can be matched against them; the loop
+  is bounded by `review_rounds`; `verify.gate` must exit 0 before any
+  merge is attempted.
+- **`magi.toml` is repo-owned, not kata-managed.** Point
+  `verify.gate` at the exact command CI runs, so a local pass means a
+  green PR, and point `verify.e2e` at the invocation that actually
+  covers the repo — feature flags included. A gate that differs from
+  CI turns a clean magi run into a red PR, which is the one failure
+  this arrangement cannot absorb.
+- **If you did not run magi, the change was not reviewed, and nothing
+  will tell you.** Do not open a PR for a hand-written change before
+  `magi review` comes back clean; if you must, say so in the PR body
+  and say why. What does *not* count as a substitute: a green CI run
+  (it compiles and tests, it does not review), and CodeRabbit's
+  silence.
+- **CodeRabbit stays installed and is not part of the gate.** It does
+  not auto-review repositories under 10 stars — the common case here —
+  so treat it as absent unless it posts. When it does post, its
+  findings are a real review: address them, reply **in the inline
+  thread** with an `@coderabbitai` mention (the review-comment
+  *replies* endpoint,
+  `gh api repos/<owner>/<repo>/pulls/<N>/comments/<id>/replies -f body=…`),
+  and reply even when declining — say why, because a silent skip
+  reads as overlooked. A "review limit reached" quota notice carries
+  no findings and counts as quiet; re-trigger with
+  `@coderabbitai review` when the quota refills if you want a real
+  pass.
+- **Read the report, not the exit status.** A reviewer seat that
+  times out is logged as `WARN agent timed out seat=review-2` and
+  then summarised as "raised 0 finding(s)" — indistinguishable from a
+  genuinely clean pass in both the summary and `magi stats`. Check
+  for timeouts before believing a clean round: a round where half the
+  panel never answered is not a clean round.
+- **Review artifacts stay local.** magi comments on a pull request
+  only when it *stops* landing one. Findings, the fixer's adoption
+  report and reviewer precision live in the run directory
+  (`magi show`, `magi stats`). When the PR needs a record — a
+  non-obvious fix, a finding declined with an argument — paste that
+  part into the PR body or a comment yourself.
+- With `merge = "pr"`, magi opens the pull request and keeps going:
+  watches the checks, reads the review comments (human and bot), runs
+  a bounded fix round when either is unhappy, pushes, and asks before
+  merging. `land_approval` is on by default and **silence is a
+  hold** — nothing merges unanswered. `magi answer` (or the web UI)
+  is where it asks. Out of rounds leaves the PR open with a comment
+  saying what still fails; `checks: unknown` never merges.
+- **Merge gate**: magi's gate green — or CI green for a change magi
+  never touched — **and** every review that did post resolved (a
+  leftover `claude-review.yml`, CodeRabbit, a human) **and** the
+  owner's explicit approval. The irreversible step stays a human
+  decision.
+- **No review-monitoring poll loop for bots this layer no longer
+  ships.** The old loop existed to wait on them. Where a repo still
+  has `claude-review.yml` (see above) the old cadence still applies
+  until it is deleted; otherwise, after opening a PR wait for CI and
+  report the wait state to the owner. When magi is landing the PR
+  (`land = true`), magi does the watching.
+- Bot-authored PRs (Renovate / Dependabot) need no review pass at
+  all: CI green + owner approval.
+- **Version-bump-only PRs** — a single `chore/release-vX.Y.Z` branch
+  whose entire diff is `[workspace.package].version` /
+  `[package].version` plus the matching inter-crate refs and the
+  lockfile — likewise. There is nothing in a version bump for a
+  reviewer to find, and the release pipeline downstream of merge
+  (auto-tag → `release.yml`) is time-sensitive.
 
 ### Worktree workflow
 
