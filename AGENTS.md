@@ -54,11 +54,19 @@ then they still fire on every human-authored PR. Check
 if either file is still there, its comments are a real review, not
 noise to ignore.
 
-- **`magi review <branch>`** runs only the review + verification +
-  gate half of magi's graph: nothing competes, no implementation, no
-  judging, no vote. That is the mode for hand-written work.
-  `magi run "<task>"` is the full competition, for work handed over
-  whole. Both end at the same gate.
+- **`magi review <branch> --merge none`** runs only the review +
+  verification + gate half of magi's graph: nothing competes, no
+  implementation, no judging, no vote. That is the mode for
+  hand-written work. `magi run "<task>"` is the full competition, for
+  work handed over whole. Both end at the same gate.
+- **Always pass `--merge none` on a `magi review` you invoke by
+  hand.** `[merge] mode` in config defaults to `"pr"` for the queue
+  loop (`magi serve` / `magi web`) that drains `magi task add` —
+  there, ending in an actual PR is the point. `magi review` run
+  directly inherits that same config default when no `--merge` flag
+  is given, which would open a PR nobody asked for. `--merge none`
+  overrides it for that one invocation and leaves the branch for the
+  operator to turn into a PR themselves.
 - What the loop actually does: each reviewer gets its **own detached
   worktree pinned at the commit under review** (no reviewer can
   perturb the tree, and the fixer never races one); `verify.e2e` runs
