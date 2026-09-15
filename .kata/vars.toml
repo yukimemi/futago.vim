@@ -35,7 +35,7 @@ deno_setup = "v2"
 # renovate: datasource=github-tags depName=rhysd/action-setup-vim
 rhysd_action_setup_vim = "v1.6.1"
 # renovate: datasource=github-tags depName=thinca/action-setup-vim
-thinca_action_setup_vim = "v3.0.2"
+thinca_action_setup_vim = "v3.0.3"
 
 [denops]
 # renovate: datasource=github-releases depName=vim/vim-win32-installer
