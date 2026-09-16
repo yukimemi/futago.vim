@@ -28,7 +28,7 @@ jobs:
         with:
           version: "v9.2.0148"
 
-      - uses: thinca/action-setup-vim@v3.0.2
+      - uses: thinca/action-setup-vim@v3.0.3
         if: matrix.os != 'ubuntu-latest'
         id: vim-thinca
         with:
