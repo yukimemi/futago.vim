@@ -1,9 +1,9 @@
 preset = "github.com/yukimemi/pj-presets:denops"
-applied_at = "2026-09-16T03:29:52.723566368Z"
+applied_at = "2026-09-19T03:28:16.79369507Z"
 
 [[templates]]
 source = "github.com/yukimemi/pj-base"
-rev = "e5ad02c4f60ce83f12ffeb7537c5665367a50aa2"
+rev = "b97e6bd59845f1151a1e34fdc508dafa751af7c8"
 version = "0.18.0"
 
 [[templates]]

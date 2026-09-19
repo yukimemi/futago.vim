@@ -2,10 +2,10 @@
 ## Shared conventions
 
 This file is the agent-agnostic source of truth (per the
-[agents.md](https://agents.md) convention). The matching
-`CLAUDE.md` and `GEMINI.md` files are thin shims that point back
-here so each tool's auto-load behaviour still finds something.
-**Edit AGENTS.md, not the shims.**
+[agents.md](https://agents.md) convention). Codex and Claude Code
+(>=2.1.277) read it directly; the `GEMINI.md` file is a thin shim
+for tools that don't yet auto-load `AGENTS.md`.
+**Edit AGENTS.md, not the shim.**
 
 ### Git workflow
 
